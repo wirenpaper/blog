@@ -1,0 +1,192 @@
+### Variables
+@baseUrl = http://localhost:5000
+@username = saif.rashiduddin@gmail.com
+@password = boom
+@firstname = Mustapha
+@lastname = Rashiduddin
+
+@username2 = bob.harry@gmail.com
+@password2 = 123456
+@firstanme2 = bob
+@lastname2 = harry
+
+
+### Register a user ######################################################
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}",
+  "firstname": "{{firstname}}",
+  "lastname": "{{lastname}}"
+}
+
+# @lang=lua
+> {%
+local json = vim.json.decode(response.body)
+vim.fn.setenv("TOKEN", json.token)
+%}
+
+### Register user2 ######################################################
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username2}}",
+  "password": "{{password2}}",
+  "firstname": "{{firstname2}}",
+  "lastname": "{{lastname2}}"
+}
+
+# @lang=lua
+> {%
+local json = vim.json.decode(response.body)
+vim.fn.setenv("TOKEN", json.token)
+%}
+
+### Login user 1 #########################################################
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+# @lang=lua
+> {%
+local json = vim.json.decode(response.body)
+vim.fn.setenv("TOKEN", json.token)
+%}
+
+### Login user2 #########################################################
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username2}}",
+  "password": "{{password2}}"
+}
+
+# @lang=lua
+> {%
+local json = vim.json.decode(response.body)
+vim.fn.setenv("TOKEN", json.token)
+%}
+
+### Logout a user ########################################################
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+
+### Request password reset ###############################################
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "username": "{{username}}"
+}
+
+# @lang=lua
+> {%
+local json = vim.json.decode(response.body)
+vim.fn.setenv("RESET_TOKEN", json.resetToken)
+%}
+
+### Verify reset token ###################################################
+POST {{baseUrl}}/auth/verify-reset-token
+Content-Type: application/json
+
+{
+  "resetToken": "{{RESET_TOKEN}}"
+}
+
+### Reset password with verified token ###################################
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "resetToken": "{{RESET_TOKEN}}",
+  "newPassword": "lol"
+}
+
+### Reset password when logged in ########################################
+POST {{baseUrl}}/auth/change-password-logged-in
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+{
+  "currentPassword": "{{password}}",
+  "newPassword": "boom"
+}
+
+###########################################################################
+# postRoutes
+###########################################################################
+POST {{baseUrl}}/posts/
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+{
+  "post": "this is my blog welcome blabla i have a glass of water blabla it has salt in it"
+}
+
+############################################################################
+POST {{baseUrl}}/posts/
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+{
+  "post": "i am posting a post which is a post in which i post"
+}
+
+### Read all posts #########################################################
+GET {{baseUrl}}/posts/
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+### Request 1 post using id ################################################
+GET {{baseUrl}}/posts/2
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+### change post 1 ##########################################################
+PUT {{baseUrl}}/posts/1
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+{
+  "post": "haha"
+}
+
+### delete post 1 ##########################################################
+DELETE {{baseUrl}}/posts/2
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+############################################################################
+### CommentRoutes
+############################################################################
+
+###  create comment ########################################################
+POST {{baseUrl}}/comments/
+Authorization: {{TOKEN}}
+Content-Type: application/json
+
+{
+  "comment": "lala",
+  "post_id": 2
+}
+
+### create another comment #################################################
+POST {{baseUrl}}/comments/
+Authorization: {{TOKEN}}
+
+{
+  "comment": "hahahhaahahha",
+  "post_id": 2
+}
+
+### get all comments #######################################################
+GET {{baseUrl}}/posts/comments/2
+Authorization: {{TOKEN}}
