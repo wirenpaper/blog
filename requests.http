@@ -1,7 +1,7 @@
 ### Variables
 @baseUrl = http://localhost:5000
 @username = saif.rashiduddin@gmail.com
-@password = boom
+@password = 123456
 @firstname = Mustapha
 @lastname = Rashiduddin
 
@@ -106,6 +106,7 @@ POST {{baseUrl}}/auth/reset-password
 Content-Type: application/json
 
 {
+  "username": "{{username}}",
   "resetToken": "{{RESET_TOKEN}}",
   "newPassword": "lol"
 }
@@ -117,7 +118,7 @@ Content-Type: application/json
 
 {
   "currentPassword": "{{password}}",
-  "newPassword": "boom"
+  "newPassword": "lol1234"
 }
 
 ###########################################################################

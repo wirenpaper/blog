@@ -1,7 +1,11 @@
 import express from 'express'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import authRoutes from './routes/authRoutes.js'
+
+import sql from "./db.js"
+import { userRepository } from "./db/user/repository.js"
+import { buildAuthRoutes } from "./routes/authRoutes.js"
+
 import postRoutes from './routes/postRoutes.js'
 import commentRoutes from './routes/commentRoutes.js'
 import authMiddleware from './middleware/authMiddleware.js'
@@ -19,6 +23,9 @@ app.use(express.json())
 // Serves the HTML file from the /public directory
 // Tells express to serve all files from the public folder as static assets / file. Any requests for the css files will be resolved to the public directory.
 app.use(express.static(path.join(__dirname, '../public')))
+
+const userRepo = userRepository(sql);
+const authRoutes = buildAuthRoutes(userRepo);
 
 // Routes
 app.use('/auth', authRoutes)

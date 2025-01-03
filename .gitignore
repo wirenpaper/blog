@@ -139,3 +139,6 @@ dist
 # mac and windows specific npm generations
 *.DS_Store
 Thumbs.db
+
+# clones of files (backups)
+*.clone
