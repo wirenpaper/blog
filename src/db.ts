@@ -8,4 +8,6 @@ const sql = postgres({
   password: process.env.PASSWORD
 })
 
+export type PostgresClient = ReturnType<typeof postgres>
+
 export default sql

@@ -5,10 +5,10 @@ drop table if exists users;
 -- users table
 create table if not exists users (
     id int generated always as identity primary key,
-    username varchar(255) not null unique,
-    password varchar(255) not null,
-    firstname text,
-    lastname text,
+    user_name varchar(255) not null unique,
+    hashed_password varchar(255) not null,
+    first_name text,
+    last_name text,
     reset_token text,
     reset_token_expires timestamp,
     token_verified BOOLEAN DEFAULT false

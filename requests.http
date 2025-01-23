@@ -1,25 +1,26 @@
 ### Variables
 @baseUrl = http://localhost:5000
-@username = saif.rashiduddin@gmail.com
-@password = 123456
-@firstname = Mustapha
-@lastname = Rashiduddin
 
-@username2 = bob.harry@gmail.com
-@password2 = 123456
-@firstanme2 = bob
-@lastname2 = harry
+@userName = saif.rashiduddin@gmail.com
+@password = Lk9375msr!
+@newPassword = Lk9375msr@
+@firstName = Mustapha
+@lastName = Rashiduddin
 
+@userName2 = bob.harry@gmail.com
+@password2 = Lk9375msr@
+@firstName2 = bob
+@lastName2 = harry
 
 ### Register a user ######################################################
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "{{username}}",
+  "userName": "{{userName}}",
   "password": "{{password}}",
-  "firstname": "{{firstname}}",
-  "lastname": "{{lastname}}"
+  "firstName": "{{firstName}}",
+  "lastName": "{{lastName}}"
 }
 
 # @lang=lua
@@ -33,10 +34,10 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "{{username2}}",
+  "userName": "{{userName2}}",
   "password": "{{password2}}",
-  "firstname": "{{firstname2}}",
-  "lastname": "{{lastname2}}"
+  "firstName": "{{firstName2}}",
+  "lastName": "{{lastName2}}"
 }
 
 # @lang=lua
@@ -50,7 +51,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "{{username}}",
+  "userName": "{{userName}}",
   "password": "{{password}}"
 }
 
@@ -65,7 +66,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "{{username2}}",
+  "userName": "{{username2}}",
   "password": "{{password2}}"
 }
 
@@ -75,7 +76,7 @@ local json = vim.json.decode(response.body)
 vim.fn.setenv("TOKEN", json.token)
 %}
 
-### Logout a user ########################################################
+### Logout user1 ########################################################
 POST {{baseUrl}}/auth/logout
 Content-Type: application/json
 
@@ -84,7 +85,7 @@ POST {{baseUrl}}/auth/forgot-password
 Content-Type: application/json
 
 {
-  "username": "{{username}}"
+  "userName": "{{userName}}"
 }
 
 # @lang=lua
@@ -106,9 +107,9 @@ POST {{baseUrl}}/auth/reset-password
 Content-Type: application/json
 
 {
-  "username": "{{username}}",
+  "userName": "{{userName}}",
   "resetToken": "{{RESET_TOKEN}}",
-  "newPassword": "lol"
+  "newPassword": "{{newPassword}}"
 }
 
 ### Reset password when logged in ########################################
@@ -118,50 +119,50 @@ Content-Type: application/json
 
 {
   "currentPassword": "{{password}}",
-  "newPassword": "lol1234"
+  "newPassword": "{{newPassword}}"
 }
 
 ###########################################################################
 # postRoutes
 ###########################################################################
-POST {{baseUrl}}/posts/
+POST {{baseUrl}}/posts/create
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 {
-  "post": "this is my blog welcome blabla i have a glass of water blabla it has salt in it"
+  "mPost": "this is my blog welcome blabla i have a glass of water blabla it has salt in it"
 }
 
 ############################################################################
-POST {{baseUrl}}/posts/
+POST {{baseUrl}}/posts/create
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 {
-  "post": "i am posting a post which is a post in which i post"
+  "mPost": "i am posting a post which is a post in which i post"
 }
 
 ### Read all posts #########################################################
-GET {{baseUrl}}/posts/
+GET {{baseUrl}}/posts/read
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 ### Request 1 post using id ################################################
-GET {{baseUrl}}/posts/2
+GET {{baseUrl}}/posts/read/2
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 ### change post 1 ##########################################################
-PUT {{baseUrl}}/posts/1
+PUT {{baseUrl}}/posts/edit/1
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 {
-  "post": "haha"
+  "mPost": "haha"
 }
 
 ### delete post 1 ##########################################################
-DELETE {{baseUrl}}/posts/2
+DELETE {{baseUrl}}/posts/delete/2
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
@@ -170,24 +171,50 @@ Content-Type: application/json
 ############################################################################
 
 ###  create comment ########################################################
-POST {{baseUrl}}/comments/
+POST {{baseUrl}}/comments/create
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
 {
-  "comment": "lala",
-  "post_id": 2
+  "mComment": "lala",
+  "postId": 2
 }
 
 ### create another comment #################################################
-POST {{baseUrl}}/comments/
+POST {{baseUrl}}/comments/create
 Authorization: {{TOKEN}}
 
 {
-  "comment": "hahahhaahahha",
-  "post_id": 2
+  "mComment": "babababa",
+  "postId": 2
 }
 
-### get all comments #######################################################
+### create another comment #################################################
+POST {{baseUrl}}/comments/create
+Authorization: {{TOKEN}}
+
+{
+  "mComment": "trolololo",
+  "postId": 1
+}
+
+
+### edit a comment ########################################################
+PUT {{baseUrl}}/comments/edit/2
+Authorization: {{TOKEN}}
+
+{
+  "mComment": "updated comment lol"
+}
+
+### delete a comment #######################################################
+DELETE {{baseUrl}}/comments/delete/3
+Authorization: {{TOKEN}}
+
+### get all post comments #######################################################
 GET {{baseUrl}}/posts/comments/2
+Authorization: {{TOKEN}}
+
+### get all post comments #######################################################
+GET {{baseUrl}}/posts/comments/1
 Authorization: {{TOKEN}}
