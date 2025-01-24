@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express"
 import { UserRepository } from "../../../db/user/user_repository.js";
 import { makeChangePasswordLoggedInService } from "./change_password_logged_in_service.js";
 import { PostgressDBError, UserError } from "../../../errors.js";
-import authMiddleware from "../../../middleware/authMiddleware.js";
 
 interface ChangePasswordRequest {
   currentPassword: string;
@@ -12,7 +11,7 @@ interface ChangePasswordRequest {
 export function makeChangePasswordLoggedInRouter(userRepo: UserRepository) {
   const changePasswordLoggedInService = makeChangePasswordLoggedInService(userRepo)
 
-  return Router().post("/", authMiddleware, async (req: Request<object, object, ChangePasswordRequest>, res: Response) => {
+  return Router().post("/", async (req: Request<object, object, ChangePasswordRequest>, res: Response) => {
     const { currentPassword, newPassword } = req.body
     try {
       if (!req.userId) {

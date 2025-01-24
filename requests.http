@@ -143,7 +143,7 @@ Content-Type: application/json
 }
 
 ### Read all posts #########################################################
-GET {{baseUrl}}/posts/read
+GET {{baseUrl}}/posts/read-all
 Authorization: {{TOKEN}}
 Content-Type: application/json
 
@@ -212,9 +212,9 @@ DELETE {{baseUrl}}/comments/delete/3
 Authorization: {{TOKEN}}
 
 ### get all post comments #######################################################
-GET {{baseUrl}}/posts/comments/2
+GET {{baseUrl}}/comments/read-post-comments/2
 Authorization: {{TOKEN}}
 
 ### get all post comments #######################################################
-GET {{baseUrl}}/posts/comments/1
+GET {{baseUrl}}/comments/read-post-comments/1
 Authorization: {{TOKEN}}

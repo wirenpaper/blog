@@ -65,14 +65,14 @@ app.use("/auth/logout", makeLogoutRouter())
 app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo))
 app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
 app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
-app.use("/auth/change-password-logged-in", makeChangePasswordLoggedInRouter(userRepo))
+app.use("/auth/change-password-logged-in", authMiddleware, makeChangePasswordLoggedInRouter(userRepo))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// POST ROUTES
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 app.use("/posts/create", authMiddleware, makePostRouter(postRepo))
-app.use("/posts/read", authMiddleware, makeReadPostsRouter(postRepo))
-app.use("/posts/read", authMiddleware, makeReadPostRouter(postRepo))
+app.use("/posts/read-all", makeReadPostsRouter(postRepo))
+app.use("/posts/read", makeReadPostRouter(postRepo))
 app.use("/posts/edit", authMiddleware, makeEditPostRouter(postRepo))
 app.use("/posts/delete", authMiddleware, makeDeletePostRouter(postRepo))
 
@@ -82,7 +82,7 @@ app.use("/posts/delete", authMiddleware, makeDeletePostRouter(postRepo))
 app.use("/comments/create", authMiddleware, makeCreateCommentRouter(commentRepo))
 app.use("/comments/edit", authMiddleware, makeEditCommentRouter(commentRepo))
 app.use("/comments/delete", authMiddleware, makeDeleteCommentRouter(commentRepo))
-app.use("/posts/comments", makeGetPostCommentsRouter(commentRepo))
+app.use("/comments/read-post-comments", makeGetPostCommentsRouter(commentRepo))
 
 app.listen(PORT, () => {
   console.log(`Server has started on port: ${PORT}`)
