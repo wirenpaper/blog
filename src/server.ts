@@ -59,46 +59,30 @@ app.use(express.static(path.join(__dirname, '../public')))
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// AUTH ROUTES
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const registerRouter = makeRegisterRouter(userRepo)  // Use makeRegisterRouter instead
-app.use('/auth/register', registerRouter)
-const loginRouter = makeLoginRouter(userRepo)
-app.use("/auth/login", loginRouter)
-const logoutRouter = makeLogoutRouter()
-app.use("/auth/logout", logoutRouter)
-const forgotPasswordRouter = makeForgotPasswordRouter(userRepo)
-app.use("/auth/forgot-password", forgotPasswordRouter)
-const verifyResetTokenRouter = makeVerifyResetTokenRouter(userRepo)
-app.use("/auth/verify-reset-token", verifyResetTokenRouter)
-const resetPasswordRouter = makeResetPasswordRouter(userRepo)
-app.use("/auth/reset-password", resetPasswordRouter)
-const changePasswordLoggedInRouter = makeChangePasswordLoggedInRouter(userRepo)
-app.use("/auth/change-password-logged-in", changePasswordLoggedInRouter)
+app.use('/auth/register', makeRegisterRouter(userRepo))
+app.use("/auth/login", makeLoginRouter(userRepo))
+app.use("/auth/logout", makeLogoutRouter())
+app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo))
+app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
+app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
+app.use("/auth/change-password-logged-in", makeChangePasswordLoggedInRouter(userRepo))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// POST ROUTES
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-const postRouter = makePostRouter(postRepo)
-app.use("/posts/create", authMiddleware, postRouter)
-const readPostsRouter = makeReadPostsRouter(postRepo)
-app.use("/posts/read", authMiddleware, readPostsRouter)
-const readPostRouter = makeReadPostRouter(postRepo)
-app.use("/posts/read", authMiddleware, readPostRouter)
-const editPostRouter = makeEditPostRouter(postRepo)
-app.use("/posts/edit", authMiddleware, editPostRouter)
-const deletePostRouter = makeDeletePostRouter(postRepo)
-app.use("/posts/delete", authMiddleware, deletePostRouter)
+app.use("/posts/create", authMiddleware, makePostRouter(postRepo))
+app.use("/posts/read", authMiddleware, makeReadPostsRouter(postRepo))
+app.use("/posts/read", authMiddleware, makeReadPostRouter(postRepo))
+app.use("/posts/edit", authMiddleware, makeEditPostRouter(postRepo))
+app.use("/posts/delete", authMiddleware, makeDeletePostRouter(postRepo))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// COMMENT ROUTES
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-const createCommentRouter = makeCreateCommentRouter(commentRepo)
-app.use("/comments/create", authMiddleware, createCommentRouter)
-const editCommentRouter = makeEditCommentRouter(commentRepo)
-app.use("/comments/edit", authMiddleware, editCommentRouter)
-const deleteCommentRouter = makeDeleteCommentRouter(commentRepo)
-app.use("/comments/delete", authMiddleware, deleteCommentRouter)
-const getPostCommentsRouter = makeGetPostCommentsRouter(commentRepo)
-app.use("/posts/comments", getPostCommentsRouter)
+app.use("/comments/create", authMiddleware, makeCreateCommentRouter(commentRepo))
+app.use("/comments/edit", authMiddleware, makeEditCommentRouter(commentRepo))
+app.use("/comments/delete", authMiddleware, makeDeleteCommentRouter(commentRepo))
+app.use("/posts/comments", makeGetPostCommentsRouter(commentRepo))
 
 app.listen(PORT, () => {
   console.log(`Server has started on port: ${PORT}`)
