@@ -37,6 +37,9 @@ export function createUser(user: UserModel): UserModel {
 
 // Helper functions
 export function isValidPassword(password: string) {
+  if (password == "" || password == undefined || password == null)
+    return false
+
   return password && password.length >= 8 &&
     /[A-Z]/.test(password) &&     // At least one uppercase
     /[a-z]/.test(password) &&     // At least one lowercase

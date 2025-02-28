@@ -1,7 +1,7 @@
 import { createUser as createUserModel } from "./user_model.js";
 import { PostgresClient } from "../../db.js";
 import { UserModel } from "./user_model.js";
-import { PostgressDBError } from "../../errors.js";
+import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "../../errors.js";
 
 interface CreateUserParams {
   userName: string
@@ -70,30 +70,41 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       lastName
     }) {
       try {
-        const [row] = await sqlClient`
-          insert into users (user_name, hashed_password, first_name, last_name)
-          values (
-            ${userName},
-            ${hashedPassword},
-            ${firstName === undefined || firstName === "" ? null : firstName},
-            ${lastName === undefined || lastName === "" ? null : lastName}
-          )
-          returning
-            id,
-            user_name as "userName",
-            hashed_password as "hashedPassword",
-            first_name as "firstName",
-            last_name as "lastName"
-        `
-        return createUserModel(row as UserModel);
+        const res = await sqlClient`
+                insert into users (user_name, hashed_password, first_name, last_name)
+                values (
+                  ${userName},
+                  ${hashedPassword},
+                  ${firstName === undefined || firstName === "" ? null : firstName},
+                  ${lastName === undefined || lastName === "" ? null : lastName}
+                )
+                returning
+                  id,
+                  user_name as "userName",
+                  hashed_password as "hashedPassword",
+                  first_name as "firstName",
+                  last_name as "lastName"
+              `
+        if (res.length > 1)
+          throw createExpressError(500, "should be only 1 row")
+
+        return createUserModel(res[0] as UserModel);
       } catch (error) {
-        throw new PostgressDBError(error, this.createUser)
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
     async getUserByUsername({ userName }) {
       try {
-        const [row]: [GetUserByUsernameResult | undefined] = await sqlClient`
+        const res: GetUserByUsernameResult[] = await sqlClient`
           select
             id,
             user_name as "userName",
@@ -103,7 +114,10 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           from users
           where user_name = ${userName}
         `
-        return row
+        if (res.length > 1)
+          throw createExpressError(500, "should be only 1 row")
+
+        return res[0]
       } catch (error) {
         throw new PostgressDBError(error, this.getUserByUsername)
       }
@@ -111,14 +125,19 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async getUserById({ userId }) {
       try {
-        const [user]: [GetUserByIdResult | undefined] = await sqlClient`
+        const res: GetUserByIdResult[] = await sqlClient`
           select
             id,
             hashed_password as "hashedPassword"
           from users
           where id = ${userId}
         `
-        return user
+
+        if (res.length > 1) {
+          throw new Error("should be only 1 row")
+        }
+
+        return res[0]
       } catch (error) {
         throw new PostgressDBError(error, this.getUserById)
       }

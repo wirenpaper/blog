@@ -52,7 +52,7 @@ Content-Type: application/json
 
 {
   "userName": "{{userName}}",
-  "password": "{{password}}"
+  "password": "{{newPassword}}"
 }
 
 # @lang=lua

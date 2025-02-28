@@ -6,30 +6,30 @@ import sql from "./db.js"
 ////////////////////////////////////////////////////////////////////////////////////
 /////////// AUTH ROUTER IMPORTS
 ////////////////////////////////////////////////////////////////////////////////////
-import { makeRegisterRouter } from './business/auth/register/register_request.js'
-import { makeLoginRouter } from "./business/auth/login/login_request.js"
-import { makeLogoutRouter } from './business/auth/logout/logout_request.js'
-import { makeForgotPasswordRouter } from "./business/auth/forgot_password/forgot_password_request.js"
-import { makeVerifyResetTokenRouter } from "./business/auth/verify_reset_token/verify_reset_token_request.js"
-import { makeResetPasswordRouter } from "./business/auth/reset_password/reset_password_request.js"
-import { makeChangePasswordLoggedInRouter } from "./business/auth/change_password_logged_in/change_password_logged_in_request.js"
+import { makeRegisterRouter } from './business/auth/register/register_controller.js'
+import { makeLoginRouter } from "./business/auth/login/login_controller.js"
+import { makeLogoutRouter } from './business/auth/logout/logout_controller.js'
+import { makeForgotPasswordRouter } from "./business/auth/forgot_password/forgot_password_controller.js"
+import { makeVerifyResetTokenRouter } from "./business/auth/verify_reset_token/verify_reset_token_controller.js"
+import { makeResetPasswordRouter } from "./business/auth/reset_password/reset_password_controller.js"
+import { makeChangePasswordLoggedInRouter } from "./business/auth/change_password_logged_in/change_password_logged_in_controller.js"
 
 ///////////////////////////////////////////////////////////////////////////////////
 //////// POST ROUTER IMPORTS
 ///////////////////////////////////////////////////////////////////////////////////
-import { makePostRouter } from "./business/post/create_post/create_post_request.js"
-import { makeReadPostsRouter } from "./business/post/read_posts/read_posts_request.js"
-import { makeReadPostRouter } from "./business/post/read_post/read_post_request.js"
-import { makeEditPostRouter } from "./business/post/edit_post/edit_post_request.js"
-import { makeDeletePostRouter } from "./business/post/delete_post/delete_post_request.js"
+import { makePostRouter } from "./business/post/create_post/create_post_controller.js"
+import { makeReadPostsRouter } from "./business/post/read_posts/read_posts_controller.js"
+import { makeReadPostRouter } from "./business/post/read_post/read_post_controller.js"
+import { makeEditPostRouter } from "./business/post/edit_post/edit_post_controller.js"
+import { makeDeletePostRouter } from "./business/post/delete_post/delete_post_controller.js"
 
 ///////////////////////////////////////////////////////////////////////////////////
 //////// COMMENT ROUTER IMPORTS
 ///////////////////////////////////////////////////////////////////////////////////
-import { makeCreateCommentRouter } from './business/comment/create_comment/create_comment_request.js'
-import { makeEditCommentRouter } from './business/comment/edit_comment/edit_comment_request.js'
-import { makeDeleteCommentRouter } from './business/comment/delete_comment/delete_comment_request.js'
-import { makeGetPostCommentsRouter } from './business/comment/get_post_comments/get_post_comments_request.js'
+import { makeCreateCommentRouter } from './business/comment/create_comment/create_comment_controller.js'
+import { makeEditCommentRouter } from './business/comment/edit_comment/edit_comment_controller.js'
+import { makeDeleteCommentRouter } from './business/comment/delete_comment/delete_comment_controller.js'
+import { makeGetPostCommentsRouter } from './business/comment/get_post_comments/get_post_comments_controller.js'
 
 // REPOSITORIES ////////////////////////////////////////////////////////////////////
 import { userRepository } from './db/user/user_repository.js'

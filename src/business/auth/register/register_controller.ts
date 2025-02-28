@@ -1,9 +1,10 @@
 import { Router, Request } from 'express'
 import { makeRegisterService } from './register_service.js'
 import { UserRepository } from '../../../db/user/user_repository.js'
-import { PostgressDBError, JWTError } from '../../../errors.js'
+import { isExpressError, ExpressError } from '../../../errors.js'
+// import { PostgressDBError, JWTError } from '../../../errors.js'
 
-interface RegisterRequest {
+export interface RegisterRequest {
   userName: string,
   password: string,
   firstName: string,
@@ -24,15 +25,13 @@ export function makeRegisterRouter(userRepo: UserRepository) {
         lastName
       })
 
-
       res.json({ token: result.token })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof JWTError) {
-        const { statusCode, message, func } = error;
-        res.status(statusCode).json({ statusCode, func, message });
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json({ message: (error as Error).message })
     }
   })
 }

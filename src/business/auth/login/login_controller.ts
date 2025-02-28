@@ -3,7 +3,7 @@ import { makeLoginService } from "./login_service.js"
 import { UserRepository } from "../../../db/user/user_repository.js";
 import { PostgressDBError, JWTError, UserError } from "../../../errors.js";
 
-interface MakeLoginRequest {
+export interface MakeLoginRequest {
   userName: string,
   password: string
 }
