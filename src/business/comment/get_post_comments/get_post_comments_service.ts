@@ -1,5 +1,5 @@
-import { CommentRepository, GetPostCommentsSpecifications } from "../../../db/comment/comment_repository.js";
-import { CommentError } from "../../../errors.js";
+import { CommentRepository, GetPostCommentsSpecifications } from "@db/comment/comment_repository.js";
+import { CommentError } from "@src/errors.js";
 
 export function makeGetPostCommentsService(commentRepo: CommentRepository): GetPostCommentsSpecifications {
   return {

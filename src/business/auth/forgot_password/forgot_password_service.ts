@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
-import { UserRepository } from "../../../db/user/user_repository.js";
-import { UserError } from "../../../errors.js";
+import { UserRepository } from "@db/user/user_repository.js";
+import { UserError } from "@src/errors.js";
 import crypto from "crypto";
 
 interface ForgotPasswordResults {

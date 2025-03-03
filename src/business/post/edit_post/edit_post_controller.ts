@@ -1,7 +1,7 @@
 import { Router, Request } from "express";
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { PostgressDBError, PostError, UserError } from "../../../errors.js";
-import { makeEditPostService } from "./edit_post_service.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { PostgressDBError, PostError, UserError } from "@src/errors.js";
+import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
 
 export function makeEditPostRouter(postRepo: PostRepository) {
   const editPostService = makeEditPostService(postRepo)

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
-import { mockUserRepo } from "../../../../db/user/__mocks__/user_repository.mock.js"
-import { makeRegisterService } from "../register_service.js"
+import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { makeRegisterService } from "@business/auth/register/register_service.js"
 
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken")

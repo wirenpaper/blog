@@ -17,7 +17,22 @@
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "allowImportingTsExtensions": false
+    "allowImportingTsExtensions": false,
+    "baseUrl": "./src",
+    "paths": {
+      "@db/*": [
+        "db/*"
+      ],
+      "@business/*": [
+        "business/*"
+      ],
+      "@middleware/*": [
+        "middleware/*"
+      ],
+      "@src/*": [
+        "./*"
+      ]
+    }
   },
   "include": [
     "src/**/*",

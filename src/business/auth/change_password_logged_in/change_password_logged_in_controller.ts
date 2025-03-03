@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express"
-import { UserRepository } from "../../../db/user/user_repository.js";
-import { makeChangePasswordLoggedInService } from "./change_password_logged_in_service.js";
-import { PostgressDBError, UserError } from "../../../errors.js";
+import { UserRepository } from "@db/user/user_repository.js";
+import { makeChangePasswordLoggedInService } from
+  "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
+import { PostgressDBError, UserError } from "@src/errors.js";
 
 interface ChangePasswordRequest {
   currentPassword: string;

@@ -1,8 +1,7 @@
 import { Router, Request } from 'express'
-import { makeRegisterService } from './register_service.js'
-import { UserRepository } from '../../../db/user/user_repository.js'
-import { isExpressError, ExpressError } from '../../../errors.js'
-// import { PostgressDBError, JWTError } from '../../../errors.js'
+import { makeRegisterService } from '@business/auth/register/register_service.js'
+import { UserRepository } from '@db/user/user_repository.js'
+import { isExpressError, ExpressError } from '@src/errors.js'
 
 export interface RegisterRequest {
   userName: string,

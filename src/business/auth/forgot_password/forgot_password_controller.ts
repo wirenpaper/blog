@@ -1,6 +1,6 @@
 import { Router, Request } from "express";
-import { UserRepository } from "../../../db/user/user_repository.js";
-import { makeForgotPasswordService } from "./forgot_password_service.js";
+import { UserRepository } from "@db/user/user_repository.js";
+import { makeForgotPasswordService } from "@business/auth/forgot_password/forgot_password_service.js"
 
 interface ForgotPasswordRequest {
   userName: string

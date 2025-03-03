@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { createUser as createUserModel, isValidPassword, sanitizeUser } from '../../../db/user/user_model.js'
-import { UserRepository } from "../../../db/user/user_repository.js"
-import { createExpressError } from "../../../errors.js"
+import { createUser as createUserModel, isValidPassword, sanitizeUser } from "@db/user/user_model.js"
+import { UserRepository } from "@db/user/user_repository.js"
+import { createExpressError } from "@src/errors.js"
 
 const SALT_ROUNDS = 12
 

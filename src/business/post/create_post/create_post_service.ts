@@ -1,5 +1,5 @@
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { PostError } from "../../../errors.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { PostError } from "@src/errors.js";
 
 interface PostParams {
   mPost: string,

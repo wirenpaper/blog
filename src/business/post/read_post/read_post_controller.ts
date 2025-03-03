@@ -1,6 +1,6 @@
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { makeReadPostService } from "./read_post_service.js";
-import { PostgressDBError, PostError } from "../../../errors.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { makeReadPostService } from "business/post/read_post/read_post_service.js"
+import { PostgressDBError, PostError } from "@src/errors.js";
 import { Router } from "express";
 
 export function makeReadPostRouter(postRepo: PostRepository) {

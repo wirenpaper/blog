@@ -1,7 +1,7 @@
 import { Router, Request } from "express";
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { makeDeletePostService } from "./delete_post_service.js";
-import { PostgressDBError, PostError, UserError } from "../../../errors.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { makeDeletePostService } from "business/post/delete_post/delete_post_service.js"
+import { PostgressDBError, PostError, UserError } from "@src/errors.js";
 
 export function makeDeletePostRouter(repo: PostRepository) {
   const deletePostService = makeDeletePostService(repo)

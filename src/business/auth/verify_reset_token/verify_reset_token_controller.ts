@@ -1,7 +1,7 @@
 import { Router, Request } from "express"
-import { UserRepository } from "../../../db/user/user_repository.js"
-import { makeVerifyResetTokenService } from "./verify_reset_token_service.js"
-import { PostgressDBError, UserError } from "../../../errors.js";
+import { UserRepository } from "@db/user/user_repository.js"
+import { makeVerifyResetTokenService } from "@business/auth/verify_reset_token/verify_reset_token_service.js"
+import { PostgressDBError, UserError } from "@src/errors.js";
 
 interface ResetRequest {
   resetToken: string

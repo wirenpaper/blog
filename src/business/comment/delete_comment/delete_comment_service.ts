@@ -1,5 +1,5 @@
-import { CommentRepository, CheckCommentOwnershipParams } from "../../../db/comment/comment_repository.js";
-import { UserError } from "../../../errors.js";
+import { CommentRepository, CheckCommentOwnershipParams } from "@db/comment/comment_repository.js";
+import { UserError } from "@src/errors.js";
 
 interface MakeDeleteCommentService {
   deleteComment: (params: CheckCommentOwnershipParams) => Promise<void>

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { makePostService } from "./create_post_service.js";
-import { PostgressDBError, PostError } from "../../../errors.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { makePostService } from "@business/post/create_post/create_post_service.js"
+import { PostgressDBError, PostError } from "@src/errors.js";
 
 interface PostService {
   mPost: string,

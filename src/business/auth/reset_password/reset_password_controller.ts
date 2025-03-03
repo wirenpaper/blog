@@ -1,7 +1,7 @@
 import { Router, Request } from "express"
-import { UserRepository } from "../../../db/user/user_repository.js";
-import { makeResetPasswordService } from "./reset_password_service.js";
-import { PostgressDBError, UserError } from "../../../errors.js";
+import { UserRepository } from "@db/user/user_repository.js";
+import { makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
+import { PostgressDBError, UserError } from "@src/errors.js";
 
 interface ResetPasswordRequest {
   userName: string,

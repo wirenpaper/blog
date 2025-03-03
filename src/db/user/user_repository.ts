@@ -1,7 +1,7 @@
-import { createUser as createUserModel } from "./user_model.js";
-import { PostgresClient } from "../../db.js";
-import { UserModel } from "./user_model.js";
-import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "../../errors.js";
+import { createUser as createUserModel } from "@db/user/user_model.js"
+import { PostgresClient } from "@src/db.js";
+import { UserModel } from "@db/user/user_model.js";
+import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "@src/errors.js";
 
 interface CreateUserParams {
   userName: string

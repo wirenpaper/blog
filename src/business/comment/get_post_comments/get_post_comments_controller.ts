@@ -1,7 +1,7 @@
 import { Router, Request } from "express"
-import { makeGetPostCommentsService } from "./get_post_comments_service.js"
-import { CommentRepository } from "../../../db/comment/comment_repository.js"
-import { CommentError, PostgressDBError } from "../../../errors.js"
+import { makeGetPostCommentsService } from "@business/comment/get_post_comments/get_post_comments_service.js"
+import { CommentRepository } from "@db/comment/comment_repository.js"
+import { CommentError, PostgressDBError } from "@src/errors.js"
 
 export function makeGetPostCommentsRouter(commentRepo: CommentRepository) {
   const getPostCommentsService = makeGetPostCommentsService(commentRepo)

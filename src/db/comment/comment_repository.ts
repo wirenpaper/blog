@@ -1,6 +1,6 @@
-import { PostgresClient } from "../../db.js"
-import { CommentModel } from "./comment_model.js"
-import { PostgressDBError } from "../../errors.js"
+import { PostgresClient } from "@src/db.js"
+import { CommentModel } from "@db/comment/comment_model.js"
+import { PostgressDBError } from "@src/errors.js"
 
 export interface CheckCommentOwnershipParams {
   id: number

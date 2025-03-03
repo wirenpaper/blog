@@ -1,7 +1,7 @@
 import { Router, Request } from "express";
-import { makeLoginService } from "./login_service.js"
-import { UserRepository } from "../../../db/user/user_repository.js";
-import { PostgressDBError, JWTError, UserError } from "../../../errors.js";
+import { makeLoginService } from "@business/auth/login/login_service.js"
+import { UserRepository } from "@db/user/user_repository.js";
+import { PostgressDBError, JWTError, UserError } from "@src/errors.js";
 
 export interface MakeLoginRequest {
   userName: string,

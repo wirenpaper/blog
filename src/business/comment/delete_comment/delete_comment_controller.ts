@@ -1,7 +1,7 @@
 import { Router, Request } from "express";
-import { CommentRepository } from "../../../db/comment/comment_repository.js";
-import { makeDeleteCommentService } from "./delete_comment_service.js";
-import { PostgressDBError, UserError } from "../../../errors.js";
+import { CommentRepository } from "@db/comment/comment_repository.js";
+import { makeDeleteCommentService } from "@business/comment/delete_comment/delete_comment_service.js"
+import { PostgressDBError, UserError } from "@src/errors.js";
 
 export function makeDeleteCommentRouter(commentRepo: CommentRepository) {
   const deleteCommentService = makeDeleteCommentService(commentRepo)

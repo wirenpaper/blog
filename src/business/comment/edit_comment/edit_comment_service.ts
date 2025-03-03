@@ -1,5 +1,5 @@
-import { CommentRepository } from "../../../db/comment/comment_repository.js";
-import { UserError } from "../../../errors.js";
+import { CommentRepository } from "@db/comment/comment_repository.js";
+import { UserError } from "@src/errors.js";
 
 interface EditCommentParams {
   id: number

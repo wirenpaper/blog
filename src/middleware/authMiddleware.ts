@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
-import { createExpressError } from "../errors.js"
+import { createExpressError } from "@src/errors.js"
 
 function authMiddleware(req: Request, _res: Response, next: NextFunction) {
   const token = req.headers.authorization

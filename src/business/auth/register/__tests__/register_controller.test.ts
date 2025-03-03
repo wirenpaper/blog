@@ -1,9 +1,9 @@
 import express from "express"
 import supertest from "supertest"
-import { makeRegisterRouter, RegisterRequest } from "../register_controller.js"
-import { makeRegisterService } from "../register_service.js"
-import { mockUserRepo } from "../../../../db/user/__mocks__/user_repository.mock.js"
-import { createExpressError } from "../../../../errors.js"
+import { makeRegisterRouter, RegisterRequest } from "@business/auth/register/register_controller.js"
+import { makeRegisterService } from "@business/auth/register/register_service.js"
+import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { createExpressError } from "@src/errors.js"
 
 // Mock the register service module
 jest.mock("../register_service.js", () => ({

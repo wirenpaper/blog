@@ -1,6 +1,6 @@
-import { PostgresClient } from "../../db.js"
-import { PostModel } from "./post_model.js"
-import { PostgressDBError } from "../../errors.js"
+import { PostgresClient } from "@src/db.js"
+import { PostModel } from "@db/post/post_model.js"
+import { PostgressDBError } from "@src/errors.js"
 
 export interface GetPostResult {
   id: number,

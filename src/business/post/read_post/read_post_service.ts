@@ -1,6 +1,6 @@
-import { PostRepository } from "../../../db/post/post_repository.js";
-import { PostError } from "../../../errors.js";
-import { GetPostResult } from "../../../db/post/post_repository.js";
+import { PostRepository } from "@db/post/post_repository.js";
+import { PostError } from "@src/errors.js";
+import { GetPostResult } from "@db/post/post_repository.js";
 
 interface MakeReadPostService {
   readPost: (params: { id: number }) => Promise<GetPostResult>
