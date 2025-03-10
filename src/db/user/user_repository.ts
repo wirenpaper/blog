@@ -136,15 +136,21 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
         `
 
-        if (res.length > 1) {
-          throw new Error("should be only 1 row")
-        }
+        if (res.length > 1)
+          throw createExpressError(500, "should be only 1 row")
 
         return res[0]
       } catch (error) {
-        throw new PostgressDBError(error, this.getUserById)
-      }
+        if (isExpressError(error as Error))
+          throw error
 
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
+      }
     },
 
     async updateUserResetToken({ resetTokenHash, expiryTime, userId }) {

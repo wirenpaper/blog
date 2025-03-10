@@ -5,54 +5,46 @@ import { createExpressError } from "@src/errors.js"
 jest.mock("@src/db.js")
 
 describe("userRepository", () => {
-  describe("getUserByUsername", () => {
+  describe("getUserById", () => {
     beforeEach(() => {
       jest.clearAllMocks()
     })
 
     it("Success", async () => {
       // Arrange
-      const mockResponse = [
-        {
-          id: 123,
-          userName: "jellysponge123",
-          firstName: "John",
-          lastName: "Doe"
-        },
-      ];
+      const mockResponse = [{ id: 123, hashedPassword: "hashed_32@2mM" }];
       (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
 
       // Act
-      const result = await userRepository(sqlClient).getUserByUsername({
-        userName: "*MOCKED*"
+      const result = await userRepository(sqlClient).getUserById({
+        userId: 333 // MOCKED
       })
 
       // Assert
       expect(result).toMatchObject({
         id: 123,
-        userName: "jellysponge123",
-        firstName: "John",
-        lastName: "Doe",
+        hashedPassword: "hashed_32@2mM",
       })
-
     })
+
 
     it("Multiple user response failure", async () => {
       // Arrange
       const mockResponse = [
-        { id: 123, userName: "jellysponge123", firstName: "John", lastName: "Doe" },
-        { id: 423, userName: "squidink", firstName: "James", lastName: "Brown" },
+        { id: 123, hashedPassword: "hashed_32@2mM" },
+        { id: 124, hashedPassword: "hashed_12@2nQ" }
       ];
       (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
 
-      // Act && Assert
-      await expect(userRepository(sqlClient).getUserByUsername({
-        userName: "testUser",
+      // Act & Assert
+      await expect(userRepository(sqlClient).getUserById({
+        userId: 333, // MOCKED
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "should be only 1 row"
       })
     })
+
 
     it("Simple case rejection", async () => {
       // Arrange
@@ -60,8 +52,8 @@ describe("userRepository", () => {
       (sqlClient as unknown as jest.Mock).mockRejectedValue(expressError)
 
       // Act & Assert
-      await expect(userRepository(sqlClient).getUserByUsername({
-        userName: "testUser",
+      await expect(userRepository(sqlClient).getUserById({
+        userId: 333
       })).rejects.toMatchObject({
         statusCode: 403,
         message: "forbidden"
@@ -74,8 +66,8 @@ describe("userRepository", () => {
       // console.log(error.message)
 
       // Act & Assert
-      await expect(userRepository(sqlClient).getUserByUsername({
-        userName: "testUser",
+      await expect(userRepository(sqlClient).getUserById({
+        userId: 333
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "STATUSCODE NOT FOUND oops"
@@ -89,12 +81,13 @@ describe("userRepository", () => {
       })
 
       // Act & Assert
-      await expect(userRepository(sqlClient).getUserByUsername({
-        userName: "testUser",
+      await expect(userRepository(sqlClient).getUserById({
+        userId: 333
       })).rejects.toMatchObject({
         statusCode: 400,
         message: "duplicate key value violates unique constraint"
       })
     })
+
   })
 })
