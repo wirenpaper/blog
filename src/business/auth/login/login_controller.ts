@@ -1,7 +1,7 @@
-import { Router, Request } from "express";
+import { Router, Request } from "express"
 import { makeLoginService } from "@business/auth/login/login_service.js"
-import { UserRepository } from "@db/user/user_repository.js";
-import { PostgressDBError, JWTError, UserError } from "@src/errors.js";
+import { UserRepository } from "@db/user/user_repository.js"
+import { isExpressError, ExpressError } from "@src/errors.js"
 
 export interface MakeLoginRequest {
   userName: string,
@@ -18,12 +18,11 @@ export function makeLoginRouter(userRepo: UserRepository) {
 
       res.json({ token: result.token, userWithoutPassword: result.userWithoutPassword })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof JWTError || error instanceof UserError) {
-        const { statusCode, message, func } = error;
-        res.status(statusCode).json({ func, message });
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json({ message: (error as Error).message })
     }
   })
 }

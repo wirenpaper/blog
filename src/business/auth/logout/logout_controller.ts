@@ -1,21 +1,20 @@
 import { Router } from "express"
+import { isExpressError, ExpressError } from "@src/errors.js"
+import { destroySession } from "./session_service.js"
 
 export function makeLogoutRouter() {
-  return Router().post("/", (req, res) => {
+  return Router().post("/", async (req, res) => {
     try {
       // Destroy any server-side session if used
-      if (req.session) {
-        req.session.destroy((err) => {
-          if (err) {
-            throw Error("Session destruction error")
-          }
-        });
-      }
+      await destroySession(req.session)
 
       res.status(200).json({ message: "Successfully logged out" })
     } catch (error) {
-      console.error('Logout error:', error)
-      res.status(500).json({ message: "Error during logout" })
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
+      }
     }
   })
 }

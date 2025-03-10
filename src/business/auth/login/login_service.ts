@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { UserRepository } from "@db/user/user_repository.js"
-import { JWTError, UserError } from "@src/errors.js"
+import { createExpressError } from "@src/errors.js"
 
 interface LoginUserParams {
   userName: string,
@@ -26,25 +26,14 @@ export function makeLoginService(userRepo: UserRepository): MakeLoginService {
 
       const user = await userRepo.getUserByUsername({ userName })
 
-      if (!user) {
-        throw new UserError(401, this.loginUser, "Invalid username/password")
-      }
+      if (!user)
+        throw createExpressError(401, "Invalid username/password")
 
       const passwordIsValid = await bcrypt.compare(password, user.hashedPassword)
-      if (!passwordIsValid) {
-        throw new UserError(401, this.loginUser, "Invalid username/password")
-      }
+      if (!passwordIsValid)
+        throw createExpressError(401, "Invalid username/password")
 
-      let token
-      try {
-        token = jwt.sign(
-          { id: user.id },
-          process.env.JWT_SECRET!,
-          { expiresIn: "24h" }
-        )
-      } catch (error) {
-        throw new JWTError(error, this.loginUser)
-      }
+      let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "24h" })
 
       const { hashedPassword: _, ...userWithoutPassword } = user
       return { token, userWithoutPassword }

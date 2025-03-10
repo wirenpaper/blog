@@ -34,7 +34,9 @@ export default [
           "varsIgnorePattern": "^_",
           "ignoreRestSiblings": true
         }
-      ]
+      ],
+      "quotes": ["error", "double"],
+      "semi": ["error", "never"]
     }
   }
 ];

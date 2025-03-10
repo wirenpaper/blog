@@ -71,13 +71,13 @@ describe("authMiddleware", () => {
     // Act & Assert
 
     expect(() => {
-      authMiddleware(req, res, next);
+      authMiddleware(req, res, next)
     }).toThrow(
       expect.objectContaining({
         statusCode: 401,
         message: "Invalid token"
       }) as ExpressError
-    );
+    )
 
   })
 
@@ -102,13 +102,13 @@ describe("authMiddleware", () => {
     })
 
     expect(() => {
-      authMiddleware(req, res, next);
+      authMiddleware(req, res, next)
     }).toThrow(
       expect.objectContaining({
         statusCode: 500,
         message: "Decoded is undefined"
       }) as ExpressError
-    );
+    )
 
   })
 
@@ -133,13 +133,13 @@ describe("authMiddleware", () => {
     })
 
     expect(() => {
-      authMiddleware(req, res, next);
+      authMiddleware(req, res, next)
     }).toThrow(
       expect.objectContaining({
         statusCode: 500,
         message: "Decoded not of type JwtPayload"
       }) as ExpressError
-    );
+    )
 
   })
 
@@ -164,13 +164,13 @@ describe("authMiddleware", () => {
     })
 
     expect(() => {
-      authMiddleware(req, res, next);
+      authMiddleware(req, res, next)
     }).toThrow(
       expect.objectContaining({
         statusCode: 500,
         message: "decoded.id not yielding number, error"
       }) as ExpressError
-    );
+    )
 
   })
 

@@ -3,13 +3,13 @@ export interface ExpressError extends Error {
 }
 
 export function isExpressError(error: Error): error is ExpressError {
-  return 'statusCode' in error && typeof error.statusCode === 'number';
+  return "statusCode" in error && typeof error.statusCode === "number"
 }
 
 export function createExpressError(statusCode: number, message: string) {
-  const error = new Error(message) as Error & { statusCode: number };
-  error.statusCode = statusCode;
-  return error;
+  const error = new Error(message) as Error & { statusCode: number }
+  error.statusCode = statusCode
+  return error
 }
 
 export function postgresStatusCode(code: string): number {
@@ -68,9 +68,9 @@ export function postgresStatusCode(code: string): number {
  * }
  */
 export class PostgressDBError extends Error {
-  public statusCode: number;
-  public code?: string;
-  public detail?: string;
+  public statusCode: number
+  public code?: string
+  public detail?: string
   public func: string
 
   constructor(error: unknown, func: Function) {

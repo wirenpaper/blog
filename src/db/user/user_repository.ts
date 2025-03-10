@@ -1,18 +1,13 @@
 import { createUser as createUserModel } from "@db/user/user_model.js"
-import { PostgresClient } from "@src/db.js";
-import { UserModel } from "@db/user/user_model.js";
-import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "@src/errors.js";
+import { PostgresClient } from "@src/db.js"
+import { UserModel } from "@db/user/user_model.js"
+import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "@src/errors.js"
 
 interface CreateUserParams {
   userName: string
   hashedPassword: string
   firstName?: string | null
   lastName?: string | null
-}
-
-interface GetUserByUsernameResult {
-  id: number
-  resultToken: string
 }
 
 interface GetUserByUsernameResult {
@@ -88,7 +83,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
         if (res.length > 1)
           throw createExpressError(500, "should be only 1 row")
 
-        return createUserModel(res[0] as UserModel);
+        return createUserModel(res[0] as UserModel)
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
@@ -119,7 +114,15 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
         return res[0]
       } catch (error) {
-        throw new PostgressDBError(error, this.getUserByUsername)
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 

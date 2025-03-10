@@ -60,7 +60,7 @@ app.use(express.static(path.join(__dirname, "../public")))
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// AUTH ROUTES
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-app.use('/auth/register', makeRegisterRouter(userRepo))
+app.use("/auth/register", makeRegisterRouter(userRepo))
 app.use("/auth/login", makeLoginRouter(userRepo))
 app.use("/auth/logout", makeLogoutRouter())
 app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo))

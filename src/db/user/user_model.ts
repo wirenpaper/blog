@@ -32,7 +32,7 @@ export function createUser(user: UserModel): UserModel {
     resetToken,
     resetTokenExpires,
     tokenVerified
-  };
+  }
 }
 
 // Helper functions
@@ -54,7 +54,7 @@ export function sanitizeUser(user: UserModel) {
 
 export function createPasswordResetToken() {
   // Helper for generating reset tokens
-  const token = crypto.randomBytes(32).toString('hex')
+  const token = crypto.randomBytes(32).toString("hex")
   const expires = new Date(Date.now() + 3600000) // 1 hour from now
   return { token, expires }
 }

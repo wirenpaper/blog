@@ -1,4 +1,4 @@
-import session from "express-session";
+import session from "express-session"
 
 // 1. Extend the built-in session data if you store extra properties
 declare module "express-session" {

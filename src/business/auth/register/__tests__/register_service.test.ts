@@ -1,9 +1,9 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { makeRegisterService } from "@business/auth/register/register_service.js"
 
-jest.mock("bcrypt");
+jest.mock("bcrypt")
 jest.mock("jsonwebtoken")
 
 describe("makeRegisterService", () => {
@@ -20,7 +20,7 @@ describe("makeRegisterService", () => {
       // Arrange
       // jest.spyOn(userModel, "isValidPassword").mockReturnValue(true); <-- useful function to remember
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
-      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token");
+      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
 
       mockUserRepo.createUser.mockResolvedValue({
         id: 123,
@@ -33,7 +33,7 @@ describe("makeRegisterService", () => {
       // Act
       const result = await makeRegisterService(mockUserRepo).registerUser({
         userName: "testuser",
-        password: "Lk9375msr!",
+        password: "Ku3!!$jLs__ff",
         firstName: "John",
         lastName: "Doe"
       })
@@ -62,7 +62,7 @@ describe("makeRegisterService", () => {
       // Arrange
       // jest.spyOn(userModel, "isValidPassword").mockReturnValue(true); <-- useful function
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
-      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token");
+      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
 
       mockUserRepo.createUser.mockResolvedValue({
         id: 123,
@@ -87,7 +87,7 @@ describe("makeRegisterService", () => {
     it("User doesnt exist", async () => {
       // Arrange
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
-      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token");
+      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
       mockUserRepo.createUser.mockResolvedValue(undefined)
 
       // Act & Assert
@@ -104,7 +104,7 @@ describe("makeRegisterService", () => {
 
     it("Token failure", async () => {
       // Arrange
-      (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123")
       delete process.env.JWT_SECRET
 
       mockUserRepo.createUser.mockResolvedValue({
