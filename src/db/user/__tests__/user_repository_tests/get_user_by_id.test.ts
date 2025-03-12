@@ -21,10 +21,7 @@ describe("userRepository", () => {
       })
 
       // Assert
-      expect(result).toMatchObject({
-        id: 123,
-        hashedPassword: "hashed_32@2mM",
-      })
+      expect(result).toMatchObject({ id: 123, hashedPassword: "hashed_32@2mM" })
     })
 
 

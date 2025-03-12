@@ -183,7 +183,11 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
         `
         return users
       } catch (error) {
-        throw new PostgressDBError(error, this.getResetTokens)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
