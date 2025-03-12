@@ -1,7 +1,7 @@
 import { createUser as createUserModel } from "@db/user/user_model.js"
 import { PostgresClient } from "@src/db.js"
 import { UserModel } from "@db/user/user_model.js"
-import { isExpressError, createExpressError, postgresStatusCode, PostgressDBError } from "@src/errors.js"
+import { isExpressError, createExpressError, postgresStatusCode } from "@src/errors.js"
 
 interface CreateUserParams {
   userName: string
@@ -199,10 +199,15 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.updateTokenVerified)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
+    // #TODO multiple users not allowed? think about later
     async getUserByVerifiedToken({ userName }) {
       try {
         const [user]: [GetUserByVerifiedTokenResult | undefined] = await sqlClient`
@@ -216,7 +221,11 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
         `
         return user
       } catch (error) {
-        throw new PostgressDBError(error, this.getUserByVerifiedToken)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -231,7 +240,11 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.updateUserPassword)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -243,7 +256,11 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
       `
       } catch (error) {
-        throw new PostgressDBError(error, this.updateLoggedInUserPassword)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     }
   }
