@@ -93,7 +93,7 @@ describe("makeRegisterService", () => {
       // Act & Assert
       await expect(makeRegisterService(mockUserRepo).registerUser({
         userName: "testuser",
-        password: "Lk9375msr!",
+        password: "K!m1@2025#P@ssw0rd$",
         firstName: "John",
         lastName: "Doe"
       })).rejects.toMatchObject({
@@ -118,7 +118,7 @@ describe("makeRegisterService", () => {
       // Act & Assert
       await expect(makeRegisterService(mockUserRepo).registerUser({
         userName: "testuser",
-        password: "Lk9375msr!",
+        password: "K!m1@2025#P@ssw0rd$",
         firstName: "John",
         lastName: "Doe"
       })).rejects.toMatchObject({

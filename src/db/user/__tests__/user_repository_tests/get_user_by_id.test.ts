@@ -63,7 +63,6 @@ describe("userRepository", () => {
     it("!e.code case", async () => {
       const error = new Error("oops");
       (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
-      // console.log(error.message)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserById({
