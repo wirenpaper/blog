@@ -71,6 +71,7 @@ describe("makeLoginRouter", () => {
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
     })
+
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
       const generalError = new Error("Database connection failed")

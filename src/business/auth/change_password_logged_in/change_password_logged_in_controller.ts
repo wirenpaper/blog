@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express"
-import { UserRepository } from "@db/user/user_repository.js";
+import { UserRepository } from "@db/user/user_repository.js"
 import { makeChangePasswordLoggedInService } from
   "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
-import { PostgressDBError, UserError } from "@src/errors.js";
+import { createExpressError, ExpressError, isExpressError } from "@src/errors.js"
 
-interface ChangePasswordRequest {
+export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
 }
@@ -15,20 +15,19 @@ export function makeChangePasswordLoggedInRouter(userRepo: UserRepository) {
   return Router().post("/", async (req: Request<object, object, ChangePasswordRequest>, res: Response) => {
     const { currentPassword, newPassword } = req.body
     try {
-      if (!req.userId) {
-        throw new UserError(500, makeChangePasswordLoggedInRouter, "userId doesnt exist")
-      }
+      if (!req.userId)
+        throw createExpressError(500, "userId doesnt exist")
+
       const userId = req.userId
       const result = await changePasswordLoggedInService.changePasswordLoggedIn({ userId, currentPassword, newPassword })
 
       res.json({ result })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof UserError) {
-        const { statusCode, name, func, message } = error
-        res.status(statusCode).json({ name, func, message })
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json(error)
     }
   })
 }
