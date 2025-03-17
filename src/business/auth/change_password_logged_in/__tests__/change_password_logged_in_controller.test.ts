@@ -6,7 +6,6 @@ import { makeChangePasswordLoggedInService } from
   "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
-// import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/change_password_logged_in/change_password_logged_in_service.js", () => ({
   makeChangePasswordLoggedInService: jest.fn()
@@ -15,7 +14,6 @@ jest.mock("@business/auth/change_password_logged_in/change_password_logged_in_se
 describe("makeChangePasswordLoggedInRouter", () => {
   describe("POST /", () => {
     let app: express.Express
-    // const mockLoginUser = {
     const mockChangePasswordLoggedIn = {
       changePasswordLoggedIn: jest.fn()
     }

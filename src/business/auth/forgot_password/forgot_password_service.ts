@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
-import { UserRepository } from "@db/user/user_repository.js";
-import { UserError } from "@src/errors.js";
-import crypto from "crypto";
+import { UserRepository } from "@db/user/user_repository.js"
+import { UserError } from "@src/errors.js"
+import crypto from "crypto"
 
 interface ForgotPasswordResults {
   message: string,
@@ -21,7 +21,7 @@ export function makeForgotPasswordService(userRepo: UserRepository): MakeForgotP
       }
 
       // Use crypto for the reset token
-      const resetToken = crypto.randomBytes(32).toString('hex')
+      const resetToken = crypto.randomBytes(32).toString("hex")
       const resetTokenHash = await bcrypt.hash(resetToken, 10)
       const expiryTime = new Date(Date.now() + 3600000) // 1 hour
       const userId = user.id
