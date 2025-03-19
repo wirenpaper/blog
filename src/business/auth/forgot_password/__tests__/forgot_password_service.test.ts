@@ -40,5 +40,18 @@ describe("makeForgotPasswordService", () => {
         resetToken: "c2d0"
       })
     })
+
+    it("!user", async () => {
+      // Assert
+      mockUserRepo.getUserByUsername.mockResolvedValue(undefined)
+
+      // Act & Assert
+      await expect(makeForgotPasswordService(mockUserRepo).forgotPassword({
+        userName: "jimbo",
+      })).rejects.toMatchObject({
+        statusCode: 401,
+        message: "Unknown user"
+      })
+    })
   })
 })

@@ -1,8 +1,9 @@
-import { Router, Request } from "express";
-import { UserRepository } from "@db/user/user_repository.js";
+import { Router, Request } from "express"
+import { UserRepository } from "@db/user/user_repository.js"
 import { makeForgotPasswordService } from "@business/auth/forgot_password/forgot_password_service.js"
+import { ExpressError, isExpressError } from "@src/errors.js"
 
-interface ForgotPasswordRequest {
+export interface ForgotPasswordRequest {
   userName: string
 }
 
@@ -17,8 +18,11 @@ export function makeForgotPasswordRouter(userRepo: UserRepository) {
       // In production: send resetToken via email
       res.json(result)
     } catch (error) {
-      console.error('Password reset request error:', error)
-      res.status(500).json({ message: "Error processing request" })
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
+      }
     }
   })
 }
