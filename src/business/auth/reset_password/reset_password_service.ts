@@ -1,5 +1,5 @@
-import { UserRepository } from "@db/user/user_repository.js";
-import { UserError } from "@src/errors.js";
+import { UserRepository } from "@db/user/user_repository.js"
+import { createExpressError, UserError } from "@src/errors.js"
 import bcrypt from "bcrypt"
 
 interface ResetPasswordParams {
@@ -20,14 +20,12 @@ export function makeResetPasswordService(userRepo: UserRepository): MakeResetPas
   return {
     async resetPassword({ userName, resetToken, newPassword }) {
       const user = await userRepo.getUserByVerifiedToken({ userName })
-      if (!user) {
-        throw new UserError(400, this.resetPassword, "Invalid, expired, or unverified token")
-      }
+      if (!user)
+        throw createExpressError(400, "Invalid, expired or unverified token")
 
       const tokenValid = await bcrypt.compare(resetToken, user.resetToken)
-      if (!tokenValid) {
-        throw new UserError(400, this.resetPassword, "Invalid token")
-      }
+      if (!tokenValid)
+        throw createExpressError(400, "Invalid token")
 
       const hashedPassword = await bcrypt.hash(newPassword, 10)
 

@@ -1,9 +1,9 @@
 import { Router, Request } from "express"
-import { UserRepository } from "@db/user/user_repository.js";
+import { UserRepository } from "@db/user/user_repository.js"
 import { makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
-import { PostgressDBError, UserError } from "@src/errors.js";
+import { ExpressError, isExpressError } from "@src/errors.js"
 
-interface ResetPasswordRequest {
+export interface ResetPasswordRequest {
   userName: string,
   resetToken: string,
   newPassword: string
@@ -18,12 +18,11 @@ export function makeResetPasswordRouter(userRepo: UserRepository) {
       const result = await resetPasswordService.resetPassword({ userName, resetToken, newPassword })
       res.json(result)
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof UserError) {
-        const { statusCode, message, func } = error;
-        res.status(statusCode).json({ statusCode, func, message });
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json({ message: (error as Error).message })
     }
   })
 }
