@@ -1,5 +1,5 @@
-import { UserRepository } from "@db/user/user_repository.js";
-import { UserError } from "@src/errors.js";
+import { UserRepository } from "@db/user/user_repository.js"
+import { createExpressError } from "@src/errors.js"
 import bcrypt from "bcrypt"
 
 interface VerifyResetTokenParams {
@@ -18,9 +18,9 @@ export function makeVerifyResetTokenService(userRepo: UserRepository): MakeVerif
   return {
     async verifyResetToken({ resetToken }) {
       const users = await userRepo.getResetTokens()
-      if (users.length === 0) {
-        throw new UserError(500, this.verifyResetToken, "No reset tokens found")
-      }
+      if (users.length === 0)
+        throw createExpressError(500, "No reset tokens found")
+
       let user
       for (let el of users) {
         if (await bcrypt.compare(resetToken, el.resetToken)) {
@@ -29,9 +29,8 @@ export function makeVerifyResetTokenService(userRepo: UserRepository): MakeVerif
         }
       }
 
-      if (!user) {
-        throw new UserError(500, this.verifyResetToken, "Invalid or expired token")
-      }
+      if (!user)
+        throw createExpressError(500, "Invalid or expired token")
 
       const userId = user.id
       await userRepo.updateTokenVerified({ userId })
