@@ -1,6 +1,7 @@
+import { createPost as createPostModel } from "@db/post/post_model.js"
 import { PostgresClient } from "@src/db.js"
 import { PostModel } from "@db/post/post_model.js"
-import { PostgressDBError } from "@src/errors.js"
+import { createExpressError, isExpressError, PostgressDBError, postgresStatusCode } from "@src/errors.js"
 
 export interface GetPostResult {
   id: number,
@@ -35,14 +36,25 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
       userId
     }) {
       try {
-        const [row]: [PostModel | undefined] = await sqlClient`
+        const row = await sqlClient`
           insert into posts(post, user_id)
           values(${mPost}, ${userId})
           returning id, post as "mPost", user_id as "userId"
         `
-        return row
+        if (row.length > 1)
+          throw createExpressError(500, "should be only 1 row")
+
+        return createPostModel(row[0] as PostModel)
       } catch (error) {
-        throw new PostgressDBError(error, this.createPost)
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -56,7 +68,12 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
         `
         return rows
       } catch (error) {
-        throw new PostgressDBError(error, this.getPosts)
+        // throw new PostgressDBError(error, this.getPosts)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 

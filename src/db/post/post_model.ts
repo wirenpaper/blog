@@ -15,5 +15,5 @@ export function createPost(post: PostModel): PostModel {
     id,
     mPost,
     userId,
-  };
+  }
 }

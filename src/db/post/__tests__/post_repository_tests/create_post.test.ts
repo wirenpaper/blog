@@ -1,11 +1,11 @@
 import sqlClient from "@src/db.js"
-import { userRepository } from "@db/user/user_repository.js"
+import { postRepository } from "@db/post/post_repository.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
 
-describe("userRepository", () => {
-  describe("createUser", () => {
+describe("postRepository", () => {
+  describe("createPost", () => {
     beforeEach(() => {
       jest.clearAllMocks()
     })
@@ -13,46 +13,35 @@ describe("userRepository", () => {
     it("Success", async () => {
       // Arrange
       const mockResponse = [
-        { id: 1, userName: "user1", hashedPassword: "hash1", firstName: "John", lastName: "Doe" }
+        { id: 1, mPost: "haha you lolol", userId: 123 }
       ];
       (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
 
       // Act
-      const result = await userRepository(sqlClient).createUser({
-        userName: "testUser",
-        hashedPassword: "hashedPass123",
-        firstName: "John",
-        lastName: "Doe"
+      const result = await postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
       })
 
-      // Assert
       expect(result).toMatchObject({
         id: 1,
-        userName: "user1",
-        hashedPassword: "hash1",
-        firstName: "John",
-        lastName: "Doe",
-        resetToken: undefined,
-        resetTokenExpires: undefined,
-        tokenVerified: false
+        mPost: "haha you lolol",
+        userId: 123
       })
-
     })
 
     it("Multiple user response failure", async () => {
       // Arrange
       const mockResponse = [
-        { id: 1, userName: "user1", hashedPassword: "hash1", firstName: "John", lastName: "Doe" },
-        { id: 2, userName: "user2", hashedPassword: "hash2", firstName: "Jane", last_name: "Smith" }
+        { id: 1, mPost: "haha you lolol", userId: 123 },
+        { id: 2, mPost: "boomboom", userId: 123 }
       ];
       (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
 
       // Act && Assert
-      await expect(userRepository(sqlClient).createUser({
-        userName: "testUser",
-        hashedPassword: "hashedPass123",
-        firstName: "John",
-        lastName: "Doe"
+      await expect(postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "should be only 1 row"
@@ -65,11 +54,9 @@ describe("userRepository", () => {
       (sqlClient as unknown as jest.Mock).mockRejectedValue(expressError)
 
       // Act & Assert
-      await expect(userRepository(sqlClient).createUser({
-        userName: "testUser",
-        hashedPassword: "hashedPass123",
-        firstName: "John",
-        lastName: "Doe"
+      await expect(postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
       })).rejects.toMatchObject({
         statusCode: 403,
         message: "forbidden"
@@ -79,14 +66,11 @@ describe("userRepository", () => {
     it("!e.code case", async () => {
       const error = new Error("oops");
       (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
-      // console.log(error.message)
 
       // Act & Assert
-      await expect(userRepository(sqlClient).createUser({
-        userName: "testUser",
-        hashedPassword: "hashedPass123",
-        firstName: "John",
-        lastName: "Doe"
+      await expect(postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "STATUSCODE NOT FOUND oops"
@@ -100,11 +84,9 @@ describe("userRepository", () => {
       })
 
       // Act & Assert
-      await expect(userRepository(sqlClient).createUser({
-        userName: "testUser",
-        hashedPassword: "hashedPass123",
-        firstName: "John",
-        lastName: "Doe"
+      await expect(postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
       })).rejects.toMatchObject({
         statusCode: 400,
         message: "duplicate key value violates unique constraint"
