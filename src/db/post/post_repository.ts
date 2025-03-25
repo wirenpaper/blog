@@ -79,15 +79,27 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
 
     async getPostById({ id }) {
       try {
-        const [row]: [GetPostResult | undefined] = await sqlClient`
+        const row: GetPostResult[] = await sqlClient`
         select p.id, p.post as "mPost", p.user_id as "userId", u.user_name as "userName"
         from posts p
         join users u ON u.id = p.user_id
         where p.id = ${id}
         `
-        return row
+
+        if (row.length > 1)
+          throw createExpressError(500, "should be only 1 row")
+
+        return row[0]
       } catch (error) {
-        throw new PostgressDBError(error, this.getPostById)
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
