@@ -84,24 +84,6 @@ describe("makeRegisterService", () => {
       })
     })
 
-    it("User doesnt exist", async () => {
-      // Arrange
-      (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
-      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-      mockUserRepo.createUser.mockResolvedValue(undefined)
-
-      // Act & Assert
-      await expect(makeRegisterService(mockUserRepo).registerUser({
-        userName: "testuser",
-        password: "K!m1@2025#P@ssw0rd$",
-        firstName: "John",
-        lastName: "Doe"
-      })).rejects.toMatchObject({
-        statusCode: 404,
-        message: "User does not exist"
-      })
-    })
-
     it("Token failure", async () => {
       // Arrange
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123")

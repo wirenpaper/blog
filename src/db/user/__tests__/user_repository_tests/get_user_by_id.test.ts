@@ -38,7 +38,7 @@ describe("userRepository", () => {
         userId: 333, // MOCKED
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be only 1 row"
+        message: "should be *exactly* 1 row"
       })
     })
 

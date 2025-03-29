@@ -39,6 +39,21 @@ describe("userRepository", () => {
 
     })
 
+    it("no users", async () => {
+      (sqlClient as unknown as jest.Mock).mockResolvedValue([])
+
+      // Act && Assert
+      await expect(userRepository(sqlClient).createUser({
+        userName: "testUser",
+        hashedPassword: "hashedPass123",
+        firstName: "John",
+        lastName: "Doe"
+      })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "should be *exactly* 1 row"
+      })
+    })
+
     it("Multiple user response failure", async () => {
       // Arrange
       const mockResponse = [
@@ -55,7 +70,7 @@ describe("userRepository", () => {
         lastName: "Doe"
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be only 1 row"
+        message: "should be *exactly* 1 row"
       })
     })
 

@@ -31,6 +31,23 @@ describe("userRepository", () => {
       expect(result).toMatchObject({ id: 123, resetToken: "abc123#*!" })
     })
 
+    it("Failure; multiple results", async () => {
+      // Arrange
+      (sqlClient as unknown as jest.Mock).mockResolvedValue([
+        { id: 123, resetToken: "abc123#*!" },
+        { id: 124, resetToken: "abc323#*!" }
+      ])
+
+      // Act
+      await expect(userRepository(sqlClient).getUserByVerifiedToken({
+        userName: "bob"
+      })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "should be 0 or 1 rows"
+      })
+
+    })
+
 
     it("!e.code case", async () => {
       const error = new Error("oops");

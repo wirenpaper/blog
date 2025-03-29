@@ -49,8 +49,6 @@ export function makeRegisterService(userRepo: UserRepository): MakeRegisterServi
 
       // Save to database via repository
       const user = await userRepo.createUser(userData)
-      if (!user)
-        throw createExpressError(404, "User does not exist")
 
       // Create token and return sanitized user data
       if (!process.env.JWT_SECRET) {

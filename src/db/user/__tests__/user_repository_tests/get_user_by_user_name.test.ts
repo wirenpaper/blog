@@ -50,7 +50,7 @@ describe("userRepository", () => {
         userName: "testUser",
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be only 1 row"
+        message: "should be 0 or 1 rows"
       })
     })
 

@@ -30,7 +30,21 @@ describe("postRepository", () => {
       })
     })
 
-    it("Multiple user response failure", async () => {
+    it("failure: no posts", async () => {
+      // Arrange
+      (sqlClient as unknown as jest.Mock).mockResolvedValue([])
+
+      // Act && Assert
+      await expect(postRepository(sqlClient).createPost({
+        userId: 123,
+        mPost: "some post"
+      })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "should be *exactly* 1 row"
+      })
+    })
+
+    it("failure: multiple posts", async () => {
       // Arrange
       const mockResponse = [
         { id: 1, mPost: "haha you lolol", userId: 123 },
@@ -44,7 +58,7 @@ describe("postRepository", () => {
         mPost: "some post"
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be only 1 row"
+        message: "should be *exactly* 1 row"
       })
     })
 

@@ -21,10 +21,10 @@ export interface CheckPostOwnershipParams {
 }
 
 export interface PostRepository {
-  createPost: (params: PostModel) => Promise<PostModel | undefined>
+  createPost: (params: PostModel) => Promise<PostModel>
   getPosts: (params: void) => Promise<GetPostResult[]>
-  getPostById: (params: { id: number }) => Promise<GetPostResult | undefined>
-  checkPostOwnership: (params: CheckPostOwnershipParams) => Promise<{ id: number } | undefined>
+  getPostById: (params: { id: number }) => Promise<GetPostResult>
+  checkPostOwnership: (params: CheckPostOwnershipParams) => Promise<{ id: number }>
   editPostById: (params: EditPostByIdParams) => Promise<void>
   deletePostById: (params: { id: number }) => Promise<void>
 }
@@ -41,8 +41,8 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
           values(${mPost}, ${userId})
           returning id, post as "mPost", user_id as "userId"
         `
-        if (row.length > 1)
-          throw createExpressError(500, "should be only 1 row")
+        if (row.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
         return createPostModel(row[0] as PostModel)
       } catch (error) {
@@ -68,7 +68,6 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
         `
         return rows
       } catch (error) {
-        // throw new PostgressDBError(error, this.getPosts)
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
@@ -86,8 +85,8 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
         where p.id = ${id}
         `
 
-        if (row.length > 1)
-          throw createExpressError(500, "should be only 1 row")
+        if (row.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
         return row[0]
       } catch (error) {
@@ -105,12 +104,19 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
 
     async checkPostOwnership({ id, userId }) {
       try {
-        const [row]: [CheckPostOwnershipParams | undefined] = await sqlClient`
+        const row: CheckPostOwnershipParams[] = await sqlClient`
           select id from posts where user_id = ${userId} and id = ${id}
         `
-        return row
+        if (row.length !== 1)
+          throw createExpressError(500, "must have *1 AND ONLY 1* owner only!")
+
+        return row[0]
       } catch (error) {
-        throw new PostgressDBError(error, this.checkPostOwnership)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 

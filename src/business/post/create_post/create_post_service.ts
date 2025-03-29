@@ -1,5 +1,5 @@
-import { PostRepository } from "@db/post/post_repository.js";
-import { PostError } from "@src/errors.js";
+import { PostRepository } from "@db/post/post_repository.js"
+import { PostError } from "@src/errors.js"
 
 interface PostParams {
   mPost: string,
@@ -21,9 +21,6 @@ export function makePostService(postRepo: PostRepository): MakePostService {
     async createPost({ mPost, userId }) {
       try {
         const post = await postRepo.createPost({ mPost, userId })
-        if (!post) {
-          throw new PostError(500, this.createPost, "failed to create post")
-        }
 
         if (!post.id) {
           throw new PostError(500, this.createPost, "post id missing")

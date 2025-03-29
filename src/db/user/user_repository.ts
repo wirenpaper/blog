@@ -45,9 +45,10 @@ interface UpdateUserPasswordParams {
 }
 
 export interface UserRepository {
-  createUser: (params: CreateUserParams) => Promise<UserModel | undefined>
+  createUser: (params: CreateUserParams) => Promise<UserModel>
+  // usernames gotta be unique
   getUserByUsername: (params: { userName: string }) => Promise<GetUserByUsernameResult | undefined>
-  getUserById: (params: { userId: number }) => Promise<GetUserByIdResult | undefined>
+  getUserById: (params: { userId: number }) => Promise<GetUserByIdResult>
   updateUserResetToken: (params: UpdateResetTokenParams) => Promise<void>
   getResetTokens: () => Promise<GetResetTokensResult[]>
   updateTokenVerified: (params: { userId: number }) => Promise<void>
@@ -80,8 +81,8 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
                   first_name as "firstName",
                   last_name as "lastName"
               `
-        if (res.length > 1)
-          throw createExpressError(500, "should be only 1 row")
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
         return createUserModel(res[0] as UserModel)
       } catch (error) {
@@ -97,9 +98,10 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       }
     },
 
+    // usernames gotta be unique
     async getUserByUsername({ userName }) {
       try {
-        const res: GetUserByUsernameResult[] = await sqlClient`
+        const res: (GetUserByUsernameResult | undefined)[] = await sqlClient`
           select
             id,
             user_name as "userName",
@@ -110,7 +112,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where user_name = ${userName}
         `
         if (res.length > 1)
-          throw createExpressError(500, "should be only 1 row")
+          throw createExpressError(500, "should be 0 or 1 rows")
 
         return res[0]
       } catch (error) {
@@ -136,8 +138,8 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
         `
 
-        if (res.length > 1)
-          throw createExpressError(500, "should be only 1 row")
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
         return res[0]
       } catch (error) {
@@ -210,7 +212,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
     // #TODO multiple users not allowed? think about later
     async getUserByVerifiedToken({ userName }) {
       try {
-        const [user]: [GetUserByVerifiedTokenResult | undefined] = await sqlClient`
+        const user: (GetUserByVerifiedTokenResult | undefined)[] = await sqlClient`
           select
             id,
             reset_token as "resetToken"
@@ -219,9 +221,18 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           and token_verified = true
           and user_name = ${userName}
         `
-        return user
+
+        if (user.length > 1) {
+          throw createExpressError(500, "should be 0 or 1 rows")
+        }
+
+        return user[0]
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
         const e = error as { code?: string; message: string }
+
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
 

@@ -35,22 +35,6 @@ describe("makeLoginService", () => {
       })
     })
 
-    it("!user", async () => {
-      // Arrange
-      mockUserRepo.getUserById.mockResolvedValue(undefined)
-
-      // Act & Assert
-      // *MOCKED*
-      await expect(makeChangePasswordLoggedInService(mockUserRepo).changePasswordLoggedIn({
-        currentPassword: "K!m1@2025#P@ssw0rd$",
-        newPassword: "X7!k#9Lm@pQ2z$",
-        userId: 123
-      })).rejects.toMatchObject({
-        statusCode: 404,
-        message: "User not found"
-      })
-    })
-
     it("!user.hashedPassword", async () => {
       // Arrange
       mockUserRepo.getUserById.mockResolvedValue({

@@ -21,10 +21,6 @@ export function makeChangePasswordLoggedInService(userRepo: UserRepository): Mak
     async changePasswordLoggedIn({ userId, currentPassword, newPassword }) {
       const user = await userRepo.getUserById({ userId })
 
-      if (!user) {
-        throw new UserError(404, this.changePasswordLoggedIn, "User not found")
-      }
-
       if (!user.hashedPassword) {
         throw new UserError(400, this.changePasswordLoggedIn, "User has no password")
       }
