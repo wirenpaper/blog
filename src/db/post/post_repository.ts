@@ -1,7 +1,7 @@
 import { createPost as createPostModel } from "@db/post/post_model.js"
 import { PostgresClient } from "@src/db.js"
 import { PostModel } from "@db/post/post_model.js"
-import { createExpressError, isExpressError, PostgressDBError, postgresStatusCode } from "@src/errors.js"
+import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface GetPostResult {
   id: number,
@@ -108,11 +108,15 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
           select id from posts where user_id = ${userId} and id = ${id}
         `
         if (row.length !== 1)
-          throw createExpressError(500, "must have *1 AND ONLY 1* owner only!")
+          throw createExpressError(500, "should be *exactly* 1 row")
 
         return row[0]
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
         const e = error as { code?: string; message: string }
+
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
 
@@ -128,7 +132,11 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
           where id = ${id}
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.editPostById)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -139,7 +147,11 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
           where id = ${id}
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.deletePostById)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     }
   }
