@@ -1,10 +1,10 @@
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
-import { readPostService } from "@business/post/read_post/read_post_service.js"
+import { makeReadPostService } from "@business/post/read_post/read_post_service.js"
 
 jest.mock("@src/db.js")
 
-describe("makePostService", () => {
-  describe("createPost", () => {
+describe("makeReadPostService", () => {
+  describe("readPost", () => {
     beforeEach(() => {
       jest.clearAllMocks()
     })
@@ -19,7 +19,7 @@ describe("makePostService", () => {
       })
 
       // Act
-      const result = await readPostService(mockPostRepo).readPost({
+      const result = await makeReadPostService(mockPostRepo).readPost({
         id: 1
       })
 

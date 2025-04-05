@@ -24,7 +24,7 @@ export interface PostRepository {
   createPost: (params: PostModel) => Promise<PostModel>
   getPosts: (params: void) => Promise<GetPostResult[]>
   getPostById: (params: { id: number }) => Promise<GetPostResult>
-  checkPostOwnership: (params: CheckPostOwnershipParams) => Promise<{ id: number }>
+  checkPostOwnership: (params: CheckPostOwnershipParams) => Promise<{ id: number } | undefined>
   editPostById: (params: EditPostByIdParams) => Promise<void>
   deletePostById: (params: { id: number }) => Promise<void>
 }
@@ -107,8 +107,8 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
         const row: CheckPostOwnershipParams[] = await sqlClient`
           select id from posts where user_id = ${userId} and id = ${id}
         `
-        if (row.length !== 1)
-          throw createExpressError(500, "should be *exactly* 1 row")
+        if (row.length > 1)
+          throw createExpressError(500, "should be 0 or 1 rows")
 
         return row[0]
       } catch (error) {

@@ -28,20 +28,6 @@ describe("postRepository", () => {
       })
     })
 
-    it("no posts failure", async () => {
-      // Arrange
-      (sqlClient as unknown as jest.Mock).mockResolvedValue([])
-
-      // Act & Assert
-      await expect(postRepository(sqlClient).checkPostOwnership({
-        id: 123, // MOCKED
-        userId: 321
-      })).rejects.toMatchObject({
-        statusCode: 500,
-        message: "should be *exactly* 1 row"
-      })
-    })
-
     it("Multiple post response failure", async () => {
       // Arrange
       const mockResponse = [
@@ -56,7 +42,7 @@ describe("postRepository", () => {
         userId: 321
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be *exactly* 1 row"
+        message: "should be 0 or 1 rows"
       })
     })
 

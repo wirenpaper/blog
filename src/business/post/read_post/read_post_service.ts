@@ -1,11 +1,11 @@
 import { PostRepository } from "@db/post/post_repository.js"
 import { GetPostResult } from "@db/post/post_repository.js"
 
-interface ReadPostService {
+interface MakeReadPostService {
   readPost: (params: { id: number }) => Promise<GetPostResult>
 }
 
-export function readPostService(postRepo: PostRepository): ReadPostService {
+export function makeReadPostService(postRepo: PostRepository): MakeReadPostService {
   return {
     async readPost({ id }) {
       return await postRepo.getPostById({ id })
