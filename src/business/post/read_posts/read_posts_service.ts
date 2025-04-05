@@ -1,5 +1,5 @@
 import { PostRepository } from "@db/post/post_repository.js"
-import { PostError } from "@src/errors.js"
+import { createExpressError } from "@src/errors.js"
 import { GetPostResult } from "@db/post/post_repository.js"
 
 export interface MakeReadPostsService {
@@ -9,15 +9,10 @@ export interface MakeReadPostsService {
 export function makeReadPostsService(postRepo: PostRepository): MakeReadPostsService {
   return {
     async readPosts() {
-      try {
-        const posts = await postRepo.getPosts()
-        if (!posts) {
-          throw new PostError(500, this.readPosts, "Post doesnt exist")
-        }
-        return posts
-      } catch (error) {
-        throw error
-      }
+      const posts = await postRepo.getPosts()
+      if (posts.length === 0)
+        throw createExpressError(500, "Post doesnt exist")
+      return posts
     }
   }
 }
