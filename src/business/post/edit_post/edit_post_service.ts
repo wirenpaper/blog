@@ -1,5 +1,5 @@
-import { PostRepository } from "@db/post/post_repository.js";
-import { UserError } from "@src/errors.js";
+import { PostRepository } from "@db/post/post_repository.js"
+import { createExpressError, UserError } from "@src/errors.js"
 
 interface EditPostParams {
   id: number,
@@ -17,7 +17,7 @@ export function makeEditPostService(postRepo: PostRepository): MakeEditPostServi
       try {
         const ownership = await postRepo.checkPostOwnership({ id, userId })
         if (!ownership)
-          throw new UserError(403, makeEditPostService, "User trying to edit post not owned by them")
+          throw createExpressError(403, "User trying to edit post not owned by them")
         await postRepo.editPostById({ id, mPost })
       } catch (error) {
         throw error
