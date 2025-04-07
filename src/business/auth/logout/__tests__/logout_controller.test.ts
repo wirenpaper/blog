@@ -33,7 +33,7 @@ describe("makeLogoutRouter", () => {
       expect(response.body).toEqual({ message: "Successfully logged out" })
     })
 
-    it("Session destruction error", async () => {
+    it("Fail", async () => {
       const expressError = createExpressError(500, "Session destruction error");
       (destroySession as jest.Mock).mockRejectedValue(expressError)
 

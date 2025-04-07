@@ -7,7 +7,6 @@ export function makeLogoutRouter() {
     try {
       // Destroy any server-side session if used
       await destroySession(req.session)
-
       res.status(200).json({ message: "Successfully logged out" })
     } catch (error) {
       if (isExpressError(error as Error)) {

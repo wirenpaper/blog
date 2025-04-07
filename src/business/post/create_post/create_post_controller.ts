@@ -1,9 +1,10 @@
-import { Router, Request, Response } from "express";
-import { PostRepository } from "@db/post/post_repository.js";
+import { Router, Request, Response } from "express"
+import { PostRepository } from "@db/post/post_repository.js"
 import { makePostService } from "@business/post/create_post/create_post_service.js"
-import { PostgressDBError, PostError } from "@src/errors.js";
+import { isExpressError, ExpressError } from "@src/errors.js"
+import { userIdExists } from "@business/post/create_post/create_post_controller_aux.js"
 
-interface PostService {
+export interface PostService {
   mPost: string,
 }
 
@@ -13,18 +14,14 @@ export function makePostRouter(postRepo: PostRepository) {
   return Router().post("/", async (req: Request<object, object, PostService>, res: Response) => {
     const { mPost } = req.body
     try {
-      if (!req.userId) {
-        throw Error("req.userId does not exist")
-      }
-      const result = await postService.createPost({ mPost, userId: req.userId })
+      const result = await postService.createPost({ mPost, userId: userIdExists(req.userId) })
       res.json(result)
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof PostError) {
-        const { name, statusCode, message, func } = error
-        res.status(statusCode).json({ name, func, message });
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json({ message: (error as Error).message })
     }
   })
 }
