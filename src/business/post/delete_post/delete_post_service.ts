@@ -1,7 +1,7 @@
 import { PostRepository } from "@db/post/post_repository.js"
 import { createExpressError } from "@src/errors.js"
 
-interface DeletePostParams {
+export interface DeletePostParams {
   id: number,
   userId: number
 }
