@@ -1,7 +1,8 @@
-import { Router, Request } from "express";
-import { PostRepository } from "@db/post/post_repository.js";
-import { PostgressDBError, PostError, UserError } from "@src/errors.js";
+import { Router, Request } from "express"
+import { PostRepository } from "@db/post/post_repository.js"
+import { isExpressError, ExpressError } from "@src/errors.js"
 import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
+import { userIdExists } from "@business/post/edit_post/edit_post_controller_aux.js"
 
 export function makeEditPostRouter(postRepo: PostRepository) {
   const editPostService = makeEditPostService(postRepo)
@@ -12,19 +13,14 @@ export function makeEditPostRouter(postRepo: PostRepository) {
     const userId = req.userId
 
     try {
-      if (!userId) {
-        throw new UserError(403, makeEditPostRouter, "User Id does not exist")
-      }
-
-      await editPostService.editPost({ id, mPost, userId })
-
+      await editPostService.editPost({ id, mPost, userId: userIdExists(userId) })
       res.status(200).json({ message: "Post edited" })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof PostError) {
-        const { statusCode, name, func, message } = error
-        res.status(statusCode).json({ name, func, message })
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.json(error as Error)
     }
   })
 }
