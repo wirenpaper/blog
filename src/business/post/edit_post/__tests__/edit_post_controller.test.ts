@@ -1,9 +1,7 @@
 import express from "express"
 import supertest from "supertest"
-// import { makePostRouter, PostService } from "@business/post/create_post/create_post_controller.js"
 import { makeEditPostRouter } from "@business/post/edit_post/edit_post_controller.js"
-// import { makePostService } from "@business/post/create_post/create_post_service.js"
-import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
+import { EditPostParams, makeEditPostService, MakeEditPostService } from "@business/post/edit_post/edit_post_service.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { userIdExists } from "@business/post/edit_post/edit_post_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
@@ -19,8 +17,8 @@ jest.mock("@business/post/edit_post/edit_post_controller_aux.js", () => ({
 describe("makePostRouter", () => {
   describe("PUT/:id", () => {
     let app: express.Express
-    const mockEditPost = {
-      editPost: jest.fn()
+    const mockEditPost: jest.Mocked<MakeEditPostService> = {
+      editPost: jest.fn<Promise<void>, [EditPostParams]>()
     }
 
     beforeAll(() => {
@@ -37,7 +35,7 @@ describe("makePostRouter", () => {
 
     it("Success; should edit if successful", async () => {
       (userIdExists as jest.Mock).mockReturnValue(3)
-      mockEditPost.editPost.mockResolvedValue(undefined)
+      mockEditPost.editPost.mockResolvedValue()
 
       const response = await (supertest(app)
         .put("/3") as supertest.Test)
@@ -53,7 +51,7 @@ describe("makePostRouter", () => {
         throw expressError // Executes this code and throws synchronously
       })
       // (userIdExists as jest.Mock).mockRejectedValue(expressError) <-- FOR ASYNC
-      mockEditPost.editPost.mockResolvedValue(undefined)
+      mockEditPost.editPost.mockResolvedValue()
 
       const response = await (supertest(app)
         .put("/3") as supertest.Test)

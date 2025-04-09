@@ -1,13 +1,13 @@
 import { PostRepository } from "@db/post/post_repository.js"
 import { createExpressError } from "@src/errors.js"
 
-interface EditPostParams {
+export interface EditPostParams {
   id: number,
   mPost: string,
   userId: number
 }
 
-interface MakeEditPostService {
+export interface MakeEditPostService {
   editPost: (params: EditPostParams) => Promise<void>
 }
 

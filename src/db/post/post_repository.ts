@@ -10,7 +10,7 @@ export interface GetPostResult {
   userName: string
 }
 
-interface EditPostByIdParams {
+export interface EditPostByIdParams {
   id: number
   mPost: string
 }
