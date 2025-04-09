@@ -1,7 +1,7 @@
-import { PostRepository } from "@db/post/post_repository.js";
+import { PostRepository } from "@db/post/post_repository.js"
 import { Router } from "express"
-import { makeReadPostsService } from "business/post/read_posts/read_posts_service.js"
-import { PostgressDBError, PostError } from "@src/errors.js";
+import { makeReadPostsService } from "@business/post/read_posts/read_posts_service.js"
+import { isExpressError, ExpressError } from "@src/errors.js"
 
 export function makeReadPostsRouter(postRepo: PostRepository) {
   const readPostsService = makeReadPostsService(postRepo)
@@ -11,11 +11,11 @@ export function makeReadPostsRouter(postRepo: PostRepository) {
       const result = await readPostsService.readPosts()
       res.json(result)
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof PostError) {
-        const { statusCode, name, func, message } = error
-        res.status(statusCode).json({ name, func, message })
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.status(500).json(error)
     }
   })
 }
