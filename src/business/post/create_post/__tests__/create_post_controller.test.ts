@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makePostRouter, PostService } from "@business/post/create_post/create_post_controller.js"
-import { MakePostService, makePostService, PostParams, PostResult } from "@business/post/create_post/create_post_service.js"
+import { MakePostService, makePostService } from "@business/post/create_post/create_post_service.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { userIdExists } from "@business/post/create_post/create_post_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
@@ -19,7 +19,7 @@ describe("makePostRouter", () => {
   describe("POST /", () => {
     let app: express.Express
     const mockCreatePost: jest.Mocked<MakePostService> = {
-      createPost: jest.fn<Promise<PostResult>, [PostParams]>()
+      createPost: jest.fn()
     }
 
     beforeAll(() => {

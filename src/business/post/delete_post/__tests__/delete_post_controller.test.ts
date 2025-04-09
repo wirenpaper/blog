@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_controller.js"
-import { DeletePostParams, MakeDeletePostService, makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
+import { MakeDeletePostService, makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { userIdExists } from "@business/post/delete_post/delete_post_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
@@ -18,7 +18,7 @@ describe("makeDeletePostRouter", () => {
   describe("DELETE/:id", () => {
     let app: express.Express
     const mockDeletePost: jest.Mocked<MakeDeletePostService> = {
-      deletePost: jest.fn<Promise<void>, [DeletePostParams]>()
+      deletePost: jest.fn()
     }
 
     beforeAll(() => {

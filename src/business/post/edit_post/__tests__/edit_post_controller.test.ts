@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeEditPostRouter } from "@business/post/edit_post/edit_post_controller.js"
-import { EditPostParams, makeEditPostService, MakeEditPostService } from "@business/post/edit_post/edit_post_service.js"
+import { makeEditPostService, MakeEditPostService } from "@business/post/edit_post/edit_post_service.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { userIdExists } from "@business/post/edit_post/edit_post_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
@@ -18,7 +18,7 @@ describe("makePostRouter", () => {
   describe("PUT/:id", () => {
     let app: express.Express
     const mockEditPost: jest.Mocked<MakeEditPostService> = {
-      editPost: jest.fn<Promise<void>, [EditPostParams]>()
+      editPost: jest.fn()
     }
 
     beforeAll(() => {

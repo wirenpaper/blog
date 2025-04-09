@@ -6,7 +6,7 @@ export interface DeletePostParams {
   userId: number
 }
 
-interface MakeDeletePostService {
+export interface MakeDeletePostService {
   deletePost: (params: DeletePostParams) => Promise<void>
 }
 
