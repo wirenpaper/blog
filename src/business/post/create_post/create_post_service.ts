@@ -1,11 +1,11 @@
 import { PostRepository } from "@db/post/post_repository.js"
 
-interface PostParams {
+export interface PostParams {
   mPost: string,
   userId: number
 }
 
-interface PostResult {
+export interface PostResult {
   id: number,
   mPost: string,
   userId: number
