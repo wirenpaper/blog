@@ -1,3 +1,4 @@
+import { Session } from "express-session"
 import express from "express"
 import supertest from "supertest"
 import { createExpressError } from "@src/errors.js"
@@ -24,7 +25,7 @@ describe("makeLogoutRouter", () => {
     })
 
     it("Success; should return a token when login is successful", async () => {
-      (destroySession as jest.Mock).mockReturnValue(undefined)
+      (destroySession as jest.Mock<Promise<void>, [Session | undefined]>).mockResolvedValue()
 
       const response = await (supertest(app)
         .post("/") as supertest.Test)
@@ -35,7 +36,7 @@ describe("makeLogoutRouter", () => {
 
     it("Fail", async () => {
       const expressError = createExpressError(500, "Session destruction error");
-      (destroySession as jest.Mock).mockRejectedValue(expressError)
+      (destroySession as jest.Mock<Promise<void>, [Session | undefined]>).mockRejectedValue(expressError)
 
       const response = await (supertest(app)
         .post("/") as supertest.Test)

@@ -2,10 +2,9 @@ import express from "express"
 import supertest from "supertest"
 import { makeResetPasswordRouter, ResetPasswordRequest } from
   "@business/auth/reset_password/reset_password_controller.js"
-import { makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
+import { MakeResetPasswordService, makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
-import { ForgotPasswordRequest } from "@business/auth/forgot_password/forgot_password_controller.js"
 
 jest.mock("@business/auth/reset_password/reset_password_service.js", () => ({
   makeResetPasswordService: jest.fn()
@@ -15,7 +14,7 @@ jest.mock("@business/auth/reset_password/reset_password_service.js", () => ({
 describe("makeLoginRouter", () => {
   describe("POST /", () => {
     let app: express.Express
-    const mockResetPassword = {
+    const mockResetPassword: jest.Mocked<MakeResetPasswordService> = {
       resetPassword: jest.fn()
     }
 

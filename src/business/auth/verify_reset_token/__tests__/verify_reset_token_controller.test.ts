@@ -2,7 +2,7 @@ import express from "express"
 import supertest from "supertest"
 import { makeVerifyResetTokenRouter, ResetRequest } from
   "@business/auth/verify_reset_token/verify_reset_token_controller.js"
-import { makeVerifyResetTokenService } from "@business/auth/verify_reset_token/verify_reset_token_service.js"
+import { MakeVerifyResetTokenService, makeVerifyResetTokenService } from "@business/auth/verify_reset_token/verify_reset_token_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
@@ -13,7 +13,7 @@ jest.mock("@business/auth/verify_reset_token/verify_reset_token_service.js", () 
 describe("makeVerifyResetTokenRouter", () => {
   describe("POST /", () => {
     let app: express.Express
-    const mockVerifyResetToken = {
+    const mockVerifyResetToken: jest.Mocked<MakeVerifyResetTokenService> = {
       verifyResetToken: jest.fn()
     }
 

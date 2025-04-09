@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeRegisterRouter, RegisterRequest } from "@business/auth/register/register_controller.js"
-import { makeRegisterService } from "@business/auth/register/register_service.js"
+import { MakeRegisterService, makeRegisterService } from "@business/auth/register/register_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
@@ -13,7 +13,7 @@ jest.mock("@business/auth/register/register_service.js", () => ({
 describe("makeRegisterRouter", () => {
   describe("POST /", () => {
     let app: express.Express
-    const mockRegisterUser = {
+    const mockRegisterUser: jest.Mocked<MakeRegisterService> = {
       registerUser: jest.fn()
     }
 

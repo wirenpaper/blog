@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeLoginRouter, MakeLoginRequest } from "@business/auth/login/login_controller.js"
-import { makeLoginService } from "@business/auth/login/login_service.js"
+import { MakeLoginService, makeLoginService } from "@business/auth/login/login_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
@@ -12,7 +12,7 @@ jest.mock("@business/auth/login/login_service.js", () => ({
 describe("makeLoginRouter", () => {
   describe("POST /", () => {
     let app: express.Express
-    const mockLoginUser = {
+    const mockLoginUser: jest.Mocked<MakeLoginService> = {
       loginUser: jest.fn()
     }
 
@@ -34,8 +34,6 @@ describe("makeLoginRouter", () => {
         userWithoutPassword: {
           id: 32,
           userName: "jimbob",
-          firstName: "Jim",
-          lastName: "Bob"
         }
       })
 
@@ -51,7 +49,7 @@ describe("makeLoginRouter", () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         token: "mock-token-123",
-        userWithoutPassword: { id: 32, userName: "jimbob", firstName: "Jim", lastName: "Bob" }
+        userWithoutPassword: { id: 32, userName: "jimbob" }
       })
     })
 
