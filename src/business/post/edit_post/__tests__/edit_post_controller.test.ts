@@ -14,7 +14,7 @@ jest.mock("@business/post/edit_post/edit_post_controller_aux.js", () => ({
   userIdExists: jest.fn()
 }))
 
-describe("makePostRouter", () => {
+describe("makeEditPostRouter", () => {
   describe("PUT/:id", () => {
     let app: express.Express
     const mockEditPost: jest.Mocked<MakeEditPostService> = {

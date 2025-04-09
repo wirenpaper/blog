@@ -1,7 +1,7 @@
 import { PostRepository } from "@db/post/post_repository.js"
 import { GetPostResult } from "@db/post/post_repository.js"
 
-interface MakeReadPostService {
+export interface MakeReadPostService {
   readPost: (params: { id: number }) => Promise<GetPostResult>
 }
 
