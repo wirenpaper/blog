@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_controller.js"
-import { makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
+import { DeletePostParams, MakeDeletePostService, makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { userIdExists } from "@business/post/delete_post/delete_post_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
@@ -17,8 +17,8 @@ jest.mock("@business/post/delete_post/delete_post_controller_aux.js", () => ({
 describe("makeDeletePostRouter", () => {
   describe("DELETE/:id", () => {
     let app: express.Express
-    const mockDeletePost = {
-      deletePost: jest.fn()
+    const mockDeletePost: jest.Mocked<MakeDeletePostService> = {
+      deletePost: jest.fn<Promise<void>, [DeletePostParams]>()
     }
 
     beforeAll(() => {
@@ -34,8 +34,8 @@ describe("makeDeletePostRouter", () => {
     })
 
     it("Success; should return a token when login is successful", async () => {
-      (userIdExists as jest.Mock).mockReturnValue(3)
-      mockDeletePost.deletePost.mockResolvedValue({ id: 32 })
+      (userIdExists as jest.Mock<number>).mockReturnValue(3)
+      mockDeletePost.deletePost.mockResolvedValue()
 
       const response = await (supertest(app)
         .delete("/32") as supertest.Test)
@@ -46,11 +46,11 @@ describe("makeDeletePostRouter", () => {
 
     it("fail; userId doesnt exist", async () => {
       const expressError = createExpressError(500, "req.userId does not exist");
-      (userIdExists as jest.Mock).mockImplementation(() => {
+      (userIdExists as jest.Mock<number>).mockImplementation(() => {
         throw expressError // Executes this code and throws synchronously
       })
       // (userIdExists as jest.Mock).mockRejectedValue(expressError) <-- FOR ASYNC
-      mockDeletePost.deletePost.mockResolvedValue({ id: 32 })
+      mockDeletePost.deletePost.mockResolvedValue()
 
       const response = await (supertest(app)
         .delete("/32") as supertest.Test)
@@ -60,7 +60,7 @@ describe("makeDeletePostRouter", () => {
     })
 
     it("Should handle ExpressError with correct status code", async () => {
-      (userIdExists as jest.Mock).mockReturnValue(3)
+      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockDeletePost.deletePost.mockRejectedValue(expressError)
 
@@ -73,7 +73,7 @@ describe("makeDeletePostRouter", () => {
 
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
-      (userIdExists as jest.Mock).mockReturnValue(3)
+      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       const generalError = new Error("Database connection failed")
       mockDeletePost.deletePost.mockRejectedValue(generalError)
 
