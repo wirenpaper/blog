@@ -1,6 +1,6 @@
 import { PostgresClient } from "@src/db.js"
 import { CommentModel } from "@db/comment/comment_model.js"
-import { PostgressDBError } from "@src/errors.js"
+import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface CheckCommentOwnershipParams {
   id: number
@@ -40,18 +40,33 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
           returning id, comment as "mComment", user_id as "userId", post_id as "postId"
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.createComment)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
     async checkCommentOwnership({ id, userId }) {
       try {
-        const [row]: [{ id: number } | undefined] = await sqlClient`
+        const row: { id: number }[] = await sqlClient`
           select id from comments where ${id} = id and ${userId} = user_id
         `
-        return row
+        if (row.length > 1)
+          throw createExpressError(500, "should be 0 or 1 rows")
+
+        return row[0]
       } catch (error) {
-        throw new PostgressDBError(error, this.createComment)
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -61,7 +76,11 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
           update comments set comment = ${mComment} where id = ${id}
         `
       } catch (error) {
-        throw new PostgressDBError(error, this.editComment)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -71,7 +90,11 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
           delete from comments where ${id} = id
       `
       } catch (error) {
-        throw new PostgressDBError(error, this.deleteComment)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     },
 
@@ -84,7 +107,11 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
         `
         return rows
       } catch (error) {
-        throw new PostgressDBError(error, this.deleteComment)
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
       }
     }
   }
