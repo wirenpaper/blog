@@ -4,7 +4,7 @@ import { commentRepository } from "@db/comment/comment_repository.js"
 jest.mock("@src/db.js")
 
 describe("commentRepository", () => {
-  describe("editComment", () => {
+  describe("deleteComment", () => {
     beforeEach(() => {
       jest.clearAllMocks()
     })
@@ -13,9 +13,8 @@ describe("commentRepository", () => {
       (sqlClient as unknown as jest.Mock<Promise<void>, []>).mockResolvedValue(undefined)
 
       // Act
-      const result = await commentRepository(sqlClient).editComment({
-        id: 3,
-        mComment: "a comment"
+      const result = await commentRepository(sqlClient).deleteComment({
+        id: 3
       })
 
       // Assert
@@ -27,9 +26,8 @@ describe("commentRepository", () => {
       (sqlClient as unknown as jest.Mock<Promise<void>, []>).mockRejectedValue(error)
 
       // Act & Assert
-      await expect(commentRepository(sqlClient).editComment({
-        id: 3,
-        mComment: "a comment"
+      await expect(commentRepository(sqlClient).deleteComment({
+        id: 3
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "STATUSCODE NOT FOUND oops"
@@ -43,9 +41,8 @@ describe("commentRepository", () => {
       })
 
       // Act & Assert
-      await expect(commentRepository(sqlClient).editComment({
-        id: 3,
-        mComment: "a comment"
+      await expect(commentRepository(sqlClient).deleteComment({
+        id: 3
       })).rejects.toMatchObject({
         statusCode: 400,
         message: "duplicate key value violates unique constraint"
