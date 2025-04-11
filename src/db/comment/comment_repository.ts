@@ -11,7 +11,7 @@ export interface CreateComment {
   createComment: (params: CommentModel) => Promise<void>
 }
 
-interface GetPostCommentResult {
+export interface GetPostCommentResult {
   id: number
   mComment: string
 }
