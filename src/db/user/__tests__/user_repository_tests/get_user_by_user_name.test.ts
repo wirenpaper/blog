@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { userRepository } from "@db/user/user_repository.js"
+import { GetUserByUsernameResult, userRepository } from "@db/user/user_repository.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
@@ -12,13 +12,8 @@ describe("userRepository", () => {
 
     it("Success", async () => {
       // Arrange
-      const mockResponse = [
-        {
-          id: 123,
-          userName: "jellysponge123",
-          firstName: "John",
-          lastName: "Doe"
-        },
+      const mockResponse: GetUserByUsernameResult[] = [
+        { id: 1, hashedPassword: "hashed123", firstName: "lol", lastName: "cop", userName: "lolcop" },
       ];
       (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
 
@@ -28,22 +23,20 @@ describe("userRepository", () => {
       })
 
       // Assert
-      expect(result).toMatchObject({
-        id: 123,
-        userName: "jellysponge123",
-        firstName: "John",
-        lastName: "Doe",
+      expect(result).toEqual({
+        id: 1, hashedPassword: "hashed123", firstName: "lol", lastName: "cop", userName: "lolcop",
       })
 
     })
 
     it("Multiple user response failure", async () => {
       // Arrange
-      const mockResponse = [
-        { id: 123, userName: "jellysponge123", firstName: "John", lastName: "Doe" },
-        { id: 423, userName: "squidink", firstName: "James", lastName: "Brown" },
+      const mockResponse: GetUserByUsernameResult[] = [
+        { id: 1, hashedPassword: "hashed123", firstName: "lol", lastName: "cop", userName: "lolcop" },
+        { id: 2, hashedPassword: "hashed321", firstName: "jim", lastName: "tap", userName: "jimbo" }
       ];
-      (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
+      // const res: GetUserByUsernameResult[] = await sqlClient`
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByUsernameResult[]>, []>).mockResolvedValue(mockResponse)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserByUsername({
@@ -57,7 +50,7 @@ describe("userRepository", () => {
     it("Simple case rejection", async () => {
       // Arrange
       const expressError = createExpressError(403, "forbidden");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(expressError)
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByUsernameResult[]>, []>).mockRejectedValue(expressError)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserByUsername({
@@ -70,7 +63,7 @@ describe("userRepository", () => {
 
     it("!e.code case", async () => {
       const error = new Error("oops");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByUsernameResult[]>, []>).mockRejectedValue(error)
       // console.log(error.message)
 
       // Act & Assert
@@ -83,7 +76,7 @@ describe("userRepository", () => {
     })
 
     it("Postgres error", async () => {
-      (sqlClient as unknown as jest.Mock).mockRejectedValue({
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByUsernameResult[]>, []>).mockRejectedValue({
         code: "23505",  // This is a Postgres error code, like unique_violation
         message: "duplicate key value violates unique constraint"
       })

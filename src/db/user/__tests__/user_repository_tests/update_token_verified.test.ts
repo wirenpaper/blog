@@ -11,7 +11,7 @@ describe("userRepository", () => {
 
     it("Success; empty case", async () => {
       // Arrange
-      (sqlClient as unknown as jest.Mock).mockResolvedValue([])
+      (sqlClient as unknown as jest.Mock<Promise<void>, []>).mockResolvedValue(undefined)
 
       // Act
       const result = await userRepository(sqlClient).updateTokenVerified({
@@ -24,7 +24,7 @@ describe("userRepository", () => {
 
     it("!e.code case", async () => {
       const error = new Error("oops");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
+      (sqlClient as unknown as jest.Mock<Promise<void>, []>).mockRejectedValue(error)
 
       // Act & Assert
       await expect(userRepository(sqlClient).updateTokenVerified({
@@ -36,7 +36,7 @@ describe("userRepository", () => {
     })
 
     it("Postgres error", async () => {
-      (sqlClient as unknown as jest.Mock).mockRejectedValue({
+      (sqlClient as unknown as jest.Mock<Promise<void>, []>).mockRejectedValue({
         code: "23505",  // This is a Postgres error code, like unique_violation
         message: "duplicate key value violates unique constraint"
       })

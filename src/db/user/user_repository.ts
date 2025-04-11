@@ -3,14 +3,14 @@ import { PostgresClient } from "@src/db.js"
 import { UserModel } from "@db/user/user_model.js"
 import { isExpressError, createExpressError, postgresStatusCode } from "@src/errors.js"
 
-interface CreateUserParams {
+export interface CreateUserParams {
   userName: string
   hashedPassword: string
   firstName?: string | null
   lastName?: string | null
 }
 
-interface GetUserByUsernameResult {
+export interface GetUserByUsernameResult {
   id: number
   userName: string
   hashedPassword: string
@@ -18,7 +18,7 @@ interface GetUserByUsernameResult {
   lastName: string | null
 }
 
-interface GetUserByIdResult {
+export interface GetUserByIdResult {
   id: number
   hashedPassword: string | null
 }
@@ -29,12 +29,12 @@ interface UpdateResetTokenParams {
   userId: number
 }
 
-interface GetResetTokensResult {
+export interface GetResetTokensResult {
   id: number
   resetToken: string
 }
 
-interface GetUserByVerifiedTokenResult {
+export interface GetUserByVerifiedTokenResult {
   id: number
   resetToken: string
 }
@@ -101,7 +101,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
     // usernames gotta be unique
     async getUserByUsername({ userName }) {
       try {
-        const res: (GetUserByUsernameResult | undefined)[] = await sqlClient`
+        const res: GetUserByUsernameResult[] = await sqlClient`
           select
             id,
             user_name as "userName",
@@ -212,7 +212,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
     // #TODO multiple users not allowed? think about later
     async getUserByVerifiedToken({ userName }) {
       try {
-        const user: (GetUserByVerifiedTokenResult | undefined)[] = await sqlClient`
+        const user: GetUserByVerifiedTokenResult[] = await sqlClient`
           select
             id,
             reset_token as "resetToken"

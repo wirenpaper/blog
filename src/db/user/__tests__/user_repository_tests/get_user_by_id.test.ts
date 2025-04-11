@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { userRepository } from "@db/user/user_repository.js"
+import { GetUserByIdResult, userRepository } from "@db/user/user_repository.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
@@ -12,8 +12,8 @@ describe("userRepository", () => {
 
     it("Success", async () => {
       // Arrange
-      const mockResponse = [{ id: 123, hashedPassword: "hashed_32@2mM" }];
-      (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
+      const mockResponse: GetUserByIdResult[] = [{ id: 123, hashedPassword: "hashed_32@2mM" }];
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByIdResult[]>, []>).mockResolvedValue(mockResponse)
 
       // Act
       const result = await userRepository(sqlClient).getUserById({
@@ -27,11 +27,11 @@ describe("userRepository", () => {
 
     it("Multiple user response failure", async () => {
       // Arrange
-      const mockResponse = [
+      const mockResponse: GetUserByIdResult[] = [
         { id: 123, hashedPassword: "hashed_32@2mM" },
         { id: 124, hashedPassword: "hashed_12@2nQ" }
       ];
-      (sqlClient as unknown as jest.Mock).mockResolvedValue(mockResponse)
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByIdResult[]>, []>).mockResolvedValue(mockResponse)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserById({
@@ -46,7 +46,7 @@ describe("userRepository", () => {
     it("Simple case rejection", async () => {
       // Arrange
       const expressError = createExpressError(403, "forbidden");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(expressError)
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByIdResult[]>, []>).mockRejectedValue(expressError)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserById({
@@ -59,7 +59,7 @@ describe("userRepository", () => {
 
     it("!e.code case", async () => {
       const error = new Error("oops");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByIdResult[]>, []>).mockRejectedValue(error)
 
       // Act & Assert
       await expect(userRepository(sqlClient).getUserById({
@@ -71,7 +71,7 @@ describe("userRepository", () => {
     })
 
     it("Postgres error", async () => {
-      (sqlClient as unknown as jest.Mock).mockRejectedValue({
+      (sqlClient as unknown as jest.Mock<Promise<GetUserByIdResult[]>, []>).mockRejectedValue({
         code: "23505",  // This is a Postgres error code, like unique_violation
         message: "duplicate key value violates unique constraint"
       })

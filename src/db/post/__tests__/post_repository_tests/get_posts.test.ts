@@ -1,6 +1,7 @@
 import sqlClient from "@src/db.js"
 import { userRepository } from "@db/user/user_repository.js"
-import { postRepository } from "@db/post/post_repository.js"
+import { GetPostResult, postRepository } from "@db/post/post_repository.js"
+import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
 
@@ -12,18 +13,18 @@ describe("postRepository", () => {
 
     it("Success; empty case", async () => {
       // Arrange
-      (sqlClient as unknown as jest.Mock).mockResolvedValue(undefined)
+      (sqlClient as unknown as jest.Mock<Promise<GetPostResult[]>, []>).mockResolvedValue([])
 
       // Act
       const result = await postRepository(sqlClient).getPosts()
 
       // Assert
-      expect(result).toBe(undefined)
+      expect(result).toEqual([])
     })
 
     it("Success; one result", async () => {
       // Arrange
-      (sqlClient as unknown as jest.Mock).mockResolvedValue([
+      (sqlClient as unknown as jest.Mock<Promise<GetPostResult[]>, []>).mockResolvedValue([
         { id: 123, mPost: "haha", userId: 123, userName: "lolcop" }
       ])
 
@@ -38,7 +39,7 @@ describe("postRepository", () => {
 
     it("Success; multiple results (2)", async () => {
       // Arrange
-      (sqlClient as unknown as jest.Mock).mockResolvedValue([
+      (sqlClient as unknown as jest.Mock<Promise<GetPostResult[]>, []>).mockResolvedValue([
         { id: 123, mPost: "haha", userId: 123, userName: "lolcop" },
         { id: 124, mPost: "jaja", userId: 123, userName: "bro" }
       ])
@@ -55,7 +56,7 @@ describe("postRepository", () => {
 
     it("!e.code case", async () => {
       const error = new Error("oops");
-      (sqlClient as unknown as jest.Mock).mockRejectedValue(error)
+      (sqlClient as unknown as jest.Mock<Promise<GetPostResult[]>, []>).mockRejectedValue(error)
 
       // Act & Assert
       await expect(postRepository(sqlClient).getPosts()).rejects.toMatchObject({
@@ -65,7 +66,7 @@ describe("postRepository", () => {
     })
 
     it("Postgres error", async () => {
-      (sqlClient as unknown as jest.Mock).mockRejectedValue({
+      (sqlClient as unknown as jest.Mock<Promise<GetPostResult[]>, []>).mockRejectedValue({
         code: "23505",  // This is a Postgres error code, like unique_violation
         message: "duplicate key value violates unique constraint"
       })
