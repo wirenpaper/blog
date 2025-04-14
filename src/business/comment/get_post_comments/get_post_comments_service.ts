@@ -1,18 +1,13 @@
-import { CommentRepository, GetPostCommentsSpecifications } from "@db/comment/comment_repository.js";
-import { CommentError } from "@src/errors.js";
+import { CommentRepository, GetPostCommentsSpecifications } from "@db/comment/comment_repository.js"
+import { createExpressError } from "@src/errors.js"
 
 export function makeGetPostCommentsService(commentRepo: CommentRepository): GetPostCommentsSpecifications {
   return {
     async getPostComments({ postId }) {
-      try {
-        const comments = await commentRepo.getPostComments({ postId })
-        if (!comments) {
-          throw new CommentError(403, makeGetPostCommentsService, "no comments exist")
-        }
-        return comments
-      } catch (error) {
-        throw error
-      }
+      const comments = await commentRepo.getPostComments({ postId })
+      if (comments.length === 0)
+        throw createExpressError(403, "no comments exist")
+      return comments
     }
   }
 }
