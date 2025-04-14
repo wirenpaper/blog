@@ -18,7 +18,7 @@ describe("postRepository", () => {
       })
 
       // Assert
-      expect(result).toBe(undefined)
+      expect(result).toEqual(undefined)
     })
 
     it("!e.code case", async () => {

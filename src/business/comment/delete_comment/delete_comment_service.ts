@@ -1,5 +1,5 @@
-import { CommentRepository, CheckCommentOwnershipParams } from "@db/comment/comment_repository.js";
-import { UserError } from "@src/errors.js";
+import { CommentRepository, CheckCommentOwnershipParams } from "@db/comment/comment_repository.js"
+import { createExpressError } from "@src/errors.js"
 
 interface MakeDeleteCommentService {
   deleteComment: (params: CheckCommentOwnershipParams) => Promise<void>
@@ -8,15 +8,11 @@ interface MakeDeleteCommentService {
 export function makeDeleteCommentService(commentRepo: CommentRepository): MakeDeleteCommentService {
   return {
     async deleteComment({ id, userId }) {
-      try {
-        const ownership = await commentRepo.checkCommentOwnership({ id, userId })
-        if (!ownership) {
-          throw new UserError(403, makeDeleteCommentService, "User does not own comment")
-        }
-        await commentRepo.deleteComment({ id })
-      } catch (error) {
-        throw error
-      }
+      const ownership = await commentRepo.checkCommentOwnership({ id, userId })
+      if (!ownership)
+        throw createExpressError(403, "User does not own comment")
+
+      await commentRepo.deleteComment({ id })
     }
   }
 }
