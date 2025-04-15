@@ -1,7 +1,8 @@
-import { Router, Request } from "express";
-import { CommentRepository } from "@db/comment/comment_repository.js";
+import { Router, Request } from "express"
+import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeEditCommentService } from "@business/comment/edit_comment/edit_comment_service.js"
-import { PostgressDBError, UserError } from "@src/errors.js";
+import { ExpressError, isExpressError } from "@src/errors.js"
+import { userIdExists } from "@business/comment/edit_comment/edit_comment_controller_aux.js"
 
 export function makeEditCommentRouter(commentRepo: CommentRepository) {
   const editCommentService = makeEditCommentService(commentRepo)
@@ -11,18 +12,14 @@ export function makeEditCommentRouter(commentRepo: CommentRepository) {
       const { id } = req.params
       const { mComment } = req.body
       const userId = req.userId
-      if (!userId) {
-        throw new UserError(403, makeEditCommentRouter, "User id does not exist")
-      }
-      await editCommentService.editComment({ id, mComment, userId })
+      await editCommentService.editComment({ id, mComment, userId: userIdExists(userId) })
       res.json({ message: "Comment updated" })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof UserError) {
-        const { statusCode, name, func, message } = error
-        res.status(statusCode).json({ name, func, message })
-        return
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-      res.json(error as Error)
     }
   })
 }

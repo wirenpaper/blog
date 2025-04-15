@@ -7,7 +7,7 @@ interface EditCommentParams {
   userId: number
 }
 
-interface MakeEditCommentService {
+export interface MakeEditCommentService {
   editComment: (params: EditCommentParams) => Promise<void>
 }
 
