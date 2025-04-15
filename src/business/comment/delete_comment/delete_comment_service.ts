@@ -1,7 +1,7 @@
 import { CommentRepository, CheckCommentOwnershipParams } from "@db/comment/comment_repository.js"
 import { createExpressError } from "@src/errors.js"
 
-interface MakeDeleteCommentService {
+export interface MakeDeleteCommentService {
   deleteComment: (params: CheckCommentOwnershipParams) => Promise<void>
 }
 
