@@ -1,9 +1,10 @@
 import { Router, Request } from "express"
 import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeCreateCommentService } from "@business/comment/create_comment/create_comment_service.js"
-import { PostgressDBError, UserError } from "@src/errors.js"
+import { ExpressError, isExpressError } from "@src/errors.js"
+import { userIdExists } from "@business/comment/create_comment/create_comment_controller_aux.js"
 
-interface CreateCommentRequest {
+export interface CreateCommentRequest {
   mComment: string
   postId: number
 }
@@ -13,20 +14,14 @@ export function makeCreateCommentRouter(commentRepo: CommentRepository) {
   return Router().post("/", async (req: Request<object, object, CreateCommentRequest>, res) => {
     try {
       const { mComment, postId } = req.body
-      const userId = req.userId
-
-      if (!userId) {
-        throw new UserError(403, makeCreateCommentRouter, "User id does not exist")
-      }
-      await createCommentService.createComment({ mComment, userId, postId })
+      await createCommentService.createComment({ mComment, userId: userIdExists(req.userId), postId })
       res.json({ message: "Comment created" })
     } catch (error) {
-      if (error instanceof PostgressDBError || error instanceof UserError) {
-        const { statusCode, name, func, message, } = error
-        res.status(statusCode).json({ name, func, message })
+      if (isExpressError(error as Error)) {
+        res.status((error as ExpressError).statusCode).json({ message: (error as Error).message })
+      } else {
+        res.status(500).json({ error: (error as Error).message })
       }
-
-      res.status(500).json(error as Error)
     }
   })
 }
