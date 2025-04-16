@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import { UserRepository } from "@db/user/user_repository.js"
-import { UserError } from "@src/errors.js"
+import { createExpressError } from "@src/errors.js"
 import crypto from "crypto"
 
 interface ForgotPasswordResults {
@@ -17,7 +17,7 @@ export function makeForgotPasswordService(userRepo: UserRepository): MakeForgotP
     async forgotPassword({ userName }) {
       const user = await userRepo.getUserByUsername({ userName })
       if (!user) {
-        throw new UserError(401, this.forgotPassword, "Unknown user")
+        throw createExpressError(401, "Unknown user")
       }
 
       // Use crypto for the reset token

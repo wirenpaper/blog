@@ -1,5 +1,5 @@
 import { UserRepository } from "@db/user/user_repository.js"
-import { UserError } from "@src/errors.js"
+import { createExpressError } from "@src/errors.js"
 import bcrypt from "bcrypt"
 
 interface ChangePasswordLoggedInParams {
@@ -22,13 +22,13 @@ export function makeChangePasswordLoggedInService(userRepo: UserRepository): Mak
       const user = await userRepo.getUserById({ userId })
 
       if (!user.hashedPassword) {
-        throw new UserError(400, this.changePasswordLoggedIn, "User has no password")
+        throw createExpressError(400, "User has no password")
       }
 
       const passwordIsValid = await bcrypt.compare(currentPassword, user.hashedPassword)
 
       if (!passwordIsValid) {
-        throw new UserError(401, this.changePasswordLoggedIn, "Current password is incorrect")
+        throw createExpressError(401, "Current password is incorrect")
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10)

@@ -1,5 +1,5 @@
 import { UserRepository } from "@db/user/user_repository.js"
-import { createExpressError, UserError } from "@src/errors.js"
+import { createExpressError } from "@src/errors.js"
 import bcrypt from "bcrypt"
 
 interface ResetPasswordParams {

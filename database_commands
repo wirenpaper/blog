@@ -1,0 +1,2 @@
+psql -U saifr -d blogdb -f schema.sql    <--- reset the database
+psql -U saifr -d blogdb                  <--- to do select statements and other queries
