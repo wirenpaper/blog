@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "test": "NODE_ENV=test jest --detectOpenHandles",
     "test:watch": "NODE_ENV=test jest --watchAll",
-    "test:coverage": "NODE_ENV=test jest --coverage"
+    "test:coverage": "NODE_ENV=test jest --coverage",
+    "test:int": "NODE_ENV=test-integration jest --config jest.int.config.js --detectOpenHandles",
+    "test:int:watch": "NODE_ENV=test-integration jest --config jest.int.config.js --watchAll"
   },
   "keywords": [],
   "author": "",

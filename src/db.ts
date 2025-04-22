@@ -1,9 +1,9 @@
-import postgres from 'postgres'
+import postgres from "postgres"
 
 const sql = postgres({
-  host: 'localhost',
+  host: "localhost",
   port: 5432,
-  database: 'blogdb',
+  database: "blogdb",
   username: process.env.USERNAME,
   password: process.env.PASSWORD
 })
