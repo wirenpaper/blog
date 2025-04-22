@@ -1,7 +1,7 @@
 import { userRepository } from "@db/user/user_repository.js"
 import sql, { PostgresClient, createTables, dropTables, truncateTables } from "@db/db_test_setup.js"
 
-describe("getUserByUserName integration tests", () => {
+describe("getUserById integration tests", () => {
   let sqlClient: PostgresClient
 
   // Setup before all tests
@@ -41,29 +41,28 @@ describe("getUserByUserName integration tests", () => {
   })
 
   // Tests
-  describe("getUserByUserName", () => {
+  describe("getUserById", () => {
     it("Success; getting user", async () => {
       // Arrange
       const userRepo = userRepository(sqlClient)
-      const result = await userRepo.getUserByUsername({ userName: "jany" })
+      const result = await userRepo.getUserById({ userId: 1 })
 
       // Assert
       expect(result).toEqual({
-        id: 2,
-        userName: "jany",
-        hashedPassword: "somepassword333",
-        firstName: "jane",
-        lastName: "smith"
+        id: 1,
+        hashedPassword: "hashedpassword123",
       })
     })
 
     it("Success; empty", async () => {
       // Arrange
       const userRepo = userRepository(sqlClient)
-      const result = await userRepo.getUserByUsername({ userName: "wot" })
 
-      // Assert
-      expect(result).toEqual(undefined)
+      // Act & Assert
+      await expect(userRepo.getUserById({ userId: 5 })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "should be *exactly* 1 row"
+      })
     })
 
   })
