@@ -23,7 +23,7 @@ export interface GetUserByIdResult {
   hashedPassword: string | null
 }
 
-interface UpdateResetTokenParams {
+export interface UpdateResetTokenParams {
   resetTokenHash: string
   expiryTime: Date
   userId: number

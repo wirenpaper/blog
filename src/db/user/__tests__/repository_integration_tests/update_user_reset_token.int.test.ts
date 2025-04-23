@@ -41,29 +41,49 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("getUserByUserName", () => {
+  describe("updateUserResetToken", () => {
     it("Success; getting user", async () => {
       // Arrange
       const userRepo = userRepository(sqlClient)
-      const result = await userRepo.getUserByUsername({ userName: "jany" })
 
       // Assert
-      expect(result).toEqual({
-        id: 2,
-        userName: "jany",
-        hashedPassword: "somepassword333",
-        firstName: "jane",
-        lastName: "smith"
+      await userRepo.updateUserResetToken({
+        resetTokenHash: "somehash",
+        expiryTime: new Date("2024-12-31T23:59:59"),
+        userId: 1
       })
+
+      // get
+      const check = await sqlClient.unsafe(`
+        select reset_token, reset_token_expires from users where id=1
+      `)
+
+      // Assert
+      expect(check).toEqual([{
+        reset_token: "somehash",
+        reset_token_expires: new Date("2024-12-31T23:59:59")
+      }])
+
     })
 
     it("Success; empty", async () => {
       // Arrange
       const userRepo = userRepository(sqlClient)
-      const result = await userRepo.getUserByUsername({ userName: "wot" })
 
       // Assert
-      expect(result).toEqual(undefined)
+      await userRepo.updateUserResetToken({
+        resetTokenHash: "somehash",
+        expiryTime: new Date("2024-12-31T23:59:59"),
+        userId: 3
+      })
+
+      // get
+      const check = await sqlClient.unsafe(`
+        select reset_token, reset_token_expires from users where id=1
+      `)
+
+      // Assert
+      expect(check).toEqual([])
     })
 
   })

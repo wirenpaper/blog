@@ -1,7 +1,7 @@
 import { userRepository } from "@db/user/user_repository.js"
 import sql, { PostgresClient, createTables, dropTables, truncateTables } from "@db/db_test_setup.js"
 
-describe("getUserById integration tests", () => {
+describe("userRepository", () => {
   let sqlClient: PostgresClient
 
   // Setup before all tests
