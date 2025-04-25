@@ -16,8 +16,6 @@ describe("userRepository", () => {
   // Clean up before each test
   beforeEach(async () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
-    // await sqlClient.unsafe(truncateTables)
-    // const userRepo = userRepository(sqlClient)
     await sqlClient.unsafe(dropTables)
     await sqlClient.unsafe(createTables)
     const userRepo = userRepository(sqlClient)

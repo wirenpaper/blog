@@ -1,5 +1,5 @@
 import { userRepository } from "@db/user/user_repository.js"
-import sql, { PostgresClient, createTables, dropTables, truncateTables } from "@db/db_test_setup.js"
+import sql, { PostgresClient, createTables, dropTables } from "@db/db_test_setup.js"
 
 describe("userRepository", () => {
   let sqlClient: PostgresClient
@@ -16,7 +16,8 @@ describe("userRepository", () => {
   // Clean up before each test
   beforeEach(async () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
-    await sqlClient.unsafe(truncateTables)
+    await sqlClient.unsafe(dropTables)
+    await sqlClient.unsafe(createTables)
   })
 
   // Final cleanup
