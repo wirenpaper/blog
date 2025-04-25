@@ -1,15 +1,11 @@
 import { userRepository } from "@db/user/user_repository.js"
-import sql, { PostgresClient, createTables, dropTables } from "@db/db_test_setup.js"
+import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
 
 describe("userRepository", () => {
-  let sqlClient: PostgresClient
+  const userRepo = userRepository(sqlClient)
 
   // Setup before all tests
   beforeAll(async () => {
-    // Create test database connection using postgres.js
-    sqlClient = sql
-
-    // Create tables using postgres.js's unsafe method for multi-statement SQL
     await sqlClient.unsafe(createTables)
   })
 
@@ -18,7 +14,6 @@ describe("userRepository", () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
     await sqlClient.unsafe(dropTables)
     await sqlClient.unsafe(createTables)
-    const userRepo = userRepository(sqlClient)
     await userRepo.createUser({
       userName: "johnny",
       hashedPassword: "hashedpassword123",
@@ -45,7 +40,6 @@ describe("userRepository", () => {
   describe("getUserByUserName", () => {
     it("Success; getting user", async () => {
       // Arrange
-      const userRepo = userRepository(sqlClient)
       const result = await userRepo.getUserByUsername({ userName: "jany" })
 
       // Assert
@@ -60,7 +54,6 @@ describe("userRepository", () => {
 
     it("Success; empty", async () => {
       // Arrange
-      const userRepo = userRepository(sqlClient)
       const result = await userRepo.getUserByUsername({ userName: "wot" })
 
       // Assert

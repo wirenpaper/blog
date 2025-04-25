@@ -4,9 +4,7 @@ import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
 describe("userRepository", () => {
   const userRepo = userRepository(sqlClient)
 
-  // Setup before all tests
   beforeAll(async () => {
-    // Create test database connection using postgres.js
     await sqlClient.unsafe(createTables)
   })
 
@@ -45,18 +43,20 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("updateUserResetToken", () => {
+  describe("getUserByVerifiedToken", () => {
     it("Success; no results", async () => {
       // Arrange
+      // const userRepo = userRepository(sqlClient)
 
       // Assert
-      const result = await userRepo.getResetTokens()
-      expect(result).toEqual([])
+      const result = await userRepo.getUserByVerifiedToken({ userName: "bunga" })
+      expect(result).toEqual(undefined)
 
     })
 
     it("Success; multiple results", async () => {
       // Arrange
+      const userRepo = userRepository(sqlClient)
 
       // Assert
       await userRepo.updateUserResetToken({

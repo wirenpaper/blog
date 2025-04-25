@@ -1,15 +1,11 @@
 import { userRepository } from "@db/user/user_repository.js"
-import sql, { PostgresClient, createTables, dropTables } from "@db/db_test_setup.js"
+import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
 
 describe("userRepository", () => {
-  let sqlClient: PostgresClient
+  const userRepo = userRepository(sqlClient)
 
   // Setup before all tests
   beforeAll(async () => {
-    // Create test database connection using postgres.js
-    sqlClient = sql
-
-    // Create tables using postgres.js's unsafe method for multi-statement SQL
     await sqlClient.unsafe(createTables)
   })
 
@@ -18,7 +14,6 @@ describe("userRepository", () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
     await sqlClient.unsafe(dropTables)
     await sqlClient.unsafe(createTables)
-    const userRepo = userRepository(sqlClient)
     await userRepo.createUser({
       userName: "johnny",
       hashedPassword: "hashedpassword123",
@@ -44,14 +39,12 @@ describe("userRepository", () => {
   // Tests
   describe("updateTokenVerified", () => {
     it("Success; getting user", async () => {
-      const userRepo = userRepository(sqlClient)
       await userRepo.updateTokenVerified({ userId: 1 })
       const check = await sqlClient.unsafe("select token_verified from users where id=1")
       expect(check).toEqual([{ token_verified: true }])
     })
 
     it("Success; token verification", async () => {
-      const userRepo = userRepository(sqlClient)
       await expect(userRepo.updateTokenVerified({ userId: 3 })).rejects.toMatchObject({
         statusCode: 500,
         message: "need at least 1 row"
