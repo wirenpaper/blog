@@ -1,5 +1,5 @@
 import { userRepository } from "@db/user/user_repository.js"
-import sql, { PostgresClient, createTables, dropTables } from "@db/db_test_setup.js"
+import sql, { PostgresClient, createTables, dropTables, truncateTables } from "@db/db_test_setup.js"
 
 describe("userRepository", () => {
   let sqlClient: PostgresClient
@@ -16,8 +16,7 @@ describe("userRepository", () => {
   // Clean up before each test
   beforeEach(async () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
-    await sqlClient.unsafe(dropTables)
-    await sqlClient.unsafe(createTables)
+    await sqlClient.unsafe(truncateTables)
     const userRepo = userRepository(sqlClient)
     await userRepo.createUser({
       userName: "johnny",
@@ -42,42 +41,21 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("updateUserResetToken", () => {
+  describe("updateTokenVerified", () => {
     it("Success; getting user", async () => {
-      // Arrange
       const userRepo = userRepository(sqlClient)
-
-      // Assert
-      await userRepo.updateUserResetToken({
-        resetTokenHash: "somehash",
-        expiryTime: new Date("2024-12-31T23:59:59"),
-        userId: 1
-      })
-
-      // get
-      const check = await sqlClient.unsafe("select reset_token, reset_token_expires from users where id=1")
-
-      // Assert
-      expect(check).toEqual([{
-        reset_token: "somehash",
-        reset_token_expires: new Date("2024-12-31T23:59:59")
-      }])
-
+      await userRepo.updateTokenVerified({ userId: 1 })
+      const check = await sqlClient.unsafe("select token_verified from users where id=1")
+      expect(check).toEqual([{ token_verified: true }])
     })
 
-    it("Success; empty", async () => {
-      // Arrange
+    it("Success; token verification", async () => {
       const userRepo = userRepository(sqlClient)
-
-      // Assert
-      await expect(userRepo.updateUserResetToken({
-        resetTokenHash: "somehash",
-        expiryTime: new Date("2024-12-31T23:59:59"),
-        userId: 3
-      })).rejects.toMatchObject({
+      await expect(userRepo.updateTokenVerified({ userId: 1 })).rejects.toMatchObject({
         statusCode: 500,
-        message: "update on non existent row not possible"
+        message: "need at least 1 row"
       })
+
     })
 
   })

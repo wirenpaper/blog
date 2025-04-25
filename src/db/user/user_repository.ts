@@ -157,13 +157,19 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async updateUserResetToken({ resetTokenHash, expiryTime, userId }) {
       try {
-        await sqlClient`
+        const res: { id: number }[] = await sqlClient`
           update users
-          set reset_token = ${resetTokenHash},
-              reset_token_expires = ${expiryTime}
+          set reset_token = ${resetTokenHash}, reset_token_expires = ${expiryTime}
           where id = ${userId}
+          returning id
         `
+        if (res.length === 0)
+          throw createExpressError(500, "update on non existent row not possible")
+
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
@@ -195,12 +201,18 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async updateTokenVerified({ userId }) {
       try {
-        await sqlClient`
+        const res: { id: number }[] = await sqlClient`
           update users
           set token_verified = true
           where id = ${userId}
+          returning id
         `
+        if (res.length === 0)
+          throw createExpressError(500, "need at least 1 row")
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)

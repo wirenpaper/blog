@@ -1,5 +1,5 @@
 import { userRepository } from "@db/user/user_repository.js"
-import sql, { PostgresClient, createTables, dropTables, truncateTables } from "@db/db_test_setup.js"
+import sql, { PostgresClient, createTables, dropTables } from "@db/db_test_setup.js"
 
 describe("userRepository", () => {
   let sqlClient: PostgresClient
@@ -16,8 +16,12 @@ describe("userRepository", () => {
   // Clean up before each test
   beforeEach(async () => {
     // Clear data but keep tables - using postgres.js tagged template syntax
-    await sqlClient.unsafe(truncateTables)
+    // await sqlClient.unsafe(truncateTables)
+    // const userRepo = userRepository(sqlClient)
+    await sqlClient.unsafe(dropTables)
+    await sqlClient.unsafe(createTables)
     const userRepo = userRepository(sqlClient)
+
     await userRepo.createUser({
       userName: "johnny",
       hashedPassword: "hashedpassword123",
@@ -58,7 +62,7 @@ describe("userRepository", () => {
 
     })
 
-    it("Success; no valid results", async () => {
+    it("Success; multiple results", async () => {
       // Arrange
       const userRepo = userRepository(sqlClient)
 
@@ -66,38 +70,24 @@ describe("userRepository", () => {
       await userRepo.updateUserResetToken({
         resetTokenHash: "somehash",
         expiryTime: new Date("2024-12-31T23:59:59"),
-        userId: 7
-      })
-      const result = await userRepo.getResetTokens()
-      expect(result).toEqual([])
-    })
-
-    it("Success; no valid results", async () => {
-      // Arrange
-      const userRepo = userRepository(sqlClient)
-
-      // Assert
-      await userRepo.updateUserResetToken({
-        resetTokenHash: "somehash",
-        expiryTime: new Date("2024-12-31T23:59:59"),
-        userId: 7
+        userId: 1
       })
 
       await userRepo.updateUserResetToken({
         resetTokenHash: "blabla",
         expiryTime: new Date("2026-12-31T23:59:59"),
-        userId: 8
+        userId: 2
       })
 
       await userRepo.updateUserResetToken({
         resetTokenHash: "joomooom",
         expiryTime: new Date("2026-12-31T23:59:59"),
-        userId: 9
+        userId: 3
       })
       const result = await userRepo.getResetTokens()
       expect(result).toEqual([
-        { id: 8, resetToken: "blabla" },
-        { id: 9, resetToken: "joomooom" }
+        { id: 2, resetToken: "blabla" },
+        { id: 3, resetToken: "joomooom" }
       ])
     })
 
