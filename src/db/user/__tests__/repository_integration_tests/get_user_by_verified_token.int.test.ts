@@ -32,6 +32,12 @@ describe("userRepository", () => {
       firstName: "jalabibo",
       lastName: "jolololo"
     })
+    await userRepo.createUser({
+      userName: "boom",
+      hashedPassword: "gggg",
+      firstName: "Boom",
+      lastName: "Doom"
+    })
   })
 
   // Final cleanup
@@ -46,19 +52,12 @@ describe("userRepository", () => {
   describe("getUserByVerifiedToken", () => {
     it("Success; no results", async () => {
       // Arrange
-      // const userRepo = userRepository(sqlClient)
-
-      // Assert
       const result = await userRepo.getUserByVerifiedToken({ userName: "bunga" })
       expect(result).toEqual(undefined)
 
     })
 
-    it("Success; multiple results", async () => {
-      // Arrange
-      const userRepo = userRepository(sqlClient)
-
-      // Assert
+    it("Success; empty, johnny boy expirey time is over", async () => {
       await userRepo.updateUserResetToken({
         resetTokenHash: "somehash",
         expiryTime: new Date("2024-12-31T23:59:59"),
@@ -76,11 +75,39 @@ describe("userRepository", () => {
         expiryTime: new Date("2026-12-31T23:59:59"),
         userId: 3
       })
-      const result = await userRepo.getResetTokens()
-      expect(result).toEqual([
-        { id: 2, resetToken: "blabla" },
-        { id: 3, resetToken: "joomooom" }
-      ])
+      await userRepo.updateTokenVerified({ userId: 1 })
+      await userRepo.updateTokenVerified({ userId: 2 })
+
+      const res = await userRepo.getUserByVerifiedToken({ userName: "johnny" })
+      expect(res).toEqual(undefined)
+    })
+
+    it("Success; jany token verified successfully", async () => {
+      await userRepo.updateUserResetToken({
+        resetTokenHash: "somehash",
+        expiryTime: new Date("2024-12-31T23:59:59"),
+        userId: 1
+      })
+
+      await userRepo.updateUserResetToken({
+        resetTokenHash: "blabla",
+        expiryTime: new Date("2026-12-31T23:59:59"),
+        userId: 2
+      })
+
+      await userRepo.updateUserResetToken({
+        resetTokenHash: "joomooom",
+        expiryTime: new Date("2026-12-31T23:59:59"),
+        userId: 3
+      })
+      await userRepo.updateTokenVerified({ userId: 1 })
+      await userRepo.updateTokenVerified({ userId: 2 })
+
+      const res = await userRepo.getUserByVerifiedToken({ userName: "jany" })
+      expect(res).toEqual({
+        id: 2,
+        resetToken: "blabla"
+      })
     })
 
   })
