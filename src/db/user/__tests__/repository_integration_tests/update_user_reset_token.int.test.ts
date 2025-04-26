@@ -60,16 +60,13 @@ describe("userRepository", () => {
     })
 
     it("Success; empty", async () => {
-      // Arrange
-
-      // Assert
       await expect(userRepo.updateUserResetToken({
         resetTokenHash: "somehash",
         expiryTime: new Date("2024-12-31T23:59:59"),
         userId: 3
       })).rejects.toMatchObject({
         statusCode: 500,
-        message: "update on non existent row not possible"
+        message: "should be *exactly* 1 row"
       })
     })
 

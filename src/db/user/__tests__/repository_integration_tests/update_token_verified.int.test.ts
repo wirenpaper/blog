@@ -47,7 +47,7 @@ describe("userRepository", () => {
     it("Success; token verification", async () => {
       await expect(userRepo.updateTokenVerified({ userId: 3 })).rejects.toMatchObject({
         statusCode: 500,
-        message: "need at least 1 row"
+        message: "should be *exactly* 1 row"
       })
 
     })

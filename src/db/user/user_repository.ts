@@ -163,8 +163,8 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
           returning id
         `
-        if (res.length === 0)
-          throw createExpressError(500, "update on non existent row not possible")
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
       } catch (error) {
         if (isExpressError(error as Error))
@@ -207,8 +207,9 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           where id = ${userId}
           returning id
         `
-        if (res.length === 0)
-          throw createExpressError(500, "need at least 1 row")
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
+
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
@@ -261,7 +262,9 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
               reset_token_expires = null,
               token_verified = false
           where id = ${userId}
+          returning id
         `
+
       } catch (error) {
         const e = error as { code?: string; message: string }
         if (!e.code)
@@ -278,6 +281,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           set hashed_password = ${hashedPassword}
           where id = ${userId}
       `
+
       } catch (error) {
         const e = error as { code?: string; message: string }
         if (!e.code)
