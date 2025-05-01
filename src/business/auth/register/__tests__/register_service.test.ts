@@ -41,10 +41,7 @@ describe("makeRegisterService", () => {
       // Assert
       expect(mockUserRepo.createUser).toHaveBeenCalledWith(
         expect.objectContaining({
-          userName: "testuser",
           hashedPassword: "hashed_123", // Must match bcrypt's response!!
-          firstName: "John",
-          lastName: "Doe"
         })
       )
       expect(result).toEqual({

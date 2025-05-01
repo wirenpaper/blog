@@ -4,8 +4,8 @@ export interface UserModel {
   id?: number
   userName: string
   hashedPassword: string
-  firstName?: string | null
-  lastName?: string | null
+  firstName?: string
+  lastName?: string
   resetToken?: string
   resetTokenExpires?: Date
   tokenVerified?: boolean

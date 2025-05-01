@@ -1,26 +1,26 @@
-import { createUser as createUserModel } from "@db/user/user_model.js"
+// import { createUser as createUserModel } from "@db/user/user_model.js"
 import { PostgresClient } from "@src/db.js"
-import { UserModel } from "@db/user/user_model.js"
+import { createUser, UserModel } from "@db/user/user_model.js"
 import { isExpressError, createExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface CreateUserParams {
   userName: string
   hashedPassword: string
-  firstName?: string | null
-  lastName?: string | null
+  firstName?: string
+  lastName?: string
 }
 
 export interface GetUserByUsernameResult {
   id: number
   userName: string
   hashedPassword: string
-  firstName: string | null
-  lastName: string | null
+  firstName?: string
+  lastName?: string
 }
 
 export interface GetUserByIdResult {
   id: number
-  hashedPassword: string | null
+  hashedPassword?: string
 }
 
 export interface UpdateResetTokenParams {
@@ -66,7 +66,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       lastName
     }) {
       try {
-        const res = await sqlClient`
+        const res: UserModel[] = await sqlClient`
                 insert into users (user_name, hashed_password, first_name, last_name)
                 values (
                   ${userName},
@@ -84,7 +84,8 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
         if (res.length !== 1)
           throw createExpressError(500, "should be *exactly* 1 row")
 
-        return createUserModel(res[0] as UserModel)
+        return createUser(res[0])
+        // return res[0]
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
@@ -162,7 +163,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           set reset_token = ${resetTokenHash}, reset_token_expires = ${expiryTime}
           where id = ${userId}
           returning id
-        `
+          `
         if (res.length !== 1)
           throw createExpressError(500, "should be *exactly* 1 row")
 
@@ -182,13 +183,13 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
     async getResetTokens() {
       try {
         const users: GetResetTokensResult[] = await sqlClient`
-          select
-            id,
-            reset_token as "resetToken"
+        select
+        id,
+          reset_token as "resetToken"
           from users
           where reset_token is not null
           and reset_token_expires > now()
-        `
+          `
         return users
       } catch (error) {
         const e = error as { code?: string; message: string }
@@ -206,7 +207,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           set token_verified = true
           where id = ${userId}
           returning id
-        `
+          `
         if (res.length !== 1)
           throw createExpressError(500, "should be *exactly* 1 row")
 
@@ -226,9 +227,9 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
     async getUserByVerifiedToken({ userName }) {
       try {
         const user: GetUserByVerifiedTokenResult[] = await sqlClient`
-          select
-            id,
-            reset_token as "resetToken"
+        select
+        id,
+          reset_token as "resetToken"
           from users
           where reset_token_expires > now()
           and token_verified = true
@@ -255,17 +256,21 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async updateUserPassword({ hashedPassword, userId }) {
       try {
-        await sqlClient`
+        const res: { id: number }[] = await sqlClient`
           update users
           set hashed_password = ${hashedPassword},
-              reset_token = null,
-              reset_token_expires = null,
-              token_verified = false
+        reset_token = null,
+          reset_token_expires = null,
+          token_verified = false
           where id = ${userId}
           returning id
-        `
+          `
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
@@ -276,13 +281,18 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async updateLoggedInUserPassword({ hashedPassword, userId }) {
       try {
-        await sqlClient`
-          update users
-          set hashed_password = ${hashedPassword}
-          where id = ${userId}
-      `
+        const res: { id: number }[] = await sqlClient`
+              update users
+              set hashed_password = ${hashedPassword}
+              where id = ${userId}
+              returning id
+          `
+        if (res.length !== 1)
+          throw createExpressError(500, "should be *exactly* 1 row")
 
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)

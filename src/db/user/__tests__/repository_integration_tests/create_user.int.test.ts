@@ -115,8 +115,6 @@ describe("userRepository", () => {
       const testUser = {
         userName: "nonamestestuser",
         hashedPassword: "password123",
-        firstName: null,
-        lastName: null
       }
 
       // Act

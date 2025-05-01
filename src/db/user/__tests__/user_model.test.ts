@@ -81,16 +81,14 @@ describe("User Model", () => {
       const userWithNulls: UserModel = {
         userName: "nulluser",
         hashedPassword: "hashedpassword789",
-        firstName: null,
-        lastName: null
       }
 
       const sanitizedUser = sanitizeUser(userWithNulls)
 
       expect("hashedPassword" in sanitizedUser).toBe(false)
       expect(sanitizedUser.userName).toBe("nulluser")
-      expect(sanitizedUser.firstName).toBeNull()
-      expect(sanitizedUser.lastName).toBeNull()
+      expect(sanitizedUser.firstName).toBeUndefined()
+      expect(sanitizedUser.lastName).toBeUndefined()
     })
   })
 })

@@ -59,7 +59,7 @@ describe("userRepository", () => {
       // Arrange
       const mockResponse = [
         { id: 1, userName: "user1", hashedPassword: "hash1", firstName: "John", lastName: "Doe" },
-        { id: 2, userName: "user2", hashedPassword: "hash2", firstName: "Jane", last_name: "Smith" }
+        { id: 2, userName: "user2", hashedPassword: "hash2", firstName: "Jane", lastName: "Smith" }
       ];
       (sqlClient as unknown as jest.Mock<Promise<UserModel[]>, []>).mockResolvedValue(mockResponse)
 

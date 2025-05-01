@@ -39,7 +39,6 @@ describe("makeLoginService", () => {
       // Arrange
       mockUserRepo.getUserById.mockResolvedValue({
         id: 32,
-        hashedPassword: null
       })
 
       // Act & Assert

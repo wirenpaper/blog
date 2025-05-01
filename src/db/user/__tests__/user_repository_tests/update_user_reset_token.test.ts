@@ -38,7 +38,8 @@ describe("userRepository", () => {
     })
 
     it("res.length !== 0; returns multiple ids", async () => {
-      (sqlClient as unknown as jest.Mock<Promise<{ id: number }[]>, []>).mockResolvedValue([{ id: 3 }, { id: 4 }])
+      (sqlClient as unknown as jest.Mock<Promise<{ id: number }[]>, []>)
+        .mockResolvedValue([{ id: 3 }, { id: 4 }])
 
       // Act
       await expect(userRepository(sqlClient).updateUserResetToken({
