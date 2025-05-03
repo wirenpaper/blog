@@ -1,4 +1,3 @@
-// import { createUser as createUserModel } from "@db/user/user_model.js"
 import { PostgresClient } from "@src/db.js"
 import { createUser, UserModel } from "@db/user/user_model.js"
 import { isExpressError, createExpressError, postgresStatusCode } from "@src/errors.js"
@@ -85,7 +84,6 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           throw createExpressError(500, "should be *exactly* 1 row")
 
         return createUser(res[0])
-        // return res[0]
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
@@ -259,14 +257,17 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
         const res: { id: number }[] = await sqlClient`
           update users
           set hashed_password = ${hashedPassword},
-        reset_token = null,
+          reset_token = null,
           reset_token_expires = null,
           token_verified = false
-          where id = ${userId}
+          where id = ${userId} and token_verified = true
           returning id
           `
-        if (res.length !== 1)
-          throw createExpressError(500, "should be *exactly* 1 row")
+        if (res.length === 0)
+          throw createExpressError(500, "password not reset")
+
+        if (res.length > 1)
+          throw createExpressError(500, "more than one password reset") // didnt test
 
       } catch (error) {
         if (isExpressError(error as Error))
