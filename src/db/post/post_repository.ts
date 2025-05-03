@@ -1,4 +1,3 @@
-import { createPost as createPostModel } from "@db/post/post_model.js"
 import { PostgresClient } from "@src/db.js"
 import { PostModel } from "@db/post/post_model.js"
 import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
@@ -36,7 +35,7 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
       userId
     }) {
       try {
-        const row = await sqlClient`
+        const row: PostModel[] = await sqlClient`
           insert into posts(post, user_id)
           values(${mPost}, ${userId})
           returning id, post as "mPost", user_id as "userId"
@@ -44,7 +43,7 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
         if (row.length !== 1)
           throw createExpressError(500, "should be *exactly* 1 row")
 
-        return createPostModel(row[0] as PostModel)
+        return row[0]
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
