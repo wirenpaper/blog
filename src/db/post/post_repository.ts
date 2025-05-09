@@ -133,12 +133,19 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
 
     async editPostById({ id, mPost }) {
       try {
-        await sqlClient`
+        const res: { id: number }[] = await sqlClient`
           update posts
           set post = ${mPost}
           where id = ${id}
+          returning id
         `
+        if (res.length < 1)
+          throw createExpressError(500, "no results")
+
       } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
