@@ -13,8 +13,8 @@ export interface MakeEditPostService {
 
 export function makeEditPostService(postRepo: PostRepository): MakeEditPostService {
   return {
-    async editPost({ id, mPost, userId }) {
-      const ownership = await postRepo.checkPostOwnership({ id, userId })
+    async editPost({ id, mPost }) {
+      const ownership = await postRepo.checkPostOwnership({ id })
       if (!ownership)
         throw createExpressError(403, "User trying to edit post not owned by them")
       await postRepo.editPostById({ id, mPost })

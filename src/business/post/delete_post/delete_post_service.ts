@@ -12,8 +12,8 @@ export interface MakeDeletePostService {
 
 export function makeDeletePostService(postRepo: PostRepository): MakeDeletePostService {
   return {
-    async deletePost({ id, userId }) {
-      const ownership = await postRepo.checkPostOwnership({ id, userId })
+    async deletePost({ id }) {
+      const ownership = await postRepo.checkPostOwnership({ id })
       if (!ownership)
         throw createExpressError(403, "User is not the owner of this post")
       await postRepo.deletePostById({ id })

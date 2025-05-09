@@ -14,16 +14,11 @@ export interface EditPostByIdParams {
   mPost: string
 }
 
-export interface CheckPostOwnershipParams {
-  id: number,
-  userId: number
-}
-
 export interface PostRepository {
   createPost: (params: PostModel) => Promise<PostModel>
   getPosts: (params: void) => Promise<GetPostResult[]>
   getPostById: (params: { id: number }) => Promise<GetPostResult>
-  checkPostOwnership: (params: CheckPostOwnershipParams) => Promise<{ id: number } | undefined>
+  checkPostOwnership: (params: { id: number }) => Promise<{ userId: number } | undefined>
   editPostById: (params: EditPostByIdParams) => Promise<void>
   deletePostById: (params: { id: number }) => Promise<void>
 }
@@ -101,13 +96,26 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
       }
     },
 
-    async checkPostOwnership({ id, userId }) {
+    async checkPostOwnership({ id }) {
       try {
-        const row: CheckPostOwnershipParams[] = await sqlClient`
-          select id from posts where user_id = ${userId} and id = ${id}
+        const row: { userId: number }[] = await sqlClient`
+          SELECT
+            p.user_id as "userId",    -- Select user_id from posts table (aliased as p)
+            u.user_name as "userName"  -- Select user_name from users table (aliased as u)
+          FROM
+            posts p       -- From the posts table, aliased as 'p'
+          JOIN
+            users u ON p.user_id = u.id -- INNER JOIN users table (aliased as 'u')
+                                      -- ON the condition that post's user_id matches user's id
+          WHERE
+            p.id = ${id}  -- Filter for the specific post ID
         `
+
+        if (row.length < 1)
+          throw createExpressError(500, "no results")
+
         if (row.length > 1)
-          throw createExpressError(500, "should be 0 or 1 rows")
+          throw createExpressError(500, "fatal error; multiple results")
 
         return row[0]
       } catch (error) {

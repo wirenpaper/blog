@@ -11,7 +11,7 @@ describe("makeDeletePostService", () => {
 
     it("Success", async () => {
       // Arrange
-      mockPostRepo.checkPostOwnership.mockResolvedValue({ id: 1 })
+      mockPostRepo.checkPostOwnership.mockResolvedValue({ userId: 1 })
       mockPostRepo.deletePostById.mockResolvedValue(undefined)
 
       // Act

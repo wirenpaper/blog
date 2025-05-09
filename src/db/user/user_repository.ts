@@ -54,6 +54,7 @@ export interface UserRepository {
   getUserByVerifiedToken: (params: { userName: string }) => Promise<GetUserByVerifiedTokenResult | undefined>
   updateUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   updateLoggedInUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
+  deleteUserById: (params: { userId: number }) => Promise<void>
 }
 
 export function userRepository(sqlClient: PostgresClient): UserRepository {
@@ -252,6 +253,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       }
     },
 
+
     async updateUserPassword({ hashedPassword, userId }) {
       try {
         const res: { id: number }[] = await sqlClient`
@@ -290,6 +292,28 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           `
         if (res.length !== 1)
           throw createExpressError(500, "should be *exactly* 1 row")
+
+      } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+        const e = error as { code?: string; message: string }
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
+      }
+    },
+
+    async deleteUserById({ userId }) {
+      try {
+        const res: { id: number }[] = await sqlClient`
+          delete from users where id=${userId}
+          returning id
+        `
+        if (res.length < 1)
+          throw createExpressError(500, "no rows deleted")
+        if (res.length > 1)
+          throw createExpressError(500, "fatal error; multiple results")
 
       } catch (error) {
         if (isExpressError(error as Error))

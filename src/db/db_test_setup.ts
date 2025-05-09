@@ -24,7 +24,7 @@ export const createTables = `
         id int generated always as identity primary key,
         post text not null,
         user_id integer not null,
-        foreign key (user_id) references users(id)
+        foreign key (user_id) references users(id) on delete cascade
       );
       -- comments table
       create table if not exists comments (
@@ -32,7 +32,7 @@ export const createTables = `
         comment text not null,
         user_id integer,
         post_id integer,
-        foreign key (user_id) references users(id),
+        foreign key (user_id) references users(id) on delete set null,
         foreign key (post_id) references posts(id) on delete cascade
       )
     `

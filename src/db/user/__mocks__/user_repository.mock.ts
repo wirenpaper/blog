@@ -9,5 +9,6 @@ export const mockUserRepo: jest.Mocked<UserRepository> = {
   updateTokenVerified: jest.fn(),
   getUserByVerifiedToken: jest.fn(),
   updateUserPassword: jest.fn(),
-  updateLoggedInUserPassword: jest.fn()
+  updateLoggedInUserPassword: jest.fn(),
+  deleteUserById: jest.fn()
 }
