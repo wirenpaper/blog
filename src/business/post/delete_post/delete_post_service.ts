@@ -1,21 +1,17 @@
-import { PostRepository } from "@db/post/post_repository.js"
-import { createExpressError } from "@src/errors.js"
-
-export interface DeletePostParams {
-  id: number,
-  userId: number
-}
+import { userIdExists, verifyUser } from "@business/aux.js"
+import { CheckPostOwnershipResult, PostRepository } from "@db/post/post_repository.js"
 
 export interface MakeDeletePostService {
-  deletePost: (params: DeletePostParams) => Promise<void>
+  deletePost: (params: CheckPostOwnershipResult) => Promise<void>
 }
 
 export function makeDeletePostService(postRepo: PostRepository): MakeDeletePostService {
   return {
-    async deletePost({ id }) {
-      const ownership = await postRepo.checkPostOwnership({ id })
-      if (!ownership)
-        throw createExpressError(403, "User is not the owner of this post")
+    async deletePost({ id, userId }) {
+      const res = await postRepo.checkPostOwnership({ id })
+      userIdExists(res.userId)
+      userIdExists(userId)
+      verifyUser(userId, res.userId)
       await postRepo.deletePostById({ id })
     }
   }

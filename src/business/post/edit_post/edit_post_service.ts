@@ -1,10 +1,10 @@
 import { PostRepository } from "@db/post/post_repository.js"
-import { createExpressError } from "@src/errors.js"
+import { userIdExists, verifyUser } from "@business/aux.js"
 
 export interface EditPostParams {
   id: number,
   mPost: string,
-  userId: number
+  userId?: number
 }
 
 export interface MakeEditPostService {
@@ -13,10 +13,10 @@ export interface MakeEditPostService {
 
 export function makeEditPostService(postRepo: PostRepository): MakeEditPostService {
   return {
-    async editPost({ id, mPost }) {
-      const ownership = await postRepo.checkPostOwnership({ id })
-      if (!ownership)
-        throw createExpressError(403, "User trying to edit post not owned by them")
+    async editPost({ id, mPost, userId }) {
+      userIdExists(userId)
+      const post_ownership = await postRepo.checkPostOwnership({ id })
+      verifyUser(post_ownership.userId, userId)
       await postRepo.editPostById({ id, mPost })
     }
   }

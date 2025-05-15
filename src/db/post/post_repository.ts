@@ -2,6 +2,11 @@ import { PostgresClient } from "@src/db.js"
 import { PostModel } from "@db/post/post_model.js"
 import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
 
+export interface CheckPostOwnershipResult {
+  userId?: number,
+  id: number
+}
+
 export interface GetPostResult {
   id: number,
   mPost: string,
@@ -18,7 +23,7 @@ export interface PostRepository {
   createPost: (params: PostModel) => Promise<PostModel>
   getPosts: (params: void) => Promise<GetPostResult[]>
   getPostById: (params: { id: number }) => Promise<GetPostResult>
-  checkPostOwnership: (params: { id: number }) => Promise<{ userId: number } | undefined>
+  checkPostOwnership: (params: { id: number }) => Promise<CheckPostOwnershipResult>
   editPostById: (params: EditPostByIdParams) => Promise<void>
   deletePostById: (params: { id: number }) => Promise<void>
 }
@@ -98,7 +103,7 @@ export function postRepository(sqlClient: PostgresClient): PostRepository {
 
     async checkPostOwnership({ id }) {
       try {
-        const row: { userId: number }[] = await sqlClient`
+        const row: CheckPostOwnershipResult[] = await sqlClient`
           SELECT
             p.user_id as "userId",    -- Select user_id from posts table (aliased as p)
             u.user_name as "userName"  -- Select user_name from users table (aliased as u)

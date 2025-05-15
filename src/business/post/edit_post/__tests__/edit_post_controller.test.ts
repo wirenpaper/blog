@@ -45,22 +45,6 @@ describe("makeEditPostRouter", () => {
       expect(response.body).toEqual({ message: "Post edited" })
     })
 
-    it("fail; userId doesnt exist", async () => {
-      const expressError = createExpressError(500, "req.userId does not exist");
-      (userIdExists as jest.Mock).mockImplementation(() => {
-        throw expressError // Executes this code and throws synchronously
-      })
-      // (userIdExists as jest.Mock).mockRejectedValue(expressError) <-- FOR ASYNC
-      mockEditPost.editPost.mockResolvedValue()
-
-      const response = await (supertest(app)
-        .put("/3") as supertest.Test)
-        .send({ mPost: "harhar" })
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: "req.userId does not exist" })
-    })
-
     it("Should handle ExpressError with correct status code", async () => {
       (userIdExists as jest.Mock).mockReturnValue(3)
       const expressError = createExpressError(422, "Password does not meet requirements")
