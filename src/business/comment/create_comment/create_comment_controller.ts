@@ -2,7 +2,6 @@ import { Router, Request } from "express"
 import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeCreateCommentService } from "@business/comment/create_comment/create_comment_service.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { userIdExists } from "@business/comment/create_comment/create_comment_controller_aux.js"
 
 export interface CreateCommentRequest {
   mComment: string
@@ -14,7 +13,7 @@ export function makeCreateCommentRouter(commentRepo: CommentRepository) {
   return Router().post("/", async (req: Request<object, object, CreateCommentRequest>, res) => {
     try {
       const { mComment, postId } = req.body
-      await createCommentService.createComment({ mComment, userId: userIdExists(req.userId), postId })
+      await createCommentService.createComment({ mComment, userId: req.userId, postId })
       res.json({ message: "Comment created" })
     } catch (error) {
       if (isExpressError(error as Error)) {

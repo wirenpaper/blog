@@ -4,7 +4,11 @@ import { createExpressError, isExpressError, postgresStatusCode } from "@src/err
 
 export interface CheckCommentOwnershipParams {
   id: number
+}
+
+export interface CheckCommentOwnershipResult {
   userId: number
+  userName: string
 }
 
 export interface CreateComment {
@@ -21,7 +25,7 @@ export interface GetPostCommentsSpecifications {
 }
 
 export interface CommentRepository extends CreateComment, GetPostCommentsSpecifications {
-  checkCommentOwnership: (params: CheckCommentOwnershipParams) => Promise<{ id: number } | undefined>
+  checkCommentOwnership: (params: CheckCommentOwnershipParams) => Promise<CheckCommentOwnershipResult>
   editComment: (params: { id: number, mComment: string }) => Promise<void>
   deleteComment: (params: { id: number }) => Promise<void>
 }
@@ -36,9 +40,10 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
       try {
         await sqlClient`
           insert into comments (comment, user_id, post_id)
-          values(${mComment}, ${userId}, ${postId})
+          values(${mComment}, ${userId!}, ${postId})
           returning id, comment as "mComment", user_id as "userId", post_id as "postId"
         `
+
       } catch (error) {
         const e = error as { code?: string; message: string }
         if (!e.code)
@@ -48,11 +53,21 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
       }
     },
 
-    async checkCommentOwnership({ id, userId }) {
+    async checkCommentOwnership({ id }) {
       try {
-        const row: { id: number }[] = await sqlClient`
-          select id from comments where ${id} = id and ${userId} = user_id
+        const row: CheckCommentOwnershipResult[] = await sqlClient`
+          SELECT
+            c.user_id as "userId",
+            u.user_name as "userName"
+          FROM
+            comments c
+          JOIN
+            users u ON c.user_id = u.id
+          WHERE
+            c.id = ${id}
         `
+        if (row.length < 1)
+          throw createExpressError(500, "no owner")
         if (row.length > 1)
           throw createExpressError(500, "should be 0 or 1 rows")
 

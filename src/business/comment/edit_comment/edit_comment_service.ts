@@ -1,10 +1,11 @@
+import { userIdExists, verifyUser } from "@business/aux.js"
 import { CommentRepository } from "@db/comment/comment_repository.js"
 import { createExpressError } from "@src/errors.js"
 
 interface EditCommentParams {
   id: number
   mComment: string
-  userId: number
+  userId?: number
 }
 
 export interface MakeEditCommentService {
@@ -14,9 +15,11 @@ export interface MakeEditCommentService {
 export function makeEditCommentService(commentRepo: CommentRepository): MakeEditCommentService {
   return {
     async editComment({ id, mComment, userId }) {
-      const ownership = await commentRepo.checkCommentOwnership({ id, userId })
-      if (!ownership)
-        throw createExpressError(403, "User does not own comment")
+      userIdExists(userId)
+      const comment_ownership = await commentRepo.checkCommentOwnership({ id })
+      if (!comment_ownership)
+        throw createExpressError(500, "Owner doesnt exist")
+      verifyUser(comment_ownership.userId, userId)
 
       await commentRepo.editComment({ id, mComment })
     }

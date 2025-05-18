@@ -2,7 +2,6 @@ import { Router, Request } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
 import { makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-// import { userIdExists } from "@business/post/delete_post/delete_post_controller_aux.js"
 
 export function makeDeletePostRouter(repo: PostRepository) {
   const deletePostService = makeDeletePostService(repo)
@@ -10,7 +9,6 @@ export function makeDeletePostRouter(repo: PostRepository) {
   return Router().delete("/:id", async (req: Request<{ id: number }, object, object>, res) => {
     const { id } = req.params
     try {
-      // userIdExists(req.userId)
       await deletePostService.deletePost({ id, userId: req.userId })
       res.json({ message: "Post deleted" })
     } catch (error) {

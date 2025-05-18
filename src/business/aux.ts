@@ -7,5 +7,5 @@ export function userIdExists(userId?: number): void {
 
 export function verifyUser(id?: number, userId?: number): void {
   if (userId !== id)
-    throw createExpressError(500, "post doesnt belong to user")
+    throw createExpressError(500, "user verification failed")
 }

@@ -5,15 +5,10 @@ import { makeDeleteCommentRouter } from
 import { makeDeleteCommentService, MakeDeleteCommentService }
   from "@business/comment/delete_comment/delete_comment_service.js"
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
-import { userIdExists } from "@business/comment/delete_comment/delete_comment_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/comment/delete_comment/delete_comment_service.js", () => ({
   makeDeleteCommentService: jest.fn()
-}))
-
-jest.mock("@business/comment/delete_comment/delete_comment_controller_aux.js", () => ({
-  userIdExists: jest.fn()
 }))
 
 describe("makeDeleteCommentRouter", () => {
@@ -36,7 +31,6 @@ describe("makeDeleteCommentRouter", () => {
     })
 
     it("Success", async () => {
-      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       mockDeleteComment.deleteComment.mockResolvedValue()
 
       const response = await (supertest(app)
@@ -48,21 +42,7 @@ describe("makeDeleteCommentRouter", () => {
       })
     })
 
-    it("fail; userId doesnt exist", async () => {
-      const expressError = createExpressError(500, "req.userId does not exist");
-      (userIdExists as jest.Mock).mockImplementation(() => {
-        throw expressError // Executes this code and throws synchronously
-      })
-
-      const response = await (supertest(app)
-        .delete("/3") as supertest.Test)
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: "req.userId does not exist" })
-    })
-
     it("Should handle ExpressError with correct status code", async () => {
-      (userIdExists as jest.Mock).mockReturnValue(3)
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockDeleteComment.deleteComment.mockRejectedValue(expressError)
 
@@ -75,7 +55,6 @@ describe("makeDeleteCommentRouter", () => {
 
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
-      (userIdExists as jest.Mock).mockReturnValue(3)
       const generalError = new Error("Database connection failed")
       mockDeleteComment.deleteComment.mockRejectedValue(generalError)
 

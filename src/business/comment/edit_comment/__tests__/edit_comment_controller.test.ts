@@ -4,15 +4,10 @@ import { makeEditCommentRouter } from "@business/comment/edit_comment/edit_comme
 import { makeEditCommentService, MakeEditCommentService } from
   "@business/comment/edit_comment/edit_comment_service.js"
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
-import { userIdExists } from "@business/comment/edit_comment/edit_comment_controller_aux.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/comment/edit_comment/edit_comment_service.js", () => ({
   makeEditCommentService: jest.fn()
-}))
-
-jest.mock("@business/comment/edit_comment/edit_comment_controller_aux.js", () => ({
-  userIdExists: jest.fn()
 }))
 
 describe("makeEditCommentRouter", () => {
@@ -35,7 +30,6 @@ describe("makeEditCommentRouter", () => {
     })
 
     it("Success", async () => {
-      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       mockEditComment.editComment.mockResolvedValue()
 
       const response = await (supertest(app)
@@ -47,21 +41,7 @@ describe("makeEditCommentRouter", () => {
       })
     })
 
-    it("fail; userId doesnt exist", async () => {
-      const expressError = createExpressError(500, "req.userId does not exist");
-      (userIdExists as jest.Mock<number>).mockImplementation(() => {
-        throw expressError // Executes this code and throws synchronously
-      })
-
-      const response = await (supertest(app)
-        .put("/3") as supertest.Test)
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ message: "req.userId does not exist" })
-    })
-
     it("Should handle ExpressError with correct status code", async () => {
-      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockEditComment.editComment.mockRejectedValue(expressError)
 
@@ -74,7 +54,6 @@ describe("makeEditCommentRouter", () => {
 
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
-      (userIdExists as jest.Mock<number>).mockReturnValue(3)
       const generalError = new Error("Database connection failed")
       mockEditComment.editComment.mockRejectedValue(generalError)
 

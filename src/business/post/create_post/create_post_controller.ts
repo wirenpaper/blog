@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
 import { makePostService } from "@business/post/create_post/create_post_service.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { userIdExists } from "@business/post/create_post/create_post_controller_aux.js"
 
 export interface PostService {
   mPost: string,
@@ -14,7 +13,7 @@ export function makePostRouter(postRepo: PostRepository) {
   return Router().post("/", async (req: Request<object, object, PostService>, res: Response) => {
     const { mPost } = req.body
     try {
-      const result = await postService.createPost({ mPost, userId: userIdExists(req.userId) })
+      const result = await postService.createPost({ mPost, userId: req.userId })
       res.json(result)
     } catch (error) {
       if (isExpressError(error as Error)) {

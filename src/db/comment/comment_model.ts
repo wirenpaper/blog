@@ -1,7 +1,7 @@
 export interface CommentModel {
   id?: number
   mComment: string
-  userId: number
+  userId?: number
   postId: number
 }
 

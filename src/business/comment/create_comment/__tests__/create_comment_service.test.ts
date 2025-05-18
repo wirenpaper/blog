@@ -1,7 +1,12 @@
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
 import { makeCreateCommentService } from "@business/comment/create_comment/create_comment_service.js"
+import { userIdExists } from "@business/aux.js"
+import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
+jest.mock("@business/aux.js", () => ({
+  userIdExists: jest.fn()
+}))
 
 describe("makeCreateCommentService", () => {
   describe("createComment", () => {
@@ -11,7 +16,8 @@ describe("makeCreateCommentService", () => {
 
     it("Success", async () => {
       // Arrange
-      mockCommentRepo.createComment.mockResolvedValue()
+      mockCommentRepo.createComment.mockResolvedValue();
+      (userIdExists as jest.Mock<undefined>).mockReturnValue(undefined)
 
       // Act
       const result = await makeCreateCommentService(mockCommentRepo).createComment({
@@ -23,6 +29,41 @@ describe("makeCreateCommentService", () => {
 
       // Assert
       expect(result).toEqual(undefined)
+    })
+
+    it("userId doesnt exist", async () => {
+      mockCommentRepo.createComment.mockResolvedValue();
+      (userIdExists as jest.Mock<undefined>).mockImplementation(() => {
+        throw createExpressError(500, "req.userId does not exist")
+      })
+
+      // Act
+      await expect(makeCreateCommentService(mockCommentRepo).createComment({
+        mComment: "a new comment",
+        postId: 32,
+        userId: 23,
+        id: 2
+      })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "req.userId does not exist"
+      })
+    })
+
+    it("generic service error", async () => {
+      const expressError = createExpressError(500, "some generic error")
+      mockCommentRepo.createComment.mockRejectedValue(expressError);
+      (userIdExists as jest.Mock<undefined>).mockReturnValue(undefined)
+
+
+      await expect(makeCreateCommentService(mockCommentRepo).createComment({
+        mComment: "a new comment",
+        postId: 32,
+        userId: 23,
+        id: 2
+      })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "some generic error"
+      })
     })
   })
 })
