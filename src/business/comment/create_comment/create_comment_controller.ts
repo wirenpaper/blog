@@ -13,7 +13,7 @@ export function makeCreateCommentRouter(commentRepo: CommentRepository) {
   return Router().post("/", async (req: Request<object, object, CreateCommentRequest>, res) => {
     try {
       const { mComment, postId } = req.body
-      await createCommentService.createComment({ mComment, userId: req.userId, postId })
+      await createCommentService.createComment({ mComment, userId: req.userId!, postId })
       res.json({ message: "Comment created" })
     } catch (error) {
       if (isExpressError(error as Error)) {
