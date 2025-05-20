@@ -40,7 +40,7 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
       try {
         await sqlClient`
           insert into comments (comment, user_id, post_id)
-          values(${mComment}, ${userId!}, ${postId})
+          values(${mComment}, ${userId}, ${postId})
           returning id, comment as "mComment", user_id as "userId", post_id as "postId"
         `
 
@@ -61,7 +61,7 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
             u.user_name as "userName"
           FROM
             comments c
-          JOIN
+          LEFT JOIN
             users u ON c.user_id = u.id
           WHERE
             c.id = ${id}

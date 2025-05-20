@@ -63,8 +63,8 @@ describe("checkPostOwnership", () => {
   })
 
   // Tests
-  describe("checkPostOwnership", () => {
-    it("Success", async () => {
+  describe("checkCommentOwnership", () => {
+    it("Success; check user_id 2", async () => {
       const res = await commentRepo.checkCommentOwnership({ id: 1 })
       expect(res).toMatchObject({
         userId: 2,
@@ -72,7 +72,7 @@ describe("checkPostOwnership", () => {
       })
     })
 
-    it("Success", async () => {
+    it("Success; check user_id 1", async () => {
       const res = await commentRepo.checkCommentOwnership({ id: 2 })
       expect(res).toMatchObject({
         userId: 1,
@@ -80,10 +80,19 @@ describe("checkPostOwnership", () => {
       })
     })
 
-    it("Failure; user_id is null", async () => {
+    it("Success; user_id is null", async () => {
       // Arrange
       await sqlClient.unsafe("delete from users where id=1")
-      await expect(commentRepo.checkCommentOwnership({ id: 2 })).rejects.toMatchObject({
+      const res = await commentRepo.checkCommentOwnership({ id: 2 })
+      expect(res).toMatchObject({
+        userId: null,
+        userName: null
+      })
+    })
+
+    it("Failure; comment doesnt exist", async () => {
+      // Arrange
+      await expect(commentRepo.checkCommentOwnership({ id: 3 })).rejects.toMatchObject({
         statusCode: 500,
         message: "no owner"
       })
