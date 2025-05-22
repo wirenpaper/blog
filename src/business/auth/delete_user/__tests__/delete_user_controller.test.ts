@@ -1,24 +1,24 @@
 import express from "express"
 import supertest from "supertest"
-import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_controller.js"
-import { MakeDeletePostService, makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
-import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
+import { makeDeleteUserRouter } from "@business/auth/delete_user/delete_user_controller.js"
+import { makeDeleteUserService, DeleteUserService } from "@business/auth/delete_user/delete_user_service.js"
+import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/post/delete_post/delete_post_service.js", () => ({
-  makeDeletePostService: jest.fn()
+jest.mock("@business/auth/delete_user/delete_user_service.js", () => ({
+  makeDeleteUserService: jest.fn()
 }))
 
-describe("makeDeletePostRouter", () => {
+describe("makeDeleteUserRouter", () => {
   describe("DELETE/:id", () => {
     let app: express.Express
-    const mockDeletePost: jest.Mocked<MakeDeletePostService> = {
-      deletePost: jest.fn()
+    const mockDeleteUser: jest.Mocked<DeleteUserService> = {
+      deleteUser: jest.fn()
     }
 
     beforeAll(() => {
-      (makeDeletePostService as jest.Mock).mockReturnValue(mockDeletePost)
-      const router = makeDeletePostRouter(mockPostRepo)
+      (makeDeleteUserService as jest.Mock).mockReturnValue(mockDeleteUser)
+      const router = makeDeleteUserRouter(mockUserRepo)
       app = express()
       app.use(express.json())
       app.use("/", router)
@@ -29,19 +29,19 @@ describe("makeDeletePostRouter", () => {
     })
 
     it("Success", async () => {
-      mockDeletePost.deletePost.mockResolvedValue()
+      mockDeleteUser.deleteUser.mockResolvedValue()
 
       const response = await (supertest(app)
         .delete("/32") as supertest.Test)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({ message: "Post deleted" })
+      expect(response.body).toEqual({ message: "User deleted" })
     })
 
     it("Should handle ExpressError with correct status code", async () => {
       // (userIdExists as jest.Mock<number>).mockReturnValue(3)
       const expressError = createExpressError(422, "Password does not meet requirements")
-      mockDeletePost.deletePost.mockRejectedValue(expressError)
+      mockDeleteUser.deleteUser.mockRejectedValue(expressError)
 
       const response = await (supertest(app)
         .delete("/32") as supertest.Test)
@@ -53,7 +53,7 @@ describe("makeDeletePostRouter", () => {
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
       const generalError = new Error("Database connection failed")
-      mockDeletePost.deletePost.mockRejectedValue(generalError)
+      mockDeleteUser.deleteUser.mockRejectedValue(generalError)
 
       const response = await (supertest(app)
         .delete("/32") as supertest.Test)

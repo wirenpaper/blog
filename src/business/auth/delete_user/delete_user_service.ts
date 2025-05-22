@@ -7,12 +7,12 @@ interface DeleteUserParams {
 }
 
 export interface DeleteUserService {
-  deletePost: (params: DeleteUserParams) => Promise<void>
+  deleteUser: (params: DeleteUserParams) => Promise<void>
 }
 
-export function makeDeletePostService(userRepo: UserRepository): DeleteUserService {
+export function makeDeleteUserService(userRepo: UserRepository): DeleteUserService {
   return {
-    async deletePost({ userId, id }) {
+    async deleteUser({ userId, id }) {
       verifyUser(id, userId)
       await userRepo.deleteUserById({ userId })
     }

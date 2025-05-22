@@ -1,5 +1,5 @@
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
-import { makeDeletePostService } from "@business/auth/delete_user/delete_user_service.js"
+import { makeDeleteUserService } from "@business/auth/delete_user/delete_user_service.js"
 import { verifyUser } from "@business/aux.js"
 
 jest.mock("@src/db.js")
@@ -18,7 +18,7 @@ describe("makeDeletePostService", () => {
       mockUserRepo.deleteUserById.mockResolvedValue(undefined);
       (verifyUser as jest.Mock<undefined>).mockReturnValue(undefined)
       // Act
-      const result = await makeDeletePostService(mockUserRepo).deletePost({
+      const result = await makeDeleteUserService(mockUserRepo).deleteUser({
         id: 3,
         userId: 3
       })

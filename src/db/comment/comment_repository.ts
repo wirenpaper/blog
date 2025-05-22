@@ -26,7 +26,6 @@ export interface GetPostCommentsSpecifications {
   getPostComments: (params: { postId: number }) => Promise<GetPostCommentResult[]>
 }
 
-
 export interface CommentRepository extends CreateComment, GetPostCommentsSpecifications {
   checkCommentOwnership: (params: CheckCommentOwnershipParams) => Promise<CheckCommentOwnershipResult>
   editComment: (params: { id: number, mComment: string }) => Promise<void>

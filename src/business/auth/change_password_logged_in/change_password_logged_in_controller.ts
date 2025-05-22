@@ -19,7 +19,8 @@ export function makeChangePasswordLoggedInRouter(userRepo: UserRepository) {
         throw createExpressError(500, "userId doesnt exist")
 
       const userId = req.userId
-      const result = await changePasswordLoggedInService.changePasswordLoggedIn({ userId, currentPassword, newPassword })
+      const result = await changePasswordLoggedInService
+        .changePasswordLoggedIn({ userId, currentPassword, newPassword })
 
       res.json({ result })
     } catch (error) {

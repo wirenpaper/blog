@@ -14,6 +14,7 @@ import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/ve
 import { makeResetPasswordRouter } from "@business/auth/reset_password/reset_password_controller.js"
 import { makeChangePasswordLoggedInRouter } from
   "@business/auth/change_password_logged_in/change_password_logged_in_controller.js"
+import { makeDeleteUserRouter } from "@business/auth/delete_user/delete_user_controller.js"
 
 ///////////////////////////////////////////////////////////////////////////////////
 //////// POST ROUTER IMPORTS
@@ -67,6 +68,7 @@ app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo))
 app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
 app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
 app.use("/auth/change-password-logged-in", authMiddleware, makeChangePasswordLoggedInRouter(userRepo))
+app.use("/auth/delete-user", authMiddleware, makeDeleteUserRouter(userRepo))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// POST ROUTES
