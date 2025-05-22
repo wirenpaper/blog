@@ -31,7 +31,7 @@ describe("makeEditCommentRouter", () => {
 
     it("Success; single result", async () => {
       mockGetComments.getPostComments.mockResolvedValue([
-        { id: 3, mComment: "a comment" }
+        { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
       ])
 
       const response = await (supertest(app)
@@ -40,15 +40,15 @@ describe("makeEditCommentRouter", () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         "comments": [
-          { id: 3, mComment: "a comment" }
+          { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
         ]
       })
     })
 
     it("Success; multiple results", async () => {
       mockGetComments.getPostComments.mockResolvedValue([
-        { id: 3, mComment: "a comment" },
-        { id: 4, mComment: "another comment" }
+        { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" },
+        { commentId: 4, mComment: "another comment", userId: 2, userName: "Jany" }
       ])
 
       const response = await (supertest(app)
@@ -57,8 +57,8 @@ describe("makeEditCommentRouter", () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         "comments": [
-          { id: 3, mComment: "a comment" },
-          { id: 4, mComment: "another comment" }
+          { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" },
+          { commentId: 4, mComment: "another comment", userId: 2, userName: "Jany" }
         ]
       })
     })

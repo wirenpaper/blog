@@ -23,7 +23,7 @@ describe("commentRepository", () => {
     it("Success; one result", async () => {
       // Arrange
       (sqlClient as unknown as jest.Mock<Promise<GetPostCommentResult[]>, []>).mockResolvedValue([
-        { id: 3, mComment: "oh jea" }
+        { commentId: 3, mComment: "oh jea", userId: 2, userName: "jany" }
       ])
 
       // Act
@@ -31,15 +31,15 @@ describe("commentRepository", () => {
 
       // Assert
       expect(result).toEqual([
-        { id: 3, mComment: "oh jea" }
+        { commentId: 3, mComment: "oh jea", userId: 2, userName: "jany" }
       ])
     })
 
     it("Success; multiple results (2)", async () => {
       // Arrange
       (sqlClient as unknown as jest.Mock<Promise<GetPostCommentResult[]>, []>).mockResolvedValue([
-        { id: 3, mComment: "oh jea" },
-        { id: 4, mComment: "oh no" }
+        { commentId: 3, mComment: "oh jea", userId: 2, userName: "jany" },
+        { commentId: 4, mComment: "oh no", userId: 1, userName: "johnny" }
       ])
 
       // Act
@@ -47,8 +47,8 @@ describe("commentRepository", () => {
 
       // Assert
       expect(result).toEqual([
-        { id: 3, mComment: "oh jea" },
-        { id: 4, mComment: "oh no" }
+        { commentId: 3, mComment: "oh jea", userId: 2, userName: "jany" },
+        { commentId: 4, mComment: "oh no", userId: 1, userName: "johnny" }
       ])
     })
 

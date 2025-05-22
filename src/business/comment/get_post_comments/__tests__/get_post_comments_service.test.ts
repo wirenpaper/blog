@@ -1,5 +1,4 @@
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
-// import { makeEditCommentService } from "@business/comment/edit_comment/edit_comment_service.js"
 import { makeGetPostCommentsService } from "@business/comment/get_post_comments/get_post_comments_service.js"
 
 jest.mock("@src/db.js")
@@ -12,21 +11,22 @@ describe("makeEditCommentService", () => {
 
     it("Success; single result", async () => {
       // Arrange
-      mockCommentRepo.getPostComments.mockResolvedValue([{ id: 3, mComment: "haha" }])
+      mockCommentRepo.getPostComments.mockResolvedValue
+        ([{ commentId: 3, mComment: "haha", userId: 1, userName: "Johnny" }])
 
       const result = await makeGetPostCommentsService(mockCommentRepo).getPostComments({
         postId: 32
       })
 
       // Assert
-      expect(result).toEqual([{ id: 3, mComment: "haha" }])
+      expect(result).toEqual([{ commentId: 3, mComment: "haha", userId: 1, userName: "Johnny" }])
     })
 
     it("Success; multiple result", async () => {
       // Arrange
       mockCommentRepo.getPostComments.mockResolvedValue([
-        { id: 3, mComment: "haha" },
-        { id: 4, mComment: "some comment" }
+        { commentId: 3, mComment: "haha", userId: 1, userName: "Johnny" },
+        { commentId: 4, mComment: "some comment", userId: 2, userName: "Jany" }
       ])
 
       const result = await makeGetPostCommentsService(mockCommentRepo).getPostComments({
@@ -35,8 +35,8 @@ describe("makeEditCommentService", () => {
 
       // Assert
       expect(result).toEqual([
-        { id: 3, mComment: "haha" },
-        { id: 4, mComment: "some comment" }
+        { commentId: 3, mComment: "haha", userId: 1, userName: "Johnny" },
+        { commentId: 4, mComment: "some comment", userId: 2, userName: "Jany" }
       ])
     })
 
