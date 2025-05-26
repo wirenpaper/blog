@@ -1,6 +1,5 @@
-import { userIdExists, verifyUser } from "@business/aux.js"
+import { userIdExists, verifyUser, verifyUserBool } from "@business/aux.js"
 import { CommentRepository } from "@db/comment/comment_repository.js"
-import { createExpressError } from "@src/errors.js"
 
 interface deleteCommentParams {
   id: number,
@@ -14,10 +13,11 @@ export function makeDeleteCommentService(commentRepo: CommentRepository): MakeDe
   return {
     async deleteComment({ id, userId }) {
       const comment_ownership = await commentRepo.checkCommentOwnership({ id })
-      if (!comment_ownership)
-        throw createExpressError(403, "User does not own comment")
       userIdExists(userId)
-      verifyUser(userId, comment_ownership.userId)
+      if (!verifyUserBool(userId, comment_ownership.userId)) {
+        const comment_post_ownership = await commentRepo.checkCommentPostOwnership({ id })
+        verifyUser(userId, comment_post_ownership.userId)
+      }
       await commentRepo.deleteComment({ id })
     }
   }

@@ -3,7 +3,7 @@ import { postRepository } from "@db/post/post_repository.js"
 import { commentRepository } from "@db/comment/comment_repository.js"
 import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
 
-describe("checkPostOwnership", () => {
+describe("CommentRepository", () => {
   const postRepo = postRepository(sqlClient)
   const userRepo = userRepository(sqlClient)
   const commentRepo = commentRepository(sqlClient)
@@ -94,8 +94,10 @@ describe("checkPostOwnership", () => {
       // Arrange
       await expect(commentRepo.checkCommentOwnership({ id: 3 })).rejects.toMatchObject({
         statusCode: 500,
-        message: "no owner"
+        message: "should be 1 row exactly"
       })
+
+      // throw createExpressError(500, "should be 1 row exactly")
     })
 
   })

@@ -5,5 +5,6 @@ export const mockCommentRepo: jest.Mocked<CommentRepository> = {
   createComment: jest.fn(),
   deleteComment: jest.fn(),
   editComment: jest.fn(),
+  checkCommentPostOwnership: jest.fn(),
   getPostComments: jest.fn()
 }
