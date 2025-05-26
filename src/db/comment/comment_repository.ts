@@ -171,18 +171,18 @@ export function commentRepository(sqlClient: PostgresClient): CommentRepository 
     async getPostComments({ postId }) {
       try {
         const rows: GetPostCommentResult[] = await sqlClient`
-        SELECT
-        u.user_name as \"userName\",
-        c.comment AS \"mComment\",
-        u.id as \"userId\",
-        c.id as \"commentId\"
-        FROM
-              comments c
+          SELECT
+          u.user_name as \"userName\",
+          c.comment AS \"mComment\",
+          u.id as \"userId\",
+          c.id as \"commentId\"
+          FROM
+            comments c
           LEFT JOIN
-              users u ON c.user_id = u.id
-        WHERE
-        c.post_id = ${postId}
-          `
+            users u ON c.user_id = u.id
+          WHERE
+          c.post_id = ${postId}
+        `
         return rows
       } catch (error) {
         const e = error as { code?: string; message: string }
