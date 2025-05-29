@@ -32,8 +32,10 @@ describe("makeEditCommentRouter", () => {
     it("Success", async () => {
       mockEditComment.editComment.mockResolvedValue()
 
-      const response = await (supertest(app)
-        .put("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "Some test comment" })
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -41,12 +43,98 @@ describe("makeEditCommentRouter", () => {
       })
     })
 
+    it("Failure, empty comment", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "" })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Comment cannot be empty., Comment must be between 1 and 500 characters."
+      })
+    })
+
+    it("Failure, pure space comment", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "  " })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Comment cannot be empty., Comment must be between 1 and 500 characters."
+      })
+    })
+
+    it("Failure, comment more than 500", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "This is a test comment that needs to be exactly five hundred and one characters long to trigger the validation error for exceeding the maximum length limit. I need to keep writing until I reach that specific character count. Let me add some more words to get closer to the target. Almost there now, just a few more characters needed to reach exactly five hundred and one characters total for this validation test comment that should fail the length check. i need more mang what is this? i need more or" })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Comment must be between 1 and 500 characters."
+      })
+    })
+
+    it("Failure, id is 0", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/0")
+        .send({ mComment: "Test comment" })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
+    it("Failure, id is -1", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/-1")
+        .send({ mComment: "Test comment" })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
+    it("Failure, id isn't number", async () => {
+      mockEditComment.editComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/m")
+        .send({ mComment: "Test comment" })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a numeric value., ID must be a positive integer."
+      })
+    })
+
     it("Should handle ExpressError with correct status code", async () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockEditComment.editComment.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .put("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "Some test comment" })
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -57,8 +145,10 @@ describe("makeEditCommentRouter", () => {
       const generalError = new Error("Database connection failed")
       mockEditComment.editComment.mockRejectedValue(generalError)
 
-      const response = await (supertest(app)
-        .put("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/3")
+        .send({ mComment: "Some test comment" })
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })
