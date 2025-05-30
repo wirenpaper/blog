@@ -56,7 +56,7 @@ describe("makeDeleteCommentRouter", () => {
       })
     })
 
-    it("Failure; id is not number", async () => {
+    it("Failure; id is float", async () => {
       mockDeleteComment.deleteComment.mockResolvedValue()
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -69,7 +69,7 @@ describe("makeDeleteCommentRouter", () => {
       })
     })
 
-    it("Failure; id is not number", async () => {
+    it("Failure; id is negative", async () => {
       mockDeleteComment.deleteComment.mockResolvedValue()
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
