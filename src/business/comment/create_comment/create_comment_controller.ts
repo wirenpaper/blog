@@ -5,16 +5,17 @@ import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateCreateComment } from "./create_comment_validator"
 import { validationResult } from "express-validator"
 
-export interface CreateCommentRequest {
-  mComment: string
-  postId: number
-}
+/*
+ * export interface CreateCommentRequest {
+ *   mComment: string
+ * }
+ */
 
 export function makeCreateCommentRouter(commentRepo: CommentRepository) {
   const createCommentService = makeCreateCommentService(commentRepo)
-  return Router().post("/",
+  return Router().post("/:postId",
     validateCreateComment,
-    async (req: Request<object, object, CreateCommentRequest>, res: Response) => {
+    async (req: Request<{ postId: number }, object, { mComment: string }>, res: Response) => {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
@@ -22,7 +23,8 @@ export function makeCreateCommentRouter(commentRepo: CommentRepository) {
         return
       }
       try {
-        const { mComment, postId } = req.body
+        const { postId } = req.params
+        const { mComment } = req.body
         await createCommentService.createComment({ mComment, userId: req.userId!, postId })
         res.json({ message: "Comment created" })
       } catch (error) {

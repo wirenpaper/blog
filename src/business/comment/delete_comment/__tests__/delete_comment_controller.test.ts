@@ -33,8 +33,9 @@ describe("makeDeleteCommentRouter", () => {
     it("Success", async () => {
       mockDeleteComment.deleteComment.mockResolvedValue()
 
-      const response = await (supertest(app)
-        .delete("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/3")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -42,12 +43,52 @@ describe("makeDeleteCommentRouter", () => {
       })
     })
 
+    it("Failure; id is not number", async () => {
+      mockDeleteComment.deleteComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/lol")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a numeric value., ID must be a positive integer."
+      })
+    })
+
+    it("Failure; id is not number", async () => {
+      mockDeleteComment.deleteComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/1.1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
+    it("Failure; id is not number", async () => {
+      mockDeleteComment.deleteComment.mockResolvedValue()
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/-1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
     it("Should handle ExpressError with correct status code", async () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockDeleteComment.deleteComment.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .delete("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/3")
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -58,8 +99,9 @@ describe("makeDeleteCommentRouter", () => {
       const generalError = new Error("Database connection failed")
       mockDeleteComment.deleteComment.mockRejectedValue(generalError)
 
-      const response = await (supertest(app)
-        .delete("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/3")
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })
