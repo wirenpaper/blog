@@ -2,12 +2,21 @@ import { Router, Request, Response } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
+import { validationResult } from "express-validator"
+import { validateEditPost } from "./edit_post_validator"
 
 export function makeEditPostRouter(postRepo: PostRepository) {
   const editPostService = makeEditPostService(postRepo)
 
   return Router().put("/:id",
+    validateEditPost,
     async (req: Request<{ id: number }, object, { mPost: string }>, res: Response) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
+        res.status(400).json({ message: errorMessages })
+        return
+      }
       const { id } = req.params
       const { mPost } = req.body
 
