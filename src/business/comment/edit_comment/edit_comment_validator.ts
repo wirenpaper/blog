@@ -12,4 +12,4 @@ export const validateEditComment = [
     .isString().withMessage("Comment must be a string.")
     .isLength({ min: 1, max: 500 }).withMessage("Comment must be between 1 and 500 characters.")
 // .escape() // Sanitizer: to prevent XSS if you render this HTML directly (be careful with this)
-  ]
+]

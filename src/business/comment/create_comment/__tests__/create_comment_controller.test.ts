@@ -37,13 +37,71 @@ describe("makeCreateCommentRouter", () => {
         postId: 32
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         message: "Comment created"
+      })
+    })
+
+    it("Failure, postId is 0", async () => {
+      mockCreateComment.createComment.mockResolvedValue()
+
+      const requestData: CreateCommentRequest = {
+        mComment: "a comment",
+        postId: 0
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "postId must be a positive integer."
+      })
+    })
+
+    it("Failure, mComment is empty", async () => {
+      mockCreateComment.createComment.mockResolvedValue()
+
+      const requestData: CreateCommentRequest = {
+        mComment: "",
+        postId: 1
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Comment cannot be empty., Comment must be between 1 and 500 characters."
+      })
+    })
+
+    it("Failure, mComment is too big", async () => {
+      mockCreateComment.createComment.mockResolvedValue()
+
+      const requestData: CreateCommentRequest = {
+        mComment: "hello i am commenting here and i am going to make big comment lolololol wot are u gonna do mang lololol big comment what you gonna block my comment or something jajajajajajajajjajajaja theres too much going on here brain overriding stimulus override dopamine going jajajajajajaj swowowowoowowowowowoowierjiowerklfj sldkfjsdlfkjsdlkfjfsdkljweriojfweeiowefjiowefjfiowejfweiojfweiojwefiojwefiowefjiowefjiowefjwefiojfweiojwefiowefjiowefjiowefjiowefjiowefjfweiojwefiojfweiowefjiowefjiowefjiowefjiowefjwefiojwefiojwefio",
+        postId: 1
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Comment must be between 1 and 500 characters."
       })
     })
 
@@ -56,13 +114,15 @@ describe("makeCreateCommentRouter", () => {
         postId: 32
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
     })
+
 
     it("Should handle general errors with 500 status code", async () => {
       // Simulate a general error
@@ -74,8 +134,9 @@ describe("makeCreateCommentRouter", () => {
         postId: 32
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)

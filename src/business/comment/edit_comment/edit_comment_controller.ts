@@ -10,7 +10,7 @@ export function makeEditCommentRouter(commentRepo: CommentRepository) {
 
   return Router().put("/:id",
     validateEditComment,
-    async (req: Request<{ id: number }, object, { mComment: string }>, res: Response): Promise<void> => {
+    async (req: Request<{ id: number }, object, { mComment: string }>, res: Response) => {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
