@@ -10,7 +10,7 @@ jest.mock("@business/comment/get_post_comments/get_post_comments_service.js", ()
   makeGetPostCommentsService: jest.fn()
 }))
 
-describe("makeEditCommentRouter", () => {
+describe("makeGetPostCommentsRouter", () => {
   describe("GET /:id", () => {
     let app: express.Express
     const mockGetComments: jest.Mocked<GetPostCommentsSpecifications> = {
@@ -34,8 +34,9 @@ describe("makeEditCommentRouter", () => {
         { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
       ])
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -51,8 +52,9 @@ describe("makeEditCommentRouter", () => {
         { commentId: 4, mComment: "another comment", userId: 2, userName: "Jany" }
       ])
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -66,8 +68,9 @@ describe("makeEditCommentRouter", () => {
     it("Success; no result", async () => {
       mockGetComments.getPostComments.mockResolvedValue([])
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -75,12 +78,58 @@ describe("makeEditCommentRouter", () => {
       })
     })
 
+    it("Failure; negative id", async () => {
+      mockGetComments.getPostComments.mockResolvedValue([
+        { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
+      ])
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/-1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "postId must be a positive integer."
+      })
+    })
+
+    it("Failure; float id", async () => {
+      mockGetComments.getPostComments.mockResolvedValue([
+        { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
+      ])
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/1.1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "postId must be a positive integer."
+      })
+    })
+
+    it("Failure; float id", async () => {
+      mockGetComments.getPostComments.mockResolvedValue([
+        { commentId: 3, mComment: "a comment", userId: 1, userName: "Johny" }
+      ])
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/jaja")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "postId must be a numeric value., postId must be a positive integer."
+      })
+    })
+
     it("Should handle ExpressError with correct status code", async () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockGetComments.getPostComments.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -91,8 +140,9 @@ describe("makeEditCommentRouter", () => {
       const generalError = new Error("Database connection failed")
       mockGetComments.getPostComments.mockRejectedValue(generalError)
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })
