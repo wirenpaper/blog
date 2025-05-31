@@ -3,25 +3,14 @@ import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeCreateCommentService } from "@business/comment/create_comment/create_comment_service.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateCreateComment } from "./create_comment_validator"
-import { validationResult } from "express-validator"
-
-/*
- * export interface CreateCommentRequest {
- *   mComment: string
- * }
- */
+import { validation } from "@business/aux.js"
 
 export function makeCreateCommentRouter(commentRepo: CommentRepository) {
   const createCommentService = makeCreateCommentService(commentRepo)
   return Router().post("/:postId",
     validateCreateComment,
     async (req: Request<{ postId: number }, object, { mComment: string }>, res: Response) => {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
-        res.status(400).json({ message: errorMessages })
-        return
-      }
+      if (!validation(req, res)) return
       try {
         const { postId } = req.params
         const { mComment } = req.body

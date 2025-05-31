@@ -3,7 +3,7 @@ import { makeGetPostCommentsService } from "@business/comment/get_post_comments/
 import { CommentRepository } from "@db/comment/comment_repository.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateGetPostComments } from "./get_post_comments_validator"
-import { validationResult } from "express-validator"
+import { validation } from "@business/aux.js"
 
 export function makeGetPostCommentsRouter(commentRepo: CommentRepository) {
   const getPostCommentsService = makeGetPostCommentsService(commentRepo)
@@ -11,12 +11,7 @@ export function makeGetPostCommentsRouter(commentRepo: CommentRepository) {
   return Router().get("/:postId",
     validateGetPostComments,
     async (req: Request<{ postId: number }, object, object>, res: Response) => {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
-        res.status(400).json({ message: errorMessages })
-        return
-      }
+      if (!validation(req, res)) return
       const { postId } = req.params
       try {
         const comments = await getPostCommentsService.getPostComments({ postId })

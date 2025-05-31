@@ -3,7 +3,7 @@ import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeEditCommentService } from "@business/comment/edit_comment/edit_comment_service.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateEditComment } from "./edit_comment_validator"
-import { validationResult } from "express-validator"
+import { validation } from "@business/aux.js"
 
 export function makeEditCommentRouter(commentRepo: CommentRepository) {
   const editCommentService = makeEditCommentService(commentRepo)
@@ -11,12 +11,7 @@ export function makeEditCommentRouter(commentRepo: CommentRepository) {
   return Router().put("/:id",
     validateEditComment,
     async (req: Request<{ id: number }, object, { mComment: string }>, res: Response) => {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
-        res.status(400).json({ message: errorMessages })
-        return
-      }
+      if (!validation(req, res)) return
       try {
         const { id } = req.params
         const { mComment } = req.body

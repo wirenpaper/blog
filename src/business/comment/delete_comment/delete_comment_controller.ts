@@ -3,7 +3,7 @@ import { CommentRepository } from "@db/comment/comment_repository.js"
 import { makeDeleteCommentService } from "@business/comment/delete_comment/delete_comment_service.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateDeleteComment } from "./delete_comment_validator"
-import { validationResult } from "express-validator"
+import { validation } from "@business/aux.js"
 
 export function makeDeleteCommentRouter(commentRepo: CommentRepository) {
   const deleteCommentService = makeDeleteCommentService(commentRepo)
@@ -11,12 +11,7 @@ export function makeDeleteCommentRouter(commentRepo: CommentRepository) {
   return Router().delete("/:id",
     validateDeleteComment,
     async (req: Request<{ id: number }, object, object>, res: Response) => {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map(err => (err.msg as string)).join(", ")
-        res.status(400).json({ message: errorMessages })
-        return
-      }
+      if (!validation(req, res)) return
       try {
         const { id } = req.params
         await deleteCommentService.deleteComment({ id, userId: req.userId })
