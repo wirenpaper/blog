@@ -36,8 +36,9 @@ describe("makePostRouter", () => {
         userName: "lolcop"
       })
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -48,12 +49,67 @@ describe("makePostRouter", () => {
       })
     })
 
+    it("Failure; id is not number", async () => {
+      mockReadPost.readPost.mockResolvedValue({
+        id: 3,
+        mPost: "hahapost",
+        userId: 4,
+        userName: "lolcop"
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/haha")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a numeric value., ID must be a positive integer."
+      })
+    })
+
+    it("Failure; id is float", async () => {
+      mockReadPost.readPost.mockResolvedValue({
+        id: 3,
+        mPost: "hahapost",
+        userId: 4,
+        userName: "lolcop"
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/1.1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
+    it("Failure; id is negative", async () => {
+      mockReadPost.readPost.mockResolvedValue({
+        id: 3,
+        mPost: "hahapost",
+        userId: 4,
+        userName: "lolcop"
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .put("/-1")
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "ID must be a positive integer."
+      })
+    })
+
     it("Should handle ExpressError with correct status code", async () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockReadPost.readPost.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .get("/3") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/3")
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -64,6 +120,7 @@ describe("makePostRouter", () => {
       const generalError = new Error("Database connection failed")
       mockReadPost.readPost.mockRejectedValue(generalError)
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await (supertest(app)
         .get("/3") as supertest.Test)
 

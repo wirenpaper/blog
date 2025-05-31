@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-
 import { createExpressError } from "@src/errors.js"
 import { ValidationError, validationResult } from "express-validator"
 
