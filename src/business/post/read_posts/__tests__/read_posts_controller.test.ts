@@ -33,8 +33,9 @@ describe("makeEditPostRouter", () => {
         { id: 32, mPost: "harhar", userId: 2, userName: "lolcop" }
       ])
 
-      const response = await (supertest(app)
-        .get("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual([
@@ -49,8 +50,9 @@ describe("makeEditPostRouter", () => {
         { id: 34, mPost: "soisoi", userId: 4, userName: "bobrob" }
       ])
 
-      const response = await (supertest(app)
-        .get("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual([
@@ -64,8 +66,9 @@ describe("makeEditPostRouter", () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockReadPosts.readPosts.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .get("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/")
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -76,8 +79,9 @@ describe("makeEditPostRouter", () => {
       const generalError = new Error("Database connection failed")
       mockReadPosts.readPosts.mockRejectedValue(generalError)
 
-      const response = await (supertest(app)
-        .get("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .get("/")
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })

@@ -59,7 +59,7 @@ describe("makePostRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .put("/haha")
+        .get("/haha")
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({
@@ -77,7 +77,7 @@ describe("makePostRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .put("/1.1")
+        .get("/1.1")
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({
@@ -95,7 +95,7 @@ describe("makePostRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .put("/-1")
+        .get("/-1")
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({
