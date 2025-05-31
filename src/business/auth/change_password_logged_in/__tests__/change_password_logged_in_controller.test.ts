@@ -53,8 +53,9 @@ describe("makeChangePasswordLoggedInRouter", () => {
         newPassword: "X7!k#9Lm@pQ2z$"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
@@ -62,6 +63,111 @@ describe("makeChangePasswordLoggedInRouter", () => {
         result: {
           message: "Password successfully changed"
         }
+      })
+    })
+
+    it("Failure; currentPassword empty", async () => {
+      mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
+        message: "Password successfully changed"
+      })
+
+      const requestData: ChangePasswordRequest = {
+        currentPassword: "",
+        newPassword: "X7!k#9Lm@pQ2z$"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Current password is required."
+      })
+    })
+
+    it("Failure; currentPassword only spaces", async () => {
+      mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
+        message: "Password successfully changed"
+      })
+
+      const requestData: ChangePasswordRequest = {
+        currentPassword: "   ",
+        newPassword: "X7!k#9Lm@pQ2z$"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Current password is required."
+      })
+    })
+
+    it("Failure; newPassword too short", async () => {
+      mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
+        message: "Password successfully changed"
+      })
+
+      const requestData: ChangePasswordRequest = {
+        currentPassword: "abcd",
+        newPassword: "1234567"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must be between 8 and 128 characters., New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+      })
+    })
+
+    it("Failure; newPassword too long", async () => {
+      mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
+        message: "Password successfully changed"
+      })
+
+      const requestData: ChangePasswordRequest = {
+        currentPassword: "abcd",
+        newPassword: "A".repeat(129) + "a1@"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must be between 8 and 128 characters."
+      })
+    })
+
+    it("Failure; newPassword too blah", async () => {
+      mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
+        message: "Password successfully changed"
+      })
+
+      const requestData: ChangePasswordRequest = {
+        currentPassword: "abcd",
+        newPassword: "Password123"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
       })
     })
 
@@ -73,8 +179,9 @@ describe("makeChangePasswordLoggedInRouter", () => {
         newPassword: "X7!k#9Lm@pQ2z$"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)
@@ -92,8 +199,9 @@ describe("makeChangePasswordLoggedInRouter", () => {
         newPassword: "X7!k#9Lm@pQ2z$"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
@@ -110,8 +218,9 @@ describe("makeChangePasswordLoggedInRouter", () => {
         newPassword: "X7!k#9Lm@pQ2z$"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)

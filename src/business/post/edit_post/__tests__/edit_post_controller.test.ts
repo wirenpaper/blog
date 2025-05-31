@@ -49,7 +49,7 @@ describe("makeEditPostRouter", () => {
         .send({ mPost: "" })
 
       expect(response.status).toBe(400)
-      expect(response.body).toEqual({ message: "Post cannot be empty., Comment must be between 1 and 2000 characters." })
+      expect(response.body).toEqual({ message: "Post cannot be empty., Post must be between 1 and 2000 characters." })
     })
 
     it("Failure; spaces only", async () => {
@@ -62,7 +62,7 @@ describe("makeEditPostRouter", () => {
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({
-        message: "Post cannot be empty., Comment must be between 1 and 2000 characters."
+        message: "Post cannot be empty., Post must be between 1 and 2000 characters."
       })
     })
 
@@ -76,7 +76,7 @@ describe("makeEditPostRouter", () => {
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({
-        message: "Comment must be between 1 and 2000 characters."
+        message: "Post must be between 1 and 2000 characters."
       })
     })
 
