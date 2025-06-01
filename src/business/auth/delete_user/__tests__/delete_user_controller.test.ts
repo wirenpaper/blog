@@ -31,8 +31,9 @@ describe("makeDeleteUserRouter", () => {
     it("Success", async () => {
       mockDeleteUser.deleteUser.mockResolvedValue()
 
-      const response = await (supertest(app)
-        .delete("/32") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({ message: "User deleted" })
@@ -43,8 +44,9 @@ describe("makeDeleteUserRouter", () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockDeleteUser.deleteUser.mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .delete("/32") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/")
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -55,8 +57,9 @@ describe("makeDeleteUserRouter", () => {
       const generalError = new Error("Database connection failed")
       mockDeleteUser.deleteUser.mockRejectedValue(generalError)
 
-      const response = await (supertest(app)
-        .delete("/32") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .delete("/")
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })

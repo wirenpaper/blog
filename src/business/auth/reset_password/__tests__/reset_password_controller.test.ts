@@ -41,13 +41,120 @@ describe("makeLoginRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         message: "Password successfully reset"
+      })
+    })
+
+    it("Failure; empty userName", async () => {
+      mockResetPassword.resetPassword.mockResolvedValue({
+        message: "Password successfully reset"
+      })
+
+      const requestData: ResetPasswordRequest = {
+        userName: "",
+        newPassword: "X7!k#9Lm@pQ2z$",
+        resetToken: "reset_token_123"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "User name cannot be empty." })
+    })
+
+    it("Failure; resetToken cannot be empty", async () => {
+      mockResetPassword.resetPassword.mockResolvedValue({
+        message: "Password successfully reset"
+      })
+
+      const requestData: ResetPasswordRequest = {
+        userName: "lolcat",
+        newPassword: "X7!k#9Lm@pQ2z$",
+        resetToken: ""
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Reset token cannot be empty."
+      })
+    })
+
+    it("Failure; newPassword too short", async () => {
+      mockResetPassword.resetPassword.mockResolvedValue({
+        message: "Password successfully reset"
+      })
+
+      const requestData: ResetPasswordRequest = {
+        userName: "lolcat",
+        newPassword: "1234567",
+        resetToken: "reset_token_123"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must be between 8 and 128 characters., New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+      })
+    })
+
+    it("Failure; newPassword too long", async () => {
+      mockResetPassword.resetPassword.mockResolvedValue({
+        message: "Password successfully reset"
+      })
+
+      const requestData: ResetPasswordRequest = {
+        userName: "lolcat",
+        newPassword: "A".repeat(129) + "a1@",
+        resetToken: "reset_token_123"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "New password must be between 8 and 128 characters." })
+    })
+
+    it("Failure; newPassword too simple", async () => {
+      mockResetPassword.resetPassword.mockResolvedValue({
+        message: "Password successfully reset"
+      })
+
+      const requestData: ResetPasswordRequest = {
+        userName: "lolcat",
+        newPassword: "Password123",
+        resetToken: "reset_token_123"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
       })
     })
 
@@ -61,8 +168,9 @@ describe("makeLoginRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
@@ -80,8 +188,9 @@ describe("makeLoginRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)

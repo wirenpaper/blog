@@ -6,10 +6,9 @@ import { UserRepository } from "@db/user/user_repository.js"
 export function makeDeleteUserRouter(repo: UserRepository) {
   const deleteUserService = makeDeleteUserService(repo)
 
-  return Router().delete("/:id", async (req: Request<{ id: number }, object, object>, res) => {
-    const { id } = req.params
+  return Router().delete("/", async (req: Request, res) => {
     try {
-      await deleteUserService.deleteUser({ id, userId: req.userId! })
+      await deleteUserService.deleteUser({ userId: req.userId! })
       res.json({ message: "User deleted" })
     } catch (error) {
       if (isExpressError(error as Error)) {

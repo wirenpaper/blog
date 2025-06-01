@@ -150,7 +150,7 @@ describe("makeChangePasswordLoggedInRouter", () => {
       })
     })
 
-    it("Failure; newPassword too blah", async () => {
+    it("Failure; newPassword too simple", async () => {
       mockChangePasswordLoggedIn.changePasswordLoggedIn.mockResolvedValue({
         message: "Password successfully changed"
       })
