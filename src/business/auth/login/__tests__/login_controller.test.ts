@@ -42,14 +42,65 @@ describe("makeLoginRouter", () => {
         password: "password123",
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         token: "mock-token-123",
         userWithoutPassword: { id: 32, userName: "jimbob" }
+      })
+    })
+
+    it("Failure; userName is empty", async () => {
+      mockLoginUser.loginUser.mockResolvedValue({
+        token: "mock-token-123",
+        userWithoutPassword: {
+          id: 32,
+          userName: "jimbob",
+        }
+      })
+
+      const requestData: MakeLoginRequest = {
+        userName: "",
+        password: "password123",
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "User name cannot be empty."
+      })
+    })
+
+    it("Failure; password is empty", async () => {
+      mockLoginUser.loginUser.mockResolvedValue({
+        token: "mock-token-123",
+        userWithoutPassword: {
+          id: 32,
+          userName: "jimbob",
+        }
+      })
+
+      const requestData: MakeLoginRequest = {
+        userName: "testUser",
+        password: "",
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "Password cannot be empty."
       })
     })
 
@@ -62,8 +113,9 @@ describe("makeLoginRouter", () => {
         password: "weak",
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
@@ -80,8 +132,9 @@ describe("makeLoginRouter", () => {
         password: "password123",
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)
