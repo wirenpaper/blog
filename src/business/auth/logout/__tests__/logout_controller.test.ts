@@ -27,8 +27,9 @@ describe("makeLogoutRouter", () => {
     it("Success; should return a token when login is successful", async () => {
       (destroySession as jest.Mock<Promise<void>, [Session | undefined]>).mockResolvedValue()
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({ message: "Successfully logged out" })
@@ -38,8 +39,9 @@ describe("makeLogoutRouter", () => {
       const expressError = createExpressError(500, "Session destruction error");
       (destroySession as jest.Mock<Promise<void>, [Session | undefined]>).mockRejectedValue(expressError)
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ message: "Session destruction error" })
