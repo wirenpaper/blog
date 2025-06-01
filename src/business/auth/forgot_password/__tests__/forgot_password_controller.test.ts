@@ -39,14 +39,57 @@ describe("makeForgotPasswordRouter", () => {
         userName: "testUser"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         message: "Reset instructions sent",
         resetToken: "mocked_reset_token"
+      })
+    })
+
+    it("Failure; spaces only", async () => {
+      mockForgotPassword.forgotPassword.mockResolvedValue({
+        message: "Reset instructions sent",
+        resetToken: "mocked_reset_token"
+      })
+
+      const requestData: ForgotPasswordRequest = {
+        userName: "    "
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "User name cannot be empty."
+      })
+    })
+
+    it("Failure; userName empty", async () => {
+      mockForgotPassword.forgotPassword.mockResolvedValue({
+        message: "Reset instructions sent",
+        resetToken: "mocked_reset_token"
+      })
+
+      const requestData: ForgotPasswordRequest = {
+        userName: ""
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "User name cannot be empty."
       })
     })
 
@@ -58,8 +101,9 @@ describe("makeForgotPasswordRouter", () => {
         userName: "testUser"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
@@ -75,8 +119,9 @@ describe("makeForgotPasswordRouter", () => {
         userName: "testUser"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)
