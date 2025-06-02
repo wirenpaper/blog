@@ -27,8 +27,8 @@ export function createUser(user: UserModel): UserModel {
     id,
     userName,
     hashedPassword,
-    firstName,
-    lastName,
+    firstName: firstName === "" ? undefined : firstName,
+    lastName: lastName === "" ? undefined : lastName,
     resetToken,
     resetTokenExpires,
     tokenVerified

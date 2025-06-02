@@ -36,18 +36,133 @@ describe("makeRegisterRouter", () => {
       })
 
       const requestData: RegisterRequest = {
-        userName: "testUser",
-        password: "password123",
+        userName: "testUser@gmail.com",
+        password: "K!m1@2025#P@ssw0rd$",
         firstName: "John",
         lastName: "Doe"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({ token: "mock-token-123" })
+    })
+
+    it("Failure; UserName cannot be empty", async () => {
+      mockRegisterUser.registerUser.mockResolvedValue({
+        token: "mock-token-123",
+        user: { userName: "testUser" }
+      })
+
+      const requestData: RegisterRequest = {
+        userName: "",
+        password: "K!m1@2025#P@ssw0rd$",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "UserName is required., UserName must be a valid email address." })
+    })
+
+    it("Failure; UserName cannot be empty", async () => {
+      mockRegisterUser.registerUser.mockResolvedValue({
+        token: "mock-token-123",
+        user: { userName: "testUser" }
+      })
+
+      const requestData: RegisterRequest = {
+        userName: "boom.doom",
+        password: "K!m1@2025#P@ssw0rd$",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "UserName must be a valid email address." })
+    })
+
+    it("Failure; password too short", async () => {
+      mockRegisterUser.registerUser.mockResolvedValue({
+        token: "mock-token-123",
+        user: { userName: "testUser" }
+      })
+
+      const requestData: RegisterRequest = {
+        userName: "testUser@gmail.com",
+        password: "1234567",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must be between 8 and 128 characters., New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+      })
+    })
+
+    it("Failure; password too long", async () => {
+      mockRegisterUser.registerUser.mockResolvedValue({
+        token: "mock-token-123",
+        user: { userName: "testUser" }
+      })
+
+      const requestData: RegisterRequest = {
+        userName: "testUser@gmail.com",
+        password: "A".repeat(129) + "a1@",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "New password must be between 8 and 128 characters." })
+    })
+
+    it("Failure; password too simple", async () => {
+      mockRegisterUser.registerUser.mockResolvedValue({
+        token: "mock-token-123",
+        user: { userName: "testUser" }
+      })
+
+      const requestData: RegisterRequest = {
+        userName: "testUser@gmail.com",
+        password: "Password123",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        message: "New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+      })
     })
 
     it("Should handle ExpressError with correct status code", async () => {
@@ -55,14 +170,15 @@ describe("makeRegisterRouter", () => {
       mockRegisterUser.registerUser.mockRejectedValue(expressError)
 
       const requestData: RegisterRequest = {
-        userName: "testUser",
-        password: "weak",
+        userName: "testUser@gmail.com",
+        password: "K!m1@2025#P@ssw0rd$",
         firstName: "John",
         lastName: "Doe"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
 
@@ -76,14 +192,15 @@ describe("makeRegisterRouter", () => {
       mockRegisterUser.registerUser.mockRejectedValue(generalError)
 
       const requestData: RegisterRequest = {
-        userName: "testUser",
-        password: "password123",
+        userName: "testUser@gmail.com",
+        password: "K!m1@2025#P@ssw0rd$",
         firstName: "John",
         lastName: "Doe"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)

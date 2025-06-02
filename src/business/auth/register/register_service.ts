@@ -9,8 +9,8 @@ const SALT_ROUNDS = 12
 interface RegisterUserParams {
   userName: string,
   password: string,
-  firstName: string | null,
-  lastName: string | null
+  firstName?: string,
+  lastName?: string
 }
 
 interface RegisterUserResult {
@@ -30,6 +30,8 @@ export function makeRegisterService(userRepo: UserRepository): MakeRegisterServi
     async registerUser({
       userName,
       password,
+      firstName,
+      lastName
     }) {
       // Validate password before hashing
       if (!isValidPassword(password))
@@ -41,6 +43,8 @@ export function makeRegisterService(userRepo: UserRepository): MakeRegisterServi
       const userData = createUserModel({
         userName,
         hashedPassword,
+        firstName,
+        lastName
       })
 
       // Save to database via repository
