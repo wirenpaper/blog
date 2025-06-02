@@ -1,4 +1,4 @@
-import { isValidPassword, sanitizeUser, UserModel } from "@db/user/user_model.js"
+import { createUser, isValidPassword, sanitizeUser, UserModel } from "@db/user/user_model.js"
 
 describe("User Model", () => {
   describe("isValidPassword", () => {
@@ -89,6 +89,68 @@ describe("User Model", () => {
       expect(sanitizedUser.userName).toBe("nulluser")
       expect(sanitizedUser.firstName).toBeUndefined()
       expect(sanitizedUser.lastName).toBeUndefined()
+    })
+
+    test("should convert empty string firstName to undefined", () => {
+      const user: UserModel = {
+        userName: "test@example.com",
+        hashedPassword: "hashedpass123",
+        firstName: "",
+        lastName: "Doe"
+      }
+
+      const result = createUser(user)
+      expect(result.firstName).toBeUndefined()
+      expect(result.lastName).toBe("Doe")
+    })
+
+    test("should convert empty string lastName to undefined", () => {
+      const user: UserModel = {
+        userName: "test@example.com",
+        hashedPassword: "hashedpass123",
+        firstName: "John",
+        lastName: ""
+      }
+
+      const result = createUser(user)
+      expect(result.firstName).toBe("John")
+      expect(result.lastName).toBeUndefined()
+    })
+
+    test("should convert both empty string names to undefined", () => {
+      const user: UserModel = {
+        userName: "test@example.com",
+        hashedPassword: "hashedpass123",
+        firstName: "",
+        lastName: ""
+      }
+
+      const result = createUser(user)
+      expect(result.firstName).toBeUndefined()
+      expect(result.lastName).toBeUndefined()
+    })
+
+    test("should preserve non-empty string names", () => {
+      const user: UserModel = {
+        userName: "test@example.com",
+        hashedPassword: "hashedpass123",
+        firstName: "John",
+        lastName: "Doe"
+      }
+
+      const result = createUser(user)
+      expect(result.firstName).toBe("John")
+      expect(result.lastName).toBe("Doe")
+    })
+
+    test("should set tokenVerified to false by default", () => {
+      const user: UserModel = {
+        userName: "test@example.com",
+        hashedPassword: "hashedpass123"
+      }
+
+      const result = createUser(user)
+      expect(result.tokenVerified).toBe(false)
     })
   })
 })

@@ -55,6 +55,45 @@ describe("makeRegisterService", () => {
       })
     })
 
+    it("expe", async () => {
+      // Arrange
+      // jest.spyOn(userModel, "isValidPassword").mockReturnValue(true); <-- useful function to remember
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123");
+      (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
+
+      mockUserRepo.createUser.mockResolvedValue({
+        id: 123,
+        userName: "testuser",
+        hashedPassword: "*MOCKED*", // The actual value here doesn't matter
+        firstName: "John",
+        lastName: "Doe"
+      })
+
+      // Act
+      const result = await makeRegisterService(mockUserRepo).registerUser({
+        userName: "testuser",
+        password: "Ku3!!$jLs__ff",
+        firstName: "",
+        lastName: ""
+      })
+
+      // Assert
+      expect(mockUserRepo.createUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          hashedPassword: "hashed_123", // Must match bcrypt's response!!
+        })
+      )
+      expect(result).toEqual({
+        token: "test.jwt.token",
+        user: {
+          id: 123,
+          userName: "testuser",
+          firstName: "John",
+          lastName: "Doe"
+        }
+      })
+    })
+
     it("Invalid password", async () => {
       // Arrange
       // jest.spyOn(userModel, "isValidPassword").mockReturnValue(true); <-- useful function
