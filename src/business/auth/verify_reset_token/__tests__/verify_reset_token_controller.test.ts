@@ -38,16 +38,31 @@ describe("makeVerifyResetTokenRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        msg: {
-          message: "Token verified, proceed to password reset"
-        }
+      expect(response.body).toEqual({ message: "Token verified, proceed to password reset" })
+    })
+
+    it("Failure; resetToken cannot be empty", async () => {
+      mockVerifyResetToken.verifyResetToken.mockResolvedValue({
+        message: "Token verified, proceed to password reset"
       })
+
+      const requestData: ResetRequest = {
+        resetToken: ""
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
+        .send(requestData)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ message: "resetToken cannot be empty." })
     })
 
     it("Should handle ExpressError with correct status code", async () => {
@@ -58,8 +73,9 @@ describe("makeVerifyResetTokenRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(422)
@@ -75,8 +91,9 @@ describe("makeVerifyResetTokenRouter", () => {
         resetToken: "reset_token_123"
       }
 
-      const response = await (supertest(app)
-        .post("/") as supertest.Test)
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      const response = await supertest(app)
+        .post("/")
         .send(requestData)
 
       expect(response.status).toBe(500)
