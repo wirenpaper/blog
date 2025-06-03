@@ -41,6 +41,7 @@ import { commentRepository } from "@db/comment/comment_repository.js"
 
 // middleware ///////////
 import authMiddleware from "@middleware/authMiddleware.js"
+import { makeEmailClient } from "./email_client.js"
 /////////////////////////
 
 const app = express()
@@ -54,6 +55,18 @@ const userRepo = userRepository(sql)
 const postRepo = postRepository(sql)
 const commentRepo = commentRepository(sql)
 
+const emailConfig = {
+  host: process.env.SMTP_HOST!,
+  port: parseInt(process.env.SMTP_PORT!),
+  secure: process.env.SMTP_SECURE === "true",
+  auth: {
+    user: process.env.SMTP_USER!,
+    pass: process.env.SMTP_PASS!
+  },
+  from: process.env.FROM_EMAIL!
+}
+const emailClient = makeEmailClient(emailConfig)
+
 // Middleware
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "../public")))
@@ -64,7 +77,7 @@ app.use(express.static(path.join(__dirname, "../public")))
 app.use("/auth/register", makeRegisterRouter(userRepo))
 app.use("/auth/login", makeLoginRouter(userRepo))
 app.use("/auth/logout", makeLogoutRouter())
-app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo))
+app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo, emailClient))
 app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
 app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
 app.use("/auth/change-password-logged-in", authMiddleware, makeChangePasswordLoggedInRouter(userRepo))

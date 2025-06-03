@@ -2,8 +2,10 @@ import express from "express"
 import supertest from "supertest"
 import { makeForgotPasswordRouter, ForgotPasswordRequest } from
   "@business/auth/forgot_password/forgot_password_controller.js"
-import { MakeForgotPasswordService, makeForgotPasswordService } from "@business/auth/forgot_password/forgot_password_service.js"
+import { MakeForgotPasswordService, makeForgotPasswordService }
+  from "@business/auth/forgot_password/forgot_password_service.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockEmailClient } from "@src/client/mocks/email_client_mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/forgot_password/forgot_password_service.js", () => ({
@@ -19,7 +21,7 @@ describe("makeForgotPasswordRouter", () => {
 
     beforeAll(() => {
       (makeForgotPasswordService as jest.Mock).mockReturnValue(mockForgotPassword)
-      const router = makeForgotPasswordRouter(mockUserRepo)
+      const router = makeForgotPasswordRouter(mockUserRepo, mockEmailClient)
       app = express()
       app.use(express.json())
       app.use("/", router)
@@ -30,14 +32,9 @@ describe("makeForgotPasswordRouter", () => {
     })
 
     it("Success", async () => {
-      mockForgotPassword.forgotPassword.mockResolvedValue({
-        message: "Reset instructions sent",
-        resetToken: "mocked_reset_token"
-      })
+      mockForgotPassword.forgotPassword.mockResolvedValue({ message: "Reset instructions sent" })
 
-      const requestData: ForgotPasswordRequest = {
-        userName: "testUser"
-      }
+      const requestData: ForgotPasswordRequest = { userName: "testUser" }
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
@@ -45,21 +42,13 @@ describe("makeForgotPasswordRouter", () => {
         .send(requestData)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        message: "Reset instructions sent",
-        resetToken: "mocked_reset_token"
-      })
+      expect(response.body).toEqual({ message: "Reset instructions sent" })
     })
 
     it("Failure; spaces only", async () => {
-      mockForgotPassword.forgotPassword.mockResolvedValue({
-        message: "Reset instructions sent",
-        resetToken: "mocked_reset_token"
-      })
+      mockForgotPassword.forgotPassword.mockResolvedValue({ message: "Reset instructions sent" })
 
-      const requestData: ForgotPasswordRequest = {
-        userName: "    "
-      }
+      const requestData: ForgotPasswordRequest = { userName: "    " }
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
@@ -73,14 +62,9 @@ describe("makeForgotPasswordRouter", () => {
     })
 
     it("Failure; userName empty", async () => {
-      mockForgotPassword.forgotPassword.mockResolvedValue({
-        message: "Reset instructions sent",
-        resetToken: "mocked_reset_token"
-      })
+      mockForgotPassword.forgotPassword.mockResolvedValue({ message: "Reset instructions sent" })
 
-      const requestData: ForgotPasswordRequest = {
-        userName: ""
-      }
+      const requestData: ForgotPasswordRequest = { userName: "" }
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
@@ -88,18 +72,14 @@ describe("makeForgotPasswordRouter", () => {
         .send(requestData)
 
       expect(response.status).toBe(400)
-      expect(response.body).toEqual({
-        message: "User name cannot be empty."
-      })
+      expect(response.body).toEqual({ message: "User name cannot be empty." })
     })
 
     it("Should handle ExpressError with correct status code", async () => {
       const expressError = createExpressError(422, "Password does not meet requirements")
       mockForgotPassword.forgotPassword.mockRejectedValue(expressError)
 
-      const requestData: ForgotPasswordRequest = {
-        userName: "testUser"
-      }
+      const requestData: ForgotPasswordRequest = { userName: "testUser" }
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
@@ -115,9 +95,7 @@ describe("makeForgotPasswordRouter", () => {
       const generalError = new Error("Database connection failed")
       mockForgotPassword.forgotPassword.mockRejectedValue(generalError)
 
-      const requestData: ForgotPasswordRequest = {
-        userName: "testUser"
-      }
+      const requestData: ForgotPasswordRequest = { userName: "testUser" }
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)

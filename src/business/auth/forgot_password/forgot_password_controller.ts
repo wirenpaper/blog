@@ -4,13 +4,14 @@ import { makeForgotPasswordService } from "@business/auth/forgot_password/forgot
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateForgotPassword } from "./forgot_password_validator.js"
 import { validation } from "@business/aux.js"
+import { EmailClient } from "@src/client/email_client.js"
 
 export interface ForgotPasswordRequest {
   userName: string
 }
 
-export function makeForgotPasswordRouter(userRepo: UserRepository) {
-  const forgotPasswordService = makeForgotPasswordService(userRepo)
+export function makeForgotPasswordRouter(userRepo: UserRepository, emailClient: EmailClient) {
+  const forgotPasswordService = makeForgotPasswordService(userRepo, emailClient)
 
   return Router().post("/",
     validateForgotPassword,

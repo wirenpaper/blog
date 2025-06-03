@@ -1,18 +1,21 @@
 import bcrypt from "bcrypt"
 import { UserRepository } from "@db/user/user_repository.js"
+import { EmailClient } from "@src/client/email_client.js"
 import { createExpressError } from "@src/errors.js"
 import crypto from "crypto"
 
 interface ForgotPasswordResults {
   message: string,
-  resetToken: string,
 }
 
 export interface MakeForgotPasswordService {
   forgotPassword: (params: { userName: string }) => Promise<ForgotPasswordResults>
 }
 
-export function makeForgotPasswordService(userRepo: UserRepository): MakeForgotPasswordService {
+export function makeForgotPasswordService(
+  userRepo: UserRepository,
+  emailClient: EmailClient
+): MakeForgotPasswordService {
   return {
     async forgotPassword({ userName }) {
       const user = await userRepo.getUserByUsername({ userName })
@@ -26,16 +29,14 @@ export function makeForgotPasswordService(userRepo: UserRepository): MakeForgotP
       const expiryTime = new Date(Date.now() + 3600000) // 1 hour
       const userId = user.id
 
+      await emailClient.sendPasswordResetEmail({ recipient: userName, resetToken: resetToken })
       await userRepo.updateUserResetToken({
         resetTokenHash,
         expiryTime,
         userId
       })
 
-      return ({
-        message: "Reset instructions sent",
-        resetToken
-      })
+      return ({ message: "Reset instructions sent" })
     }
   }
 }
