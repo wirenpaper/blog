@@ -41,7 +41,10 @@ import { commentRepository } from "@db/comment/comment_repository.js"
 
 // middleware ///////////
 import authMiddleware from "@middleware/authMiddleware.js"
-import { makeEmailClient } from "./email_client.js"
+/////////////////////////
+
+// clients //////////////
+import { makeEmailClient } from "@src/client/email_client.js"
 /////////////////////////
 
 const app = express()
