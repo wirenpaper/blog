@@ -1,7 +1,7 @@
 import express from "express"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
-import sql from "./db.js"
+import sql from "@src/db.js"
 
 ////////////////////////////////////////////////////////////////////////////////////
 /////////// AUTH ROUTER IMPORTS
