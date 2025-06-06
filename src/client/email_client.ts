@@ -24,11 +24,17 @@ export function makeEmailClient(config: EmailConfig): EmailClient {
     port: config.port,
     secure: config.secure,
     auth: config.auth
+    /*
+     * connectionTimeout: 5000,  // 5 second timeout
+     * greetingTimeout: 5000,
+     * socketTimeout: 5000
+     */
   })
 
   return {
     async sendPasswordResetEmail({ recipient, resetToken }) {
-      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
+      // const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
+      const resetUrl = `http://localhost:3000/reset-password?token=${resetToken}`
 
       const mailOptions = {
         from: config.from,

@@ -26,7 +26,7 @@ describe("makeForgotPasswordService", () => {
         firstName: "Jim",
         lastName: "Bo"
       })
-      mockEmailClient.sendPasswordResetEmail.mockResolvedValue(undefined);
+      mockEmailClient.sendPasswordResetEmail.mockResolvedValue();
 
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (crypto.randomBytes as jest.Mock).mockReturnValue(Buffer.from("c2d0", "hex"))

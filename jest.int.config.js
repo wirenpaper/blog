@@ -19,6 +19,5 @@ export default {
   },
   transformIgnorePatterns: ["node_modules/(?!postgres)"],
   testMatch: ["**/*.int.test.ts"], // Match *.int.test.ts pattern
-  // setupFilesAfterEnv: ["<rootDir>/jest.integration.setup.js"],
   setupFiles: ["dotenv/config"]
 };

@@ -12,7 +12,9 @@
     "test:watch": "NODE_ENV=test jest --watchAll",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "test:int": "NODE_ENV=test-integration jest --config jest.int.config.js --detectOpenHandles",
-    "test:int:watch": "NODE_ENV=test-integration jest --config jest.int.config.js --watchAll"
+    "test:int:watch": "NODE_ENV=test-integration jest --config jest.int.config.js --watchAll",
+    "test:maildev:active": "./scripts/run-maildev-active-tests.sh --config jest.maildev.active.config.js --detectOpenHandles",
+    "test:maildev:active:watch": "./scripts/run-maildev-active-tests.sh --config jest.maildev.active.config.js --watchAll"
   },
   "keywords": [],
   "author": "",
