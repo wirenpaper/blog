@@ -29,12 +29,12 @@ export function makeForgotPasswordService(
       const expiryTime = new Date(Date.now() + 3600000) // 1 hour
       const userId = user.id
 
-      await emailClient.sendPasswordResetEmail({ recipient: userName, resetToken: resetToken })
       await userRepo.updateUserResetToken({
         resetTokenHash,
         expiryTime,
         userId
       })
+      await emailClient.sendPasswordResetEmail({ recipient: userName, resetToken: resetToken })
 
       return ({ message: "Reset instructions sent" })
     }

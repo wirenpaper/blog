@@ -14,7 +14,9 @@
     "test:int": "NODE_ENV=test-integration jest --config jest.int.config.js --detectOpenHandles",
     "test:int:watch": "NODE_ENV=test-integration jest --config jest.int.config.js --watchAll",
     "test:maildev:active": "./scripts/run-maildev-active-tests.sh --config jest.maildev.active.config.js --detectOpenHandles",
-    "test:maildev:active:watch": "./scripts/run-maildev-active-tests.sh --config jest.maildev.active.config.js --watchAll"
+    "test:maildev:active:watch": "./scripts/run-maildev-active-tests.sh --config jest.maildev.active.config.js --watchAll",
+    "test:maildev:inactive": "./scripts/run-maildev-inactive-tests.sh --config jest.maildev.inactive.config.js --detectOpenHandles",
+    "test:maildev:inactive:watch": "./scripts/run-maildev-inactive-tests.sh --config jest.maildev.inactive.config.js --watchAll"
   },
   "keywords": [],
   "author": "",
