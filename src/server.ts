@@ -1,4 +1,4 @@
-import express from "express"
+import express, { ErrorRequestHandler } from "express"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
 import sql from "@src/db.js"
@@ -46,6 +46,10 @@ import authMiddleware from "@middleware/authMiddleware.js"
 // clients //////////////
 import { makeEmailClient } from "@src/client/email_client.js"
 /////////////////////////
+
+interface CustomError extends Error {
+  statusCode?: number
+}
 
 const app = express()
 const PORT = process.env.PORT ?? 5003
@@ -102,6 +106,31 @@ app.use("/comments/create", authMiddleware, makeCreateCommentRouter(commentRepo)
 app.use("/comments/edit", authMiddleware, makeEditCommentRouter(commentRepo))
 app.use("/comments/delete", authMiddleware, makeDeleteCommentRouter(commentRepo))
 app.use("/comments/read-post-comments", makeGetPostCommentsRouter(commentRepo))
+
+// =========================================================
+// FINAL ERROR HANDLER
+// =========================================================
+const errorHandler: ErrorRequestHandler = (err: CustomError, _req, res, _next) => {
+  let statusCode = 500
+  let message = "An unexpected internal server error occurred."
+
+  if (err && typeof err.statusCode === "number" && typeof err.message === "string") {
+    statusCode = err.statusCode
+    message = err.message
+  }
+
+  if (statusCode === 500) {
+    console.error("UNHANDLED ERROR:", err)
+  }
+
+  res.status(statusCode).json({
+    error: {
+      message: message,
+    },
+  })
+}
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server has started on port: ${PORT}`)

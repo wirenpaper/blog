@@ -1,244 +1,149 @@
-import authMiddleware from "@middleware/authMiddleware.js"
-import jwt, { JwtPayload, VerifyCallback } from "jsonwebtoken"
 import { Request, Response, NextFunction } from "express"
-import { ExpressError } from "@src/errors.js"
+import jwt from "jsonwebtoken"
+import authMiddleware from "@middleware/authMiddleware.js"
+// We don't need ExpressError for these tests, as we can check object properties directly.
 
-
+// --- CHANGE 1: Mock the entire library correctly for type safety ---
+// This tells TypeScript what the mocked version looks like.
 jest.mock("jsonwebtoken")
+const mockedJwt = jwt as jest.Mocked<typeof jwt>
 
 describe("authMiddleware", () => {
+  // Define reusable test objects
+  let req: Partial<Request>
+  let res: Partial<Response> // We don't use res, but it's good practice
+  let next: NextFunction
 
+  // --- CHANGE 2: Use beforeEach for clean state in every test ---
   beforeEach(() => {
-    jest.clearAllMocks();
-    (jwt.sign as jest.Mock).mockReset()
-    process.env.JWT_SECRET = "process.env.JWT_SECRET.token"
+    // Reset mocks before each test
+    jest.clearAllMocks()
+
+    // Set up default environment
+    process.env.JWT_SECRET = "test-secret"
+
+    // Create fresh mock objects for each test
+    req = {
+      headers: {},
+    }
+    res = {}
+    next = jest.fn()
   })
 
-  it("Success", () => {
+  // --- Test the "Happy Path" ---
+  it("should attach userId to req and call next() on success", async () => {
     // Arrange
-    process.env.JWT_SECRET = "test-secret";
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
+    req.headers = { authorization: "Bearer valid.token.here" }
+    const mockPayload = { id: 123, username: "test" };
 
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
+    // --- CHANGE 3: The new, simpler way to mock `jwt.verify` ---
+    // For success, just have it return the desired value. No callbacks needed.
+    (mockedJwt.verify as jest.Mock).mockReturnValue(mockPayload)
 
-    const res = {} as Response
+    // Act
+    // --- CHANGE 4: Await the async middleware function ---
+    await authMiddleware(req as Request, res as Response, next)
 
-    const next = jest.fn() as NextFunction
+    // Assert
+    expect(mockedJwt.verify).toHaveBeenCalledWith("valid.token.here", "test-secret")
+    expect(req.userId).toBe(123)
+    // Ensure next() was called with NO arguments, indicating success
+    expect(next).toHaveBeenCalledWith()
+  })
 
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, { id: 123 } as JwtPayload)  // null error, valid decoded payload
+  // --- Grouping header/token format tests ---
+  describe("Header and Token Format Errors", () => {
+    it("should call next with a 401 error if no Authorization header is provided", async () => {
+      // Arrange
+      req.headers = {} // No authorization header
+
+      // Act
+      await authMiddleware(req as Request, res as Response, next)
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          statusCode: 401,
+          message: "No token provided or malformed header",
+        })
+      )
+    })
+
+    it("should call next with a 401 error if header is not in Bearer format", async () => {
+      // Arrange
+      req.headers = { authorization: "invalid.token.format" }
+
+      // Act
+      await authMiddleware(req as Request, res as Response, next)
+
+      // Assert
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          statusCode: 401,
+          message: "No token provided or malformed header",
+        })
+      )
+    })
+  })
+
+  // --- Test for when the token itself is bad (signature, expired) ---
+  it("should call next with a 401 error if jwt.verify throws an error", async () => {
+    // Arrange
+    req.headers = { authorization: "Bearer expired.or.invalid.token" }
+
+    // --- CHANGE 5: Mocking a failure is now just throwing an error ---
+    const jwtError = new jwt.JsonWebTokenError("jwt expired")
+    mockedJwt.verify.mockImplementation(() => {
+      throw jwtError
     })
 
     // Act
-    authMiddleware(req, res, next)
+    await authMiddleware(req as Request, res as Response, next)
 
     // Assert
-    expect(req.userId).toBe(123)
-    expect(next).toHaveBeenCalled()
-  })
-
-  it("Valid error arg", () => {
-    // Arrange
-    process.env.JWT_SECRET = "test-secret";
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
-
-    const res = {} as Response
-
-    const next = jest.fn() as NextFunction
-
-    const error = {
-      name: "TokenExpiredError",
-      message: "jwt expired",
-      expiredAt: new Date()
-    } as jwt.TokenExpiredError
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(error, { id: 123 } as JwtPayload)  // null error, valid decoded payload
-    })
-
-    // Act & Assert
-
-    expect(() => {
-      authMiddleware(req, res, next)
-    }).toThrow(
+    expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: 401,
-        message: "Invalid token"
-      }) as ExpressError
+        message: "Invalid or expired token",
+      })
     )
-
   })
 
-  it("!decoded", () => {
+  // --- Test for when the payload content is wrong ---
+  it("should call next with a 401 error if the decoded payload is invalid", async () => {
     // Arrange
-    process.env.JWT_SECRET = "test-secret";
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
+    req.headers = { authorization: "Bearer valid.token.with.bad.payload" }
+    // Payload is missing 'id' or it's the wrong type
+    const mockInvalidPayload = { user: "test" }; // No 'id' property
+    (mockedJwt.verify as jest.Mock).mockReturnValue(mockInvalidPayload)
 
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
+    // Act
+    await authMiddleware(req as Request, res as Response, next)
 
-    const res = {} as Response
-
-    const next = jest.fn() as NextFunction
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, undefined)  // null error, valid decoded payload
-    })
-
-    expect(() => {
-      authMiddleware(req, res, next)
-    }).toThrow(
-      expect.objectContaining({
-        statusCode: 500,
-        message: "Decoded is undefined"
-      }) as ExpressError
-    )
-
-  })
-
-  it("Decoded is a string", () => {
-    // Arrange
-    process.env.JWT_SECRET = "test-secret";
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
-
-    const res = {} as Response
-
-    const next = jest.fn() as NextFunction
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, "oops")  // null error, valid decoded payload
-    })
-
-    expect(() => {
-      authMiddleware(req, res, next)
-    }).toThrow(
-      expect.objectContaining({
-        statusCode: 500,
-        message: "Decoded not of type JwtPayload"
-      }) as ExpressError
-    )
-
-  })
-
-  it("Decoded id is not a number", () => {
-    // Arrange
-    process.env.JWT_SECRET = "test-secret";
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
-
-    const res = {} as Response
-
-    const next = jest.fn() as NextFunction
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, { id: "oops" })
-    })
-
-    expect(() => {
-      authMiddleware(req, res, next)
-    }).toThrow(
-      expect.objectContaining({
-        statusCode: 500,
-        message: "decoded.id not yielding number, error"
-      }) as ExpressError
-    )
-
-  })
-
-  it("!token", () => {
-    // Arrange
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-
-    const req = {
-      headers: {
-        authorization: undefined
-      }
-    } as Request
-
-    /*const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    } as unknown as Response
-    */
-
-    const next = jest.fn() as NextFunction
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, { id: 123 } as JwtPayload)  // null error, valid decoded payload
-    })
-    const res = {} as Response
-
-    // Act & Assert
-    expect(() => authMiddleware(req, res, next)).toThrow(
+    // Assert
+    expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: 401,
-        message: "No token provided"
-      }) as ExpressError
+        message: "Invalid token payload",
+      })
     )
   })
 
-  it("!secret", () => {
+  // --- Test for server configuration issues ---
+  it("should call next with a 500 error if JWT_SECRET is not configured", async () => {
     // Arrange
-    (jwt.sign as jest.Mock).mockReturnValue("test.jwt.token")
-    delete process.env.JWT_SECRET
+    req.headers = { authorization: "Bearer any.token" }
+    delete process.env.JWT_SECRET // Simulate missing environment variable
 
+    // Act
+    await authMiddleware(req as Request, res as Response, next)
 
-    const req = {
-      headers: {
-        authorization: "valid-token"
-      }
-    } as Request
-
-    /*const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    } as unknown as Response*/
-
-    const next = jest.fn() as NextFunction
-
-    // Mock jwt.verify to simulate successful verification
-    (jwt.verify as jest.Mock).mockImplementation((_token: string, _secret: string, callback: VerifyCallback) => {
-      callback(null, { id: 123 } as JwtPayload)  // null error, valid decoded payload
-    })
-    const res = {} as Response
-
-    // Act & Assert
-    expect(() => authMiddleware(req, res, next)).toThrow(
+    // Assert
+    expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: 500,
-        message: "Server misconfiguration: missing JWT_SECRET"
-      }) as ExpressError
+        message: "Server misconfiguration: missing JWT_SECRET",
+      })
     )
   })
-
 })

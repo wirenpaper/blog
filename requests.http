@@ -114,7 +114,7 @@ Content-Type: application/json
 
 ### Reset password when logged in ########################################
 POST {{baseUrl}}/auth/change-password-logged-in
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
@@ -126,7 +126,7 @@ Content-Type: application/json
 # postRoutes
 ###########################################################################
 POST {{baseUrl}}/posts/create
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
@@ -135,7 +135,7 @@ Content-Type: application/json
 
 ############################################################################
 POST {{baseUrl}}/posts/create
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
@@ -144,17 +144,17 @@ Content-Type: application/json
 
 ### Read all posts #########################################################
 GET {{baseUrl}}/posts/read-all
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 ### Request 1 post using id ################################################
 GET {{baseUrl}}/posts/read/2
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 ### change post 1 ##########################################################
 PUT {{baseUrl}}/posts/edit/1
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
@@ -163,7 +163,7 @@ Content-Type: application/json
 
 ### delete post 1 ##########################################################
 DELETE {{baseUrl}}/posts/delete/2
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 ############################################################################
@@ -172,7 +172,7 @@ Content-Type: application/json
 
 ###  create comment ########################################################
 POST {{baseUrl}}/comments/create
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
@@ -182,7 +182,7 @@ Content-Type: application/json
 
 ### create another comment #################################################
 POST {{baseUrl}}/comments/create
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 
 {
   "mComment": "babababa",
@@ -191,7 +191,7 @@ Authorization: {{TOKEN}}
 
 ### create another comment #################################################
 POST {{baseUrl}}/comments/create
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 
 {
   "mComment": "trolololo",
@@ -201,7 +201,7 @@ Authorization: {{TOKEN}}
 
 ### edit a comment ########################################################
 PUT {{baseUrl}}/comments/edit/2
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 
 {
   "mComment": "updated comment lol"
@@ -209,12 +209,12 @@ Authorization: {{TOKEN}}
 
 ### delete a comment #######################################################
 DELETE {{baseUrl}}/comments/delete/3
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 
 ### get all post comments #######################################################
 GET {{baseUrl}}/comments/read-post-comments/2
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
 
 ### get all post comments #######################################################
 GET {{baseUrl}}/comments/read-post-comments/1
-Authorization: {{TOKEN}}
+Authorization: Bearer {{TOKEN}}
