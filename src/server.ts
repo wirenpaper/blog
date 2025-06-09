@@ -45,6 +45,7 @@ import authMiddleware from "@middleware/authMiddleware.js"
 
 // clients //////////////
 import { makeEmailClient } from "@src/client/email_client.js"
+import { testEmailConfig } from "@src/client/__tests__/test_email.config.js"
 /////////////////////////
 
 interface CustomError extends Error {
@@ -62,17 +63,19 @@ const userRepo = userRepository(sql)
 const postRepo = postRepository(sql)
 const commentRepo = commentRepository(sql)
 
-const emailConfig = {
-  host: process.env.SMTP_HOST!,
-  port: parseInt(process.env.SMTP_PORT!),
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER!,
-    pass: process.env.SMTP_PASS!
-  },
-  from: process.env.FROM_EMAIL!
-}
-const emailClient = makeEmailClient(emailConfig)
+/*
+ * const emailConfig = {
+ *   host: process.env.SMTP_HOST!,
+ *   port: parseInt(process.env.SMTP_PORT!),
+ *   secure: process.env.SMTP_SECURE === "true",
+ *   auth: {
+ *     user: process.env.SMTP_USER!,
+ *     pass: process.env.SMTP_PASS!
+ *   },
+ *   from: process.env.FROM_EMAIL!
+ * }
+ */
+const emailClient = makeEmailClient(testEmailConfig)
 
 // Middleware
 app.use(express.json())
