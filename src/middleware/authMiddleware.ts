@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import { createExpressError } from "@src/errors.js"
 
-// Tell the linter to ignore the 'require-await' rule for this specific function.
 // eslint-disable-next-line @typescript-eslint/require-await
 async function authMiddleware(req: Request, _res: Response, next: NextFunction) {
   try {

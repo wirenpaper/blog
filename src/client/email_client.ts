@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-interface EmailConfig {
+export interface EmailConfig {
   host: string
   port: number
   secure: boolean

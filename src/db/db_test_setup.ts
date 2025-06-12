@@ -1,11 +1,13 @@
 import postgres from "postgres"
 
-const sql = postgres({
+const noop = () => { /* no-op */ }
+const testSql = postgres({
   host: "localhost",
   port: 5432,
   database: "blogdb",
   username: process.env.USERNAME,
-  password: process.env.PASSWORD
+  password: process.env.PASSWORD,
+  onnotice: () => noop
 })
 export const createTables = `
       -- users table
@@ -49,6 +51,6 @@ export const dropTables = `
       drop table if exists users;
     `
 
-export type PostgresClient = ReturnType<typeof postgres>
+// export type PostgresClient = ReturnType<typeof postgres>
 
-export default sql
+export default testSql
