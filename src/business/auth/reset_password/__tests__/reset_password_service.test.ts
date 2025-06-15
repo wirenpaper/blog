@@ -15,7 +15,7 @@ describe("makeResetPasswordService", () => {
       // Arrange
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_123")
 
-      mockUserRepo.getUserByVerifiedToken.mockResolvedValue({
+      mockUserRepo.getResetToken.mockResolvedValue({
         id: 123,
         resetToken: "reset_token_123"
       });
@@ -37,7 +37,7 @@ describe("makeResetPasswordService", () => {
 
     it("!user", async () => {
       // Arrange
-      mockUserRepo.getUserByVerifiedToken.mockResolvedValue(undefined)
+      mockUserRepo.getResetToken.mockResolvedValue(undefined)
 
       // Act & Assert
       await expect(makeResetPasswordService(mockUserRepo).resetPassword({
@@ -46,13 +46,13 @@ describe("makeResetPasswordService", () => {
         newPassword: "K!m1@2025#P@ssw0rd$"
       })).rejects.toMatchObject({
         statusCode: 400,
-        message: "Invalid, expired or unverified token"
+        message: "Invalid or expired token"
       })
     })
 
     it("!tokenValid", async () => {
       // Arrange
-      mockUserRepo.getUserByVerifiedToken.mockResolvedValue({
+      mockUserRepo.getResetToken.mockResolvedValue({
         id: 123,
         resetToken: "reset_token_123"
       });
@@ -65,7 +65,7 @@ describe("makeResetPasswordService", () => {
         newPassword: "K!m1@2025#P@ssw0rd$"
       })).rejects.toMatchObject({
         statusCode: 400,
-        message: "Invalid token"
+        message: "Invalid or expired token"
       })
     })
 

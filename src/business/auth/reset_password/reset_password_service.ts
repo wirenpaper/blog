@@ -19,19 +19,16 @@ export interface MakeResetPasswordService {
 export function makeResetPasswordService(userRepo: UserRepository): MakeResetPasswordService {
   return {
     async resetPassword({ userName, resetToken, newPassword }) {
-      const user = await userRepo.getUserByVerifiedToken({ userName })
+      const user = await userRepo.getResetToken({ userName })
       if (!user)
-        throw createExpressError(400, "Invalid, expired or unverified token")
+        throw createExpressError(400, "Invalid or expired token")
 
       const tokenValid = await bcrypt.compare(resetToken, user.resetToken)
       if (!tokenValid)
-        throw createExpressError(400, "Invalid token")
+        throw createExpressError(400, "Invalid or expired token")
 
       const hashedPassword = await bcrypt.hash(newPassword, 10)
-
-      const userId = user.id
-      await userRepo.updateUserPassword({ hashedPassword, userId })
-
+      await userRepo.updateUserPassword({ hashedPassword, userId: user.id })
       return { message: "Password successfully reset" }
     }
   }
