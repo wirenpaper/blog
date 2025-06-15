@@ -20,7 +20,7 @@ export function makeForgotPasswordService(
     async forgotPassword({ userName }) {
       const user = await userRepo.getUserByUsername({ userName })
       if (!user) {
-        throw createExpressError(401, "Unknown user")
+        throw createExpressError(200, "Check your email")
       }
 
       // Use crypto for the reset token
@@ -36,7 +36,7 @@ export function makeForgotPasswordService(
       })
       await emailClient.sendPasswordResetEmail({ recipient: userName, resetToken: resetToken })
 
-      return ({ message: "Reset instructions sent" })
+      return ({ message: "Check your email" })
     }
   }
 }

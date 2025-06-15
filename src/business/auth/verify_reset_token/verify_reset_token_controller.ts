@@ -12,12 +12,16 @@ export interface ResetRequest {
 export function makeVerifyResetTokenRouter(userRepo: UserRepository) {
   const verifyResetTokenService = makeVerifyResetTokenService(userRepo)
 
-  return Router().post("/",
+  return Router().get("/",
     validateResetToken,
-    async (req: Request<object, object, ResetRequest>, res: Response) => {
+    async (req: Request, res: Response) => {
       if (!validation(req, res)) return
-      const { resetToken } = req.body
+      const { resetToken } = req.query
       try {
+        if (typeof resetToken !== "string") {
+          res.status(400).json({ message: "A valid reset token must be provided." })
+          return
+        }
         const message = await verifyResetTokenService.verifyResetToken({ resetToken })
         res.json(message)
       } catch (error) {

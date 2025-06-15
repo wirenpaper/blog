@@ -40,8 +40,8 @@ describe("makeVerifyResetTokenRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .post("/")
-        .send(requestData)
+        .get("/")
+        .query(requestData)
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({ message: "Token verified, proceed to password reset" })
@@ -58,8 +58,8 @@ describe("makeVerifyResetTokenRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .post("/")
-        .send(requestData)
+        .get("/")
+        .query(requestData)
 
       expect(response.status).toBe(400)
       expect(response.body).toEqual({ message: "resetToken cannot be empty." })
@@ -75,8 +75,8 @@ describe("makeVerifyResetTokenRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .post("/")
-        .send(requestData)
+        .get("/")
+        .query(requestData)
 
       expect(response.status).toBe(422)
       expect(response.body).toEqual({ message: "Password does not meet requirements" })
@@ -93,8 +93,8 @@ describe("makeVerifyResetTokenRouter", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const response = await supertest(app)
-        .post("/")
-        .send(requestData)
+        .get("/")
+        .query(requestData)
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: "Database connection failed" })

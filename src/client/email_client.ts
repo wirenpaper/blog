@@ -1,5 +1,15 @@
 import nodemailer from "nodemailer"
 
+// Define the shape of a single email from MailDev's v1 API
+export interface MailDevEmail {
+  id: string;
+  to: { address: string; name: string }[];
+  from: { address: string; name: string }[];
+  subject: string;
+  html: string;
+  // ... add other properties if you need them
+}
+
 export interface EmailConfig {
   host: string
   port: number

@@ -1,7 +1,7 @@
-import { body } from "express-validator"
+import { query } from "express-validator"
 
 export const validateResetToken = [
-  body("resetToken")
+  query("resetToken")
     .trim()
     .notEmpty().withMessage("resetToken cannot be empty.")
 ]

@@ -38,7 +38,7 @@ describe("makeForgotPasswordService", () => {
 
       // Assert
       expect(result).toMatchObject({
-        message: "Reset instructions sent"
+        message: "Check your email"
       })
     })
 
@@ -50,8 +50,8 @@ describe("makeForgotPasswordService", () => {
       await expect(makeForgotPasswordService(mockUserRepo, mockEmailClient).forgotPassword({
         userName: "jimbo",
       })).rejects.toMatchObject({
-        statusCode: 401,
-        message: "Unknown user"
+        statusCode: 200,
+        message: "Check your email"
       })
     })
   })
