@@ -35,7 +35,6 @@ describe("userRepository", () => {
         lastName: "Doe",
         resetToken: undefined,
         resetTokenExpires: undefined,
-        tokenVerified: false
       })
 
     })

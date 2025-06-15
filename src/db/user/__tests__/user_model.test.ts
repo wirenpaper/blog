@@ -44,7 +44,6 @@ describe("User Model", () => {
         lastName: "User",
         resetToken: "sometoken123",
         resetTokenExpires: new Date(),
-        tokenVerified: true
       }
 
       const sanitizedUser = sanitizeUser(user)
@@ -59,7 +58,6 @@ describe("User Model", () => {
       expect(sanitizedUser.userName).toBe("testuser")
       expect(sanitizedUser.firstName).toBe("Test")
       expect(sanitizedUser.lastName).toBe("User")
-      expect(sanitizedUser.tokenVerified).toBe(true)
     })
 
     test("should handle partial user objects", () => {
@@ -143,14 +141,5 @@ describe("User Model", () => {
       expect(result.lastName).toBe("Doe")
     })
 
-    test("should set tokenVerified to false by default", () => {
-      const user: UserModel = {
-        userName: "test@example.com",
-        hashedPassword: "hashedpass123"
-      }
-
-      const result = createUser(user)
-      expect(result.tokenVerified).toBe(false)
-    })
   })
 })

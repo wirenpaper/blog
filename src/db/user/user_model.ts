@@ -8,7 +8,6 @@ export interface UserModel {
   lastName?: string
   resetToken?: string
   resetTokenExpires?: Date
-  tokenVerified?: boolean
 }
 
 export function createUser(user: UserModel): UserModel {
@@ -20,7 +19,6 @@ export function createUser(user: UserModel): UserModel {
     lastName,
     resetToken,
     resetTokenExpires,
-    tokenVerified = false
   } = user
 
   return {
@@ -31,7 +29,6 @@ export function createUser(user: UserModel): UserModel {
     lastName: lastName === "" ? undefined : lastName,
     resetToken,
     resetTokenExpires,
-    tokenVerified
   }
 }
 

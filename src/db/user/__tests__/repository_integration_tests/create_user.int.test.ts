@@ -57,7 +57,6 @@ describe("userRepository", () => {
           last_name: "User",
           reset_token: null,
           reset_token_expires: null,
-          token_verified: false,
           user_name: "testuser"
         }
       ])

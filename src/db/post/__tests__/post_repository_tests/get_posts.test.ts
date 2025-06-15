@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { userRepository } from "@db/user/user_repository.js"
+// import { userRepository } from "@db/user/user_repository.js"
 import { GetPostResult, postRepository } from "@db/post/post_repository.js"
 
 jest.mock("@src/db.js")
@@ -44,7 +44,7 @@ describe("postRepository", () => {
       ])
 
       // Act
-      const result = await userRepository(sqlClient).getResetTokens()
+      const result = await postRepository(sqlClient).getPosts()
 
       // Assert
       expect(result).toMatchObject([

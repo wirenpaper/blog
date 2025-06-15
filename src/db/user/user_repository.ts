@@ -54,9 +54,6 @@ export interface UserRepository {
   getUserByUsername: (params: { userName: string }) => Promise<GetUserByUsernameResult | undefined>
   getUserById: (params: { userId: number }) => Promise<GetUserByIdResult>
   updateUserResetToken: (params: UpdateResetTokenParams) => Promise<void>
-  getResetTokens: () => Promise<GetResetTokensResult[]>
-  updateTokenVerified: (params: { userId: number }) => Promise<void>
-  getUserByVerifiedToken: (params: { userName: string }) => Promise<GetUserByVerifiedTokenResult | undefined>
   getResetToken: (params: { userName: string }) => Promise<GetUserTokenResult | undefined>
   updateUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   updateLoggedInUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
@@ -184,81 +181,6 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       }
     },
 
-    // all users who have a reset token set basically
-    async getResetTokens() {
-      try {
-        const users: GetResetTokensResult[] = await sqlClient`
-        select
-        id,
-          reset_token as "resetToken"
-          from users
-          where reset_token is not null
-          and reset_token_expires > now()
-          `
-        return users
-      } catch (error) {
-        const e = error as { code?: string; message: string }
-        if (!e.code)
-          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
-
-        throw createExpressError(postgresStatusCode(e.code), e.message)
-      }
-    },
-
-    async updateTokenVerified({ userId }) {
-      try {
-        const res: { id: number }[] = await sqlClient`
-          update users
-          set token_verified = true
-          where id = ${userId}
-          returning id
-          `
-        if (res.length !== 1)
-          throw createExpressError(500, "should be *exactly* 1 row")
-
-      } catch (error) {
-        if (isExpressError(error as Error))
-          throw error
-
-        const e = error as { code?: string; message: string }
-        if (!e.code)
-          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
-
-        throw createExpressError(postgresStatusCode(e.code), e.message)
-      }
-    },
-
-    // #TODO multiple users not allowed? think about later
-    async getUserByVerifiedToken({ userName }) {
-      try {
-        const user: GetUserByVerifiedTokenResult[] = await sqlClient`
-        select
-        id,
-          reset_token as "resetToken"
-          from users
-          where reset_token_expires > now()
-          and token_verified = true
-          and user_name = ${userName}
-        `
-
-        if (user.length > 1) {
-          throw createExpressError(500, "should be 0 or 1 rows")
-        }
-
-        return user[0]
-      } catch (error) {
-        if (isExpressError(error as Error))
-          throw error
-
-        const e = error as { code?: string; message: string }
-
-        if (!e.code)
-          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
-
-        throw createExpressError(postgresStatusCode(e.code), e.message)
-      }
-    },
-
     async getResetToken({ userName }) {
       try {
         const user: GetUserByVerifiedTokenResult[] = await sqlClient`
@@ -294,8 +216,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           update users
           set hashed_password = ${hashedPassword},
           reset_token = null,
-          reset_token_expires = null,
-          token_verified = false
+          reset_token_expires = null
           where id = ${userId}
           returning id
           `
@@ -308,6 +229,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       } catch (error) {
         if (isExpressError(error as Error))
           throw error
+
         const e = error as { code?: string; message: string }
         if (!e.code)
           throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)

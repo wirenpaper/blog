@@ -11,7 +11,6 @@ create table if not exists users (
     last_name text,
     reset_token text,
     reset_token_expires timestamp,
-    token_verified BOOLEAN DEFAULT false
 );
 
 -- posts table

@@ -18,8 +18,7 @@ export const createTables = `
         first_name text,
         last_name text,
         reset_token text,
-        reset_token_expires timestamp,
-        token_verified BOOLEAN DEFAULT false
+        reset_token_expires timestamp
       );
       -- posts table
       create table if not exists posts (

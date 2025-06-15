@@ -62,7 +62,6 @@ describe("E2E: POST /auth/register", () => {
       last_name: "Doe",
       reset_token: null,
       reset_token_expires: null,
-      token_verified: false
     }])
     // THE NEW CHECK: Explicitly check the hashed_password property
     expect(res[0].hashed_password).not.toBeNull()
@@ -79,7 +78,6 @@ describe("E2E: POST /auth/register", () => {
       user_name: "testUser@gmail.com",
       first_name: "John",
       last_name: "Doe",
-      token_verified: false
     }])
     expect(res[0].hashed_password).not.toBeNull()
     expect(res[0].hashed_password).toEqual(expect.any(String)) // A more specific check
