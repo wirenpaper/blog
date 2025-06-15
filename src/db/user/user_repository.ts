@@ -38,6 +38,11 @@ export interface GetUserByVerifiedTokenResult {
   resetToken: string
 }
 
+export interface GetUserTokenResult {
+  id: number
+  resetToken: string
+}
+
 interface UpdateUserPasswordParams {
   hashedPassword: string
   userId: number
@@ -52,6 +57,7 @@ export interface UserRepository {
   getResetTokens: () => Promise<GetResetTokensResult[]>
   updateTokenVerified: (params: { userId: number }) => Promise<void>
   getUserByVerifiedToken: (params: { userName: string }) => Promise<GetUserByVerifiedTokenResult | undefined>
+  getResetToken: (params: { userName: string }) => Promise<GetUserTokenResult | undefined>
   updateUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   updateLoggedInUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   deleteUserById: (params: { userId: number }) => Promise<void>
@@ -253,6 +259,34 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
       }
     },
 
+    async getResetToken({ userName }) {
+      try {
+        const user: GetUserByVerifiedTokenResult[] = await sqlClient`
+        select
+          id,
+          reset_token as "resetToken"
+          from users
+          where reset_token_expires > now()
+          and user_name = ${userName}
+        `
+
+        if (user.length > 1) {
+          throw createExpressError(500, "should be 0 or 1 rows")
+        }
+
+        return user[0]
+      } catch (error) {
+        if (isExpressError(error as Error))
+          throw error
+
+        const e = error as { code?: string; message: string }
+
+        if (!e.code)
+          throw createExpressError(500, "STATUSCODE NOT FOUND " + e.message)
+
+        throw createExpressError(postgresStatusCode(e.code), e.message)
+      }
+    },
 
     async updateUserPassword({ hashedPassword, userId }) {
       try {
@@ -262,7 +296,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
           reset_token = null,
           reset_token_expires = null,
           token_verified = false
-          where id = ${userId} and token_verified = true
+          where id = ${userId}
           returning id
           `
         if (res.length === 0)

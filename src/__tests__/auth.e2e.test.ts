@@ -5,6 +5,7 @@ import { createApp } from "@src/app.js"
 import testSql, { createTables, dropTables } from "@db/db_test_setup.js" // Your test database connection
 import { testEmailConfig } from "@src/client/__tests__/test_email.config.js"
 import { MailDevEmail } from "@src/client/email_client"
+import bcrypt from "bcrypt"
 
 // The correct API endpoint for MailDev v1
 const MAILDEV_CHECK_URL = "http://localhost:1080/email"
@@ -97,15 +98,24 @@ describe("E2E: POST /auth/register", () => {
     const url = new URL(fullUrl)
     const plainTextToken = url.searchParams.get("token")
 
-    // 3. verify reset token
+    // 3. reset password
+    const newPassword = "Tr0ub4dor&3"
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     await supertest(app)
-      .get("/auth/verify-reset-token")
-      .query({ resetToken: plainTextToken })
-    res = await testSql.unsafe("select * from users")
-    console.log(res)
-
-    // 4. reset the password
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      .post("/auth/reset-password")
+      .send({
+        userName: res[0].user_name as string,
+        resetToken: plainTextToken,
+        newPassword
+      })
+    const query =
+      await testSql`
+          select hashed_password as "hashedPassword"
+          from users
+          where
+          user_name = ${res[0].user_name as string}
+      `
+    const tokenValid = await bcrypt.compare(newPassword, query[0].hashedPassword as string)
+    expect(tokenValid).toBe(true)
   })
 })

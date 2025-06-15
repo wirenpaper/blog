@@ -11,7 +11,7 @@ import { makeRegisterRouter } from "@business/auth/register/register_controller.
 import { makeLoginRouter } from "@business/auth/login/login_controller.js"
 import { makeLogoutRouter } from "@business/auth/logout/logout_controller.js"
 import { makeForgotPasswordRouter } from "@business/auth/forgot_password/forgot_password_controller.js"
-import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
+// import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
 import { makeResetPasswordRouter } from "@business/auth/reset_password/reset_password_controller.js"
 import { makeChangePasswordLoggedInRouter } from
   "@business/auth/change_password_logged_in/change_password_logged_in_controller.js"
@@ -73,7 +73,7 @@ export function createApp(sql: Sql, emailConfig: EmailConfig): Express {
   app.use("/auth/login", makeLoginRouter(userRepo))
   app.use("/auth/logout", makeLogoutRouter())
   app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo, emailClient))
-  app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
+  // app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
   app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
   app.use("/auth/change-password-logged-in", authMiddleware, makeChangePasswordLoggedInRouter(userRepo))
   app.use("/auth/delete-user", authMiddleware, makeDeleteUserRouter(userRepo))

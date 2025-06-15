@@ -41,7 +41,7 @@ describe("userRepository", () => {
     it("Success", async () => {
       // Assert
       const hashedPassword = await sqlClient.unsafe("select hashed_password from users where id=1")
-      await sqlClient.unsafe("update users set token_verified=true where id=1")
+      // await sqlClient.unsafe("update users set token_verified=true where id=1")
       await userRepo.updateUserPassword({
         hashedPassword: "jumbodumbo",
         userId: 1
@@ -53,15 +53,17 @@ describe("userRepository", () => {
 
     })
 
-    it("failure; password not reset", async () => {
-      await expect(userRepo.updateUserPassword({
-        hashedPassword: "jumbodumbo",
-        userId: 1
-      })).rejects.toMatchObject({
-        statusCode: 500,
-        message: "password not reset"
-      })
-    })
+    /*
+     * it("failure; password not reset", async () => {
+     *   await expect(userRepo.updateUserPassword({
+     *     hashedPassword: "jumbodumbo",
+     *     userId: 1
+     *   })).rejects.toMatchObject({
+     *     statusCode: 500,
+     *     message: "password not reset"
+     *   })
+     * })
+     */
 
   })
 })

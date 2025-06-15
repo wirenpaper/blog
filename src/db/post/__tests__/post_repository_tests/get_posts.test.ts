@@ -1,7 +1,6 @@
 import sqlClient from "@src/db.js"
 import { userRepository } from "@db/user/user_repository.js"
 import { GetPostResult, postRepository } from "@db/post/post_repository.js"
-import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
 
