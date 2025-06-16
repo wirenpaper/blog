@@ -1,5 +1,5 @@
 import { Router, Request } from "express"
-import { makeDeleteUserService } from "@business/auth/delete_user/delete_user_service.js"
+import { makeDeleteUserService } from "@business/auth/delete-user/deleteUserService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { UserRepository } from "@db/user/user_repository.js"
 

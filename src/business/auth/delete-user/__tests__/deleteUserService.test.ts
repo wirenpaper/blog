@@ -1,5 +1,5 @@
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
-import { makeDeleteUserService } from "@business/auth/delete_user/delete_user_service.js"
+import { makeDeleteUserService } from "@business/auth/delete-user/deleteUserService.js"
 import { verifyUser } from "@business/aux.js"
 
 jest.mock("@src/db.js")
