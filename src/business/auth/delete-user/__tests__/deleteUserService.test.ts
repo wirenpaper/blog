@@ -1,4 +1,4 @@
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { makeDeleteUserService } from "@business/auth/delete-user/deleteUserService.js"
 import { verifyUser } from "@business/aux.js"
 

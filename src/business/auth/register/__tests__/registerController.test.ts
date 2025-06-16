@@ -2,7 +2,7 @@ import express from "express"
 import supertest from "supertest"
 import { makeRegisterRouter, RegisterRequest } from "@business/auth/register/registerController.js"
 import { MakeRegisterService, makeRegisterService } from "@business/auth/register/registerService.js"
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 // Mock the register service module

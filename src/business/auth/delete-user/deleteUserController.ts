@@ -1,7 +1,7 @@
 import { Router, Request } from "express"
 import { makeDeleteUserService } from "@business/auth/delete-user/deleteUserService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 
 export function makeDeleteUserRouter(repo: UserRepository) {
   const deleteUserService = makeDeleteUserService(repo)

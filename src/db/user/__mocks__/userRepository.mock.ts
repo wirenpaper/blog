@@ -1,4 +1,4 @@
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 
 export const mockUserRepo: jest.Mocked<UserRepository> = {
   createUser: jest.fn(),

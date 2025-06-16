@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 import { createExpressError } from "@src/errors.js"
 
 interface LoginUserParams {

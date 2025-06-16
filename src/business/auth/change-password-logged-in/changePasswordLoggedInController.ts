@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 import { makeChangePasswordLoggedInService } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
 import { createExpressError, ExpressError, isExpressError } from "@src/errors.js"

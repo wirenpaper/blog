@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { GetUserByIdResult, userRepository } from "@db/user/user_repository.js"
+import { GetUserByIdResult, userRepository } from "@db/user/userRepository.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")

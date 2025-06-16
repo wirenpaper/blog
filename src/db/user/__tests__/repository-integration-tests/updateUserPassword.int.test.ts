@@ -1,5 +1,5 @@
-import { userRepository } from "@db/user/user_repository.js"
-import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
+import { userRepository } from "@db/user/userRepository.js"
+import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("userRepository", () => {
   const userRepo = userRepository(sqlClient)
@@ -37,38 +37,32 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("updateUserResetToken", () => {
-    it("Success; getting user", async () => {
-      // Arrange
-
+  describe("updateUserPassword", () => {
+    it("Success", async () => {
       // Assert
-      await userRepo.updateUserResetToken({
-        resetTokenHash: "somehash",
-        expiryTime: new Date("2024-12-31T23:59:59"),
+      const hashedPassword = await sqlClient.unsafe("select hashed_password from users where id=1")
+      await userRepo.updateUserPassword({
+        hashedPassword: "jumbodumbo",
         userId: 1
       })
+      const hashedPasswordUpdated = await sqlClient.unsafe("select hashed_password from users where id=1")
 
-      // get
-      const check = await sqlClient.unsafe("select reset_token, reset_token_expires from users where id=1")
-
-      // Assert
-      expect(check).toEqual([{
-        reset_token: "somehash",
-        reset_token_expires: new Date("2024-12-31T23:59:59")
-      }])
+      expect(hashedPassword).toEqual([{ hashed_password: "hashedpassword123" }])
+      expect(hashedPasswordUpdated).toEqual([{ hashed_password: "jumbodumbo" }])
 
     })
 
-    it("Success; empty", async () => {
-      await expect(userRepo.updateUserResetToken({
-        resetTokenHash: "somehash",
-        expiryTime: new Date("2024-12-31T23:59:59"),
-        userId: 3
-      })).rejects.toMatchObject({
-        statusCode: 500,
-        message: "should be *exactly* 1 row"
-      })
-    })
+    /*
+     * it("failure; password not reset", async () => {
+     *   await expect(userRepo.updateUserPassword({
+     *     hashedPassword: "jumbodumbo",
+     *     userId: 1
+     *   })).rejects.toMatchObject({
+     *     statusCode: 500,
+     *     message: "password not reset"
+     *   })
+     * })
+     */
 
   })
 })

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
-import { UserRepository } from "@db/user/user_repository.js"
-import { EmailClient } from "@src/client/email_client.js"
+import { UserRepository } from "@db/user/userRepository.js"
+import { EmailClient } from "@src/client/emailClient.js"
 import { createExpressError } from "@src/errors.js"
 import crypto from "crypto"
 

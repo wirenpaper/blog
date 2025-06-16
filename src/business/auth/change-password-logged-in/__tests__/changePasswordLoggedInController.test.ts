@@ -4,7 +4,7 @@ import { makeChangePasswordLoggedInRouter, ChangePasswordRequest } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInController.js"
 import { MakeChangePasswordLoggedInService, makeChangePasswordLoggedInService } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/change-password-logged-in/changePasswordLoggedInService.js", () => ({

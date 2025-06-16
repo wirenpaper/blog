@@ -1,7 +1,7 @@
-import { userRepository } from "@db/user/user_repository.js"
+import { userRepository } from "@db/user/userRepository.js"
 import { postRepository } from "@db/post/post_repository.js"
 import { commentRepository } from "@db/comment/comment_repository.js"
-import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
+import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("CommentRepository", () => {
   const postRepo = postRepository(sqlClient)

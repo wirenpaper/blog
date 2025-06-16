@@ -1,5 +1,5 @@
-import { userRepository } from "@db/user/user_repository.js"
-import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
+import { userRepository } from "@db/user/userRepository.js"
+import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("userRepository", () => {
   const userRepo = userRepository(sqlClient)
@@ -37,19 +37,26 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("updateLoggedInUserPassword", () => {
-    it("Success", async () => {
+  describe("getUserById", () => {
+    it("Success; getting user", async () => {
+      // Arrange
+      const result = await userRepo.getUserById({ userId: 1 })
+
       // Assert
-      const hashedPassword = await sqlClient.unsafe("select hashed_password from users where id=1")
-      await userRepo.updateLoggedInUserPassword({
-        hashedPassword: "jumbodumbo",
-        userId: 1
+      expect(result).toEqual({
+        id: 1,
+        hashedPassword: "hashedpassword123",
       })
-      const hashedPasswordUpdated = await sqlClient.unsafe("select hashed_password from users where id=1")
+    })
 
-      expect(hashedPassword).toEqual([{ hashed_password: "hashedpassword123" }])
-      expect(hashedPasswordUpdated).toEqual([{ hashed_password: "jumbodumbo" }])
+    it("Success; empty", async () => {
+      // Arrange
 
+      // Act & Assert
+      await expect(userRepo.getUserById({ userId: 5 })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "should be *exactly* 1 row"
+      })
     })
 
   })

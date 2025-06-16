@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 import { makeForgotPasswordService } from "@business/auth/forgot-password/forgotPasswordService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateForgotPassword } from "@business/auth/forgot-password/forgotPasswordValidator.js"
 import { validation } from "@business/aux.js"
-import { EmailClient } from "@src/client/email_client.js"
+import { EmailClient } from "@src/client/emailClient.js"
 
 export interface ForgotPasswordRequest {
   userName: string

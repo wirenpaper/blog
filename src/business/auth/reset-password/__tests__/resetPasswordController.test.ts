@@ -4,7 +4,7 @@ import { makeResetPasswordRouter, ResetPasswordRequest } from
   "@business/auth/reset-password/resetPasswordController.js"
 import { MakeResetPasswordService, makeResetPasswordService } from
   "@business/auth/reset-password/resetPasswordService.js"
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/reset-password/resetPasswordService.js", () => ({

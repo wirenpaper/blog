@@ -2,7 +2,7 @@ import express from "express"
 import supertest from "supertest"
 import { makeDeleteUserRouter } from "@business/auth/delete-user/deleteUserController.js"
 import { makeDeleteUserService, DeleteUserService } from "@business/auth/delete-user/deleteUserService.js"
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/delete-user/deleteUserService.js", () => ({

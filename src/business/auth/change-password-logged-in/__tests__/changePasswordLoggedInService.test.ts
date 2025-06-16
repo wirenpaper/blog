@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
+import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { makeChangePasswordLoggedInService } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
 

@@ -1,5 +1,5 @@
 import { PostgresClient } from "@src/db.js"
-import { createUser, UserModel } from "@db/user/user_model.js"
+import { createUser, UserModel } from "@db/user/userModel.js"
 import { isExpressError, createExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface CreateUserParams {

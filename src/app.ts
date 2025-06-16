@@ -34,7 +34,7 @@ import { makeDeleteCommentRouter } from "@business/comment/delete-comment/delete
 import { makeGetPostCommentsRouter } from "@business/comment/get-post-comments/getPostCommentsController.js"
 
 // REPOSITORIES ////////////////////////////////////////////////////////////////////
-import { userRepository } from "@db/user/user_repository.js"
+import { userRepository } from "@db/user/userRepository.js"
 import { postRepository } from "@db/post/post_repository.js"
 import { commentRepository } from "@db/comment/comment_repository.js"
 ////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ import authMiddleware from "@middleware/authMiddleware.js"
 /////////////////////////
 
 // clients //////////////
-import { EmailConfig, makeEmailClient } from "@src/client/email_client.js"
+import { EmailConfig, makeEmailClient } from "@src/client/emailClient.js"
 /////////////////////////
 
 export function createApp(sql: Sql, emailConfig: EmailConfig): Express {
@@ -72,7 +72,6 @@ export function createApp(sql: Sql, emailConfig: EmailConfig): Express {
   app.use("/auth/login", makeLoginRouter(userRepo))
   app.use("/auth/logout", makeLogoutRouter())
   app.use("/auth/forgot-password", makeForgotPasswordRouter(userRepo, emailClient))
-  // app.use("/auth/verify-reset-token", makeVerifyResetTokenRouter(userRepo))
   app.use("/auth/reset-password", makeResetPasswordRouter(userRepo))
   app.use("/auth/change-password-logged-in", authMiddleware, makeChangePasswordLoggedInRouter(userRepo))
   app.use("/auth/delete-user", authMiddleware, makeDeleteUserRouter(userRepo))

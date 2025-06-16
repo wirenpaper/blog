@@ -1,5 +1,5 @@
-import { userRepository } from "@db/user/user_repository.js"
-import sqlClient, { createTables, dropTables } from "@db/db_test_setup.js"
+import { userRepository } from "@db/user/userRepository.js"
+import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("userRepository", () => {
   const userRepo = userRepository(sqlClient)
@@ -37,11 +37,11 @@ describe("userRepository", () => {
   })
 
   // Tests
-  describe("updateUserPassword", () => {
+  describe("updateLoggedInUserPassword", () => {
     it("Success", async () => {
       // Assert
       const hashedPassword = await sqlClient.unsafe("select hashed_password from users where id=1")
-      await userRepo.updateUserPassword({
+      await userRepo.updateLoggedInUserPassword({
         hashedPassword: "jumbodumbo",
         userId: 1
       })
@@ -51,18 +51,6 @@ describe("userRepository", () => {
       expect(hashedPasswordUpdated).toEqual([{ hashed_password: "jumbodumbo" }])
 
     })
-
-    /*
-     * it("failure; password not reset", async () => {
-     *   await expect(userRepo.updateUserPassword({
-     *     hashedPassword: "jumbodumbo",
-     *     userId: 1
-     *   })).rejects.toMatchObject({
-     *     statusCode: 500,
-     *     message: "password not reset"
-     *   })
-     * })
-     */
 
   })
 })

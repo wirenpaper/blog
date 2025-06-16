@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express"
 import { makeLoginService } from "@business/auth/login/loginService.js"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { validateLogin } from "@business/auth/login/loginValidator.js"
 import { validation } from "@business/aux.js"

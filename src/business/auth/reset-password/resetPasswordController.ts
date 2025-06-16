@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { UserRepository } from "@db/user/user_repository.js"
+import { UserRepository } from "@db/user/userRepository.js"
 import { makeResetPasswordService } from "@business/auth/reset-password/resetPasswordService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateResetPassword } from "./resetPasswordValidator.js"

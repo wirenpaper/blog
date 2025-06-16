@@ -1,4 +1,4 @@
-import { EmailClient } from "@src/client/email_client.js"
+import { EmailClient } from "@src/client/emailClient.js"
 
 export const mockEmailClient: jest.Mocked<EmailClient> = {
   sendPasswordResetEmail: jest.fn()

@@ -1,4 +1,4 @@
-import { createUser, isValidPassword, sanitizeUser, UserModel } from "@db/user/user_model.js"
+import { createUser, isValidPassword, sanitizeUser, UserModel } from "@db/user/userModel.js"
 
 describe("User Model", () => {
   describe("isValidPassword", () => {
