@@ -1,5 +1,5 @@
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
-import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
+import { makeEditPostService } from "@business/post/edit-post/editPostService.js"
 import { userIdExists, verifyUser } from "@business/aux.js"
 import { createExpressError } from "@src/errors.js"
 

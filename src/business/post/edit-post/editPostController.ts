@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { makeEditPostService } from "@business/post/edit_post/edit_post_service.js"
-import { validateEditPost } from "./edit_post_validator"
+import { makeEditPostService } from "@business/post/edit-post/editPostService.js"
+import { validateEditPost } from "@business/post/edit-post/editPostValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeEditPostRouter(postRepo: PostRepository) {
