@@ -2,7 +2,6 @@ import sqlClient from "@src/db.js"
 import { userRepository } from "@db/user/user_repository.js"
 import { UserModel } from "@db/user/user_model.js"
 import { createExpressError } from "@src/errors.js"
-// import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")
 

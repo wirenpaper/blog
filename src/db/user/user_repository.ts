@@ -28,17 +28,7 @@ export interface UpdateResetTokenParams {
   userId: number
 }
 
-export interface GetResetTokensResult {
-  id: number
-  resetToken: string
-}
-
-export interface GetUserByVerifiedTokenResult {
-  id: number
-  resetToken: string
-}
-
-export interface GetUserTokenResult {
+export interface GetResetTokenResult {
   id: number
   resetToken: string
 }
@@ -54,7 +44,7 @@ export interface UserRepository {
   getUserByUsername: (params: { userName: string }) => Promise<GetUserByUsernameResult | undefined>
   getUserById: (params: { userId: number }) => Promise<GetUserByIdResult>
   updateUserResetToken: (params: UpdateResetTokenParams) => Promise<void>
-  getResetToken: (params: { userName: string }) => Promise<GetUserTokenResult | undefined>
+  getResetToken: (params: { userName: string }) => Promise<GetResetTokenResult | undefined>
   updateUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   updateLoggedInUserPassword: (params: UpdateUserPasswordParams) => Promise<void>
   deleteUserById: (params: { userId: number }) => Promise<void>
@@ -183,7 +173,7 @@ export function userRepository(sqlClient: PostgresClient): UserRepository {
 
     async getResetToken({ userName }) {
       try {
-        const user: GetUserByVerifiedTokenResult[] = await sqlClient`
+        const user: GetResetTokenResult[] = await sqlClient`
         select
           id,
           reset_token as "resetToken"
