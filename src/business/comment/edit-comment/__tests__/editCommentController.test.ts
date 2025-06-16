@@ -3,7 +3,7 @@ import supertest from "supertest"
 import { makeEditCommentRouter } from "@business/comment/edit-comment/editCommentController.js"
 import { makeEditCommentService, MakeEditCommentService } from
   "@business/comment/edit-comment/editCommentService.js"
-import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
+import { mockCommentRepo } from "@db/comment/__mocks__/commentRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/comment/edit-comment/editCommentService.js", () => ({

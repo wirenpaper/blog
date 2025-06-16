@@ -1,4 +1,4 @@
-import { CommentRepository, GetPostCommentsSpecifications } from "@db/comment/comment_repository.js"
+import { CommentRepository, GetPostCommentsSpecifications } from "@db/comment/commentRepository.js"
 import { createExpressError } from "@src/errors.js"
 
 export function makeGetPostCommentsService(commentRepo: CommentRepository): GetPostCommentsSpecifications {

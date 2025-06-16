@@ -36,7 +36,7 @@ import { makeGetPostCommentsRouter } from "@business/comment/get-post-comments/g
 // REPOSITORIES ////////////////////////////////////////////////////////////////////
 import { userRepository } from "@db/user/userRepository.js"
 import { postRepository } from "@db/post/postRepository.js"
-import { commentRepository } from "@db/comment/comment_repository.js"
+import { commentRepository } from "@db/comment/commentRepository.js"
 ////////////////////////////////////////////////////////////////////////////////////
 
 // middleware ///////////

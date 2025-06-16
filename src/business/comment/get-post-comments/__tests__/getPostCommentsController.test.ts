@@ -2,8 +2,8 @@ import express from "express"
 import supertest from "supertest"
 import { makeGetPostCommentsRouter } from "@business/comment/get-post-comments/getPostCommentsController.js"
 import { makeGetPostCommentsService } from "@business/comment/get-post-comments/getPostCommentsService.js"
-import { GetPostCommentsSpecifications } from "@db/comment/comment_repository.js"
-import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
+import { GetPostCommentsSpecifications } from "@db/comment/commentRepository.js"
+import { mockCommentRepo } from "@db/comment/__mocks__/commentRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/comment/get-post-comments/getPostCommentsService.js", () => ({

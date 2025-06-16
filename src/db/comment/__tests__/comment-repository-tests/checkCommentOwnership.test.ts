@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { CheckCommentOwnershipResult, commentRepository } from "@db/comment/comment_repository.js"
+import { CheckCommentOwnershipResult, commentRepository } from "@db/comment/commentRepository.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@src/db.js")

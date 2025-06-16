@@ -1,5 +1,5 @@
 import { userIdExists, verifyUser } from "@business/aux.js"
-import { CommentRepository } from "@db/comment/comment_repository.js"
+import { CommentRepository } from "@db/comment/commentRepository.js"
 import { createExpressError } from "@src/errors.js"
 
 interface EditCommentParams {

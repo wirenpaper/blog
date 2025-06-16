@@ -1,5 +1,5 @@
 import { userIdExists } from "@business/aux.js"
-import { CommentRepository, CreateComment } from "@db/comment/comment_repository.js"
+import { CommentRepository, CreateComment } from "@db/comment/commentRepository.js"
 
 export function makeCreateCommentService(commentRepo: CommentRepository): CreateComment {
   return {

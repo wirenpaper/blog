@@ -1,5 +1,5 @@
 import { PostgresClient } from "@src/db.js"
-import { CommentModel } from "@db/comment/comment_model.js"
+import { CommentModel } from "@db/comment/commentModel.js"
 import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface CheckCommentOwnershipParams {

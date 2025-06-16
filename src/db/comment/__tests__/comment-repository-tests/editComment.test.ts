@@ -1,10 +1,10 @@
 import sqlClient from "@src/db.js"
-import { commentRepository } from "@db/comment/comment_repository.js"
+import { commentRepository } from "@db/comment/commentRepository.js"
 
 jest.mock("@src/db.js")
 
 describe("commentRepository", () => {
-  describe("deleteComment", () => {
+  describe("editComment", () => {
     beforeEach(() => {
       jest.clearAllMocks()
     })
@@ -13,8 +13,9 @@ describe("commentRepository", () => {
       (sqlClient as unknown as jest.Mock<Promise<{ id: number }[]>, []>).mockResolvedValue([{ id: 2 }])
 
       // Act
-      const result = await commentRepository(sqlClient).deleteComment({
-        id: 3
+      const result = await commentRepository(sqlClient).editComment({
+        id: 3,
+        mComment: "a comment"
       })
 
       // Assert
@@ -25,8 +26,9 @@ describe("commentRepository", () => {
       (sqlClient as unknown as jest.Mock<Promise<{ id: number }[]>, []>).mockResolvedValue([])
 
       // Act && Assert
-      await expect(commentRepository(sqlClient).deleteComment({
-        id: 3
+      await expect(commentRepository(sqlClient).editComment({
+        id: 3,
+        mComment: "a comment"
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "comment does not exist"
@@ -38,8 +40,9 @@ describe("commentRepository", () => {
       (sqlClient as unknown as jest.Mock<Promise<{ id: number }[]>, []>).mockRejectedValue(error)
 
       // Act & Assert
-      await expect(commentRepository(sqlClient).deleteComment({
-        id: 3
+      await expect(commentRepository(sqlClient).editComment({
+        id: 3,
+        mComment: "a comment"
       })).rejects.toMatchObject({
         statusCode: 500,
         message: "STATUSCODE NOT FOUND oops"
@@ -53,8 +56,9 @@ describe("commentRepository", () => {
       })
 
       // Act & Assert
-      await expect(commentRepository(sqlClient).deleteComment({
-        id: 3
+      await expect(commentRepository(sqlClient).editComment({
+        id: 3,
+        mComment: "a comment"
       })).rejects.toMatchObject({
         statusCode: 400,
         message: "duplicate key value violates unique constraint"

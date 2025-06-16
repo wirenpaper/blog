@@ -1,4 +1,4 @@
-import { CommentRepository } from "@db/comment/comment_repository.js"
+import { CommentRepository } from "@db/comment/commentRepository.js"
 
 export const mockCommentRepo: jest.Mocked<CommentRepository> = {
   checkCommentOwnership: jest.fn(),

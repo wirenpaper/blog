@@ -1,4 +1,4 @@
-import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
+import { mockCommentRepo } from "@db/comment/__mocks__/commentRepository.mock.js"
 import { makeGetPostCommentsService } from "@business/comment/get-post-comments/getPostCommentsService.js"
 
 jest.mock("@src/db.js")

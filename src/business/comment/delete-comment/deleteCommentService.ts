@@ -1,5 +1,5 @@
 import { userIdExists, verifyUser, verifyUserBool } from "@business/aux.js"
-import { CommentRepository } from "@db/comment/comment_repository.js"
+import { CommentRepository } from "@db/comment/commentRepository.js"
 
 interface deleteCommentParams {
   id: number,

@@ -4,7 +4,7 @@ import { makeDeleteCommentRouter } from
   "@business/comment/delete-comment/deleteCommentController.js"
 import { makeDeleteCommentService, MakeDeleteCommentService }
   from "@business/comment/delete-comment/deleteCommentService.js"
-import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
+import { mockCommentRepo } from "@db/comment/__mocks__/commentRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/comment/delete-comment/deleteCommentService.js", () => ({

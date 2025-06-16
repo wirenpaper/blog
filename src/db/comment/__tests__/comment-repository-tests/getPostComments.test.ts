@@ -1,5 +1,5 @@
 import sqlClient from "@src/db.js"
-import { commentRepository, GetPostCommentResult } from "@db/comment/comment_repository.js"
+import { commentRepository, GetPostCommentResult } from "@db/comment/commentRepository.js"
 
 jest.mock("@src/db.js")
 

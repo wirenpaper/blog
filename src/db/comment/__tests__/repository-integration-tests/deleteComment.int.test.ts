@@ -1,6 +1,6 @@
 import { postRepository } from "@db/post/postRepository.js"
 import { userRepository } from "@db/user/userRepository.js"
-import { commentRepository } from "@db/comment/comment_repository.js"
+import { commentRepository } from "@db/comment/commentRepository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("commentRepository", () => {
@@ -47,42 +47,20 @@ describe("commentRepository", () => {
   })
 
   // Tests
-  describe("getPostComments", () => {
-    it("should successfully get comments in post 1", async () => {
-      const res = await commentRepo.getPostComments({ postId: 1 })
-      expect(res).toMatchObject([
-        { userName: "johnny", mComment: "u wot m8", userId: 1, commentId: 2 },
-        { userName: "jany", mComment: "just say it", userId: 2, commentId: 1 }
-      ])
+  describe("deleteComment", () => {
+    it("successfully deletes comment", async () => {
+      const commentBefore = await sqlClient.unsafe("select * from comments where id=2")
+      expect(commentBefore).toEqual([{ id: 2, comment: "u wot m8", user_id: 1, post_id: 1 }])
+      await commentRepo.deleteComment({ id: 2 })
+      const commentAfter = await sqlClient.unsafe("select * from comments where id=2")
+      expect(commentAfter).toEqual([])
     })
 
-    it("should successfully get comments whose users were deleted", async () => {
-      await userRepo.createUser({
-        userName: "jobs",
-        hashedPassword: "lol123",
-        firstName: "steve",
-        lastName: "jobs"
+    it("failure; tries to delete non existent comment", async () => {
+      await expect(commentRepo.deleteComment({ id: 4 })).rejects.toMatchObject({
+        statusCode: 500,
+        message: "comment does not exist"
       })
-      await commentRepo.createComment({ mComment: "ey yo", postId: 1, userId: 3 })
-      await sqlClient.unsafe("delete from users where id=3")
-      const res = await commentRepo.getPostComments({ postId: 1 })
-      expect(res).toMatchObject([
-        { userName: "johnny", mComment: "u wot m8", userId: 1, commentId: 2 },
-        { userName: "jany", mComment: "just say it", userId: 2, commentId: 1 },
-        { userName: null, mComment: "ey yo", userId: null, commentId: 4 }
-      ])
     })
-
-    it("should successfully show one comment", async () => {
-      const res = await commentRepo.getPostComments({ postId: 2 })
-      expect(res).toMatchObject([{ userName: "johnny", mComment: "g,g,", userId: 1, commentId: 3 }])
-    })
-
-    it("should successfully show NO comments", async () => {
-      await sqlClient.unsafe("delete from comments where id=3")
-      const res = await commentRepo.getPostComments({ postId: 2 })
-      expect(res).toMatchObject([])
-    })
-
   })
 })
