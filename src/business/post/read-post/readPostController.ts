@@ -1,4 +1,4 @@
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 import { makeReadPostService } from "@business/post/read-post/readPostService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { Router, Request, Response } from "express"

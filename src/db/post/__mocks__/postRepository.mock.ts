@@ -1,4 +1,4 @@
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 
 export const mockPostRepo: jest.Mocked<PostRepository> = {
   createPost: jest.fn(),

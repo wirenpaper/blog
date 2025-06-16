@@ -1,5 +1,4 @@
 import sqlClient from "@src/db.js"
-// import { createExpressError } from "@src/errors.js"
 import { CheckCommentOwnershipResult, commentRepository } from "@db/comment/comment_repository.js"
 import { createExpressError } from "@src/errors.js"
 

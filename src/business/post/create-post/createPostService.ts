@@ -1,5 +1,5 @@
 import { userIdExists } from "@business/aux.js"
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 
 export interface PostParams {
   mPost: string,

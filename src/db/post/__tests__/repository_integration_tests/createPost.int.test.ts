@@ -1,4 +1,4 @@
-import { postRepository } from "@db/post/post_repository.js"
+import { postRepository } from "@db/post/postRepository.js"
 import { userRepository } from "@db/user/userRepository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
@@ -39,45 +39,30 @@ describe("postRepository", () => {
   })
 
   // Tests
-  describe("getPosts", () => {
-    it("Success; a single post", async () => {
+  describe("createPost", () => {
+    it("should successfully create a user", async () => {
       // Act
-      await postRepo.createPost({
+      const result = await postRepo.createPost({
         mPost: "blabla",
         userId: 2
       })
 
-      const posts = await postRepo.getPosts()
-      expect(posts).toMatchObject([{ id: 1, mPost: "blabla", userId: 2, userName: "jany" }])
-    })
-
-    it("Success; multiple posts", async () => {
-      // Act
-      await postRepo.createPost({
+      // Assert
+      expect(result).toMatchObject({
+        id: 1,
         mPost: "blabla",
         userId: 2
       })
-      await postRepo.createPost({
-        mPost: "jaja",
-        userId: 2
-      })
-      await postRepo.createPost({
-        mPost: "rara",
-        userId: 1
-      })
-
-      const posts = await postRepo.getPosts()
-      expect(posts).toMatchObject([
-        { id: 3, mPost: "rara", userId: 1, userName: "johnny" },
-        { id: 2, mPost: "jaja", userId: 2, userName: "jany" },
-        { id: 1, mPost: "blabla", userId: 2, userName: "jany" }
-      ])
     })
 
-    it("Success; empty", async () => {
-      // Act
-      const posts = await postRepo.getPosts()
-      expect(posts).toMatchObject([])
+    it("failure; foreign key contstraint violation", async () => {
+      await expect(postRepo.createPost({
+        mPost: "blabla",
+        userId: 3
+      })).rejects.toMatchObject({
+        statusCode: 400,
+        message: "insert or update on table \"posts\" violates foreign key constraint \"posts_user_id_fkey\""
+      })
     })
 
   })

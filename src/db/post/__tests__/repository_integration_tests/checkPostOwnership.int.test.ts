@@ -1,5 +1,5 @@
 import { userRepository } from "@db/user/userRepository.js"
-import { postRepository } from "@db/post/post_repository.js"
+import { postRepository } from "@db/post/postRepository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("checkPostOwnership", () => {

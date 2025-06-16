@@ -1,4 +1,4 @@
-import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
+import { mockPostRepo } from "@db/post/__mocks__/postRepository.mock.js"
 import { makeReadPostService } from "@business/post/read-post/readPostService.js"
 
 jest.mock("@src/db.js")

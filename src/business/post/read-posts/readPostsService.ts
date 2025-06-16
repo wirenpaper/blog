@@ -1,6 +1,6 @@
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 import { createExpressError } from "@src/errors.js"
-import { GetPostResult } from "@db/post/post_repository.js"
+import { GetPostResult } from "@db/post/postRepository.js"
 
 export interface MakeReadPostsService {
   readPosts: (params: void) => Promise<GetPostResult[]>

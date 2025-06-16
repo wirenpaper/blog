@@ -1,4 +1,4 @@
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 import { userIdExists, verifyUser } from "@business/aux.js"
 
 export interface EditPostParams {

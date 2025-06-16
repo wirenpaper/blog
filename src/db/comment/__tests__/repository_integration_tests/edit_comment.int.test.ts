@@ -1,4 +1,4 @@
-import { postRepository } from "@db/post/post_repository.js"
+import { postRepository } from "@db/post/postRepository.js"
 import { userRepository } from "@db/user/userRepository.js"
 import { commentRepository } from "@db/comment/comment_repository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"

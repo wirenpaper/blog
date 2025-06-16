@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { PostRepository } from "@db/post/post_repository.js"
+import { PostRepository } from "@db/post/postRepository.js"
 import { makeDeletePostService } from "@business/post/delete-post/deletePostService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { validateDeletePost } from "@business/post/delete-post/deletePostValidator.js"

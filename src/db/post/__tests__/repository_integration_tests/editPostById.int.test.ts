@@ -1,5 +1,5 @@
 import { userRepository } from "@db/user/userRepository.js"
-import { postRepository } from "@db/post/post_repository.js"
+import { postRepository } from "@db/post/postRepository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("postRepository", () => {
@@ -51,20 +51,19 @@ describe("postRepository", () => {
   })
 
   // Tests
-  describe("getPostById", () => {
-    it("Success; getting post", async () => {
+  describe("editPostById", () => {
+    it("Success; check a post", async () => {
       // Arrange
-      const result = await postRepo.getPostById({ id: 1 })
-
-      // Assert
-      expect(result).toEqual({ id: 1, mPost: "blabla", userId: 2, userName: "jany" })
+      await postRepo.editPostById({ id: 1, mPost: "tralala" })
+      const post = await postRepo.getPostById({ id: 1 })
+      expect(post).toEqual({ id: 1, mPost: "tralala", userId: 2, userName: "jany" })
     })
 
-    it("failure; not found", async () => {
+    it("failure; no results", async () => {
       // Arrange
-      await expect(postRepo.getPostById({ id: 4 })).rejects.toMatchObject({
+      await expect(postRepo.editPostById({ id: 4, mPost: "tralala" })).rejects.toMatchObject({
         statusCode: 500,
-        message: "should be *exactly* 1 row"
+        message: "no results"
       })
     })
 

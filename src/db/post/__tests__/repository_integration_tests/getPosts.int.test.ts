@@ -1,5 +1,5 @@
+import { postRepository } from "@db/post/postRepository.js"
 import { userRepository } from "@db/user/userRepository.js"
-import { postRepository } from "@db/post/post_repository.js"
 import sqlClient, { createTables, dropTables } from "@db/dbTestSetup.js"
 
 describe("postRepository", () => {
@@ -28,18 +28,6 @@ describe("postRepository", () => {
       firstName: "jane",
       lastName: "smith"
     })
-    await postRepo.createPost({
-      mPost: "blabla",
-      userId: 2
-    })
-    await postRepo.createPost({
-      mPost: "jaja",
-      userId: 2
-    })
-    await postRepo.createPost({
-      mPost: "rara",
-      userId: 1
-    })
   })
 
   // Final cleanup
@@ -51,20 +39,45 @@ describe("postRepository", () => {
   })
 
   // Tests
-  describe("editPostById", () => {
-    it("Success; check a post", async () => {
-      // Arrange
-      await postRepo.editPostById({ id: 1, mPost: "tralala" })
-      const post = await postRepo.getPostById({ id: 1 })
-      expect(post).toEqual({ id: 1, mPost: "tralala", userId: 2, userName: "jany" })
+  describe("getPosts", () => {
+    it("Success; a single post", async () => {
+      // Act
+      await postRepo.createPost({
+        mPost: "blabla",
+        userId: 2
+      })
+
+      const posts = await postRepo.getPosts()
+      expect(posts).toMatchObject([{ id: 1, mPost: "blabla", userId: 2, userName: "jany" }])
     })
 
-    it("failure; no results", async () => {
-      // Arrange
-      await expect(postRepo.editPostById({ id: 4, mPost: "tralala" })).rejects.toMatchObject({
-        statusCode: 500,
-        message: "no results"
+    it("Success; multiple posts", async () => {
+      // Act
+      await postRepo.createPost({
+        mPost: "blabla",
+        userId: 2
       })
+      await postRepo.createPost({
+        mPost: "jaja",
+        userId: 2
+      })
+      await postRepo.createPost({
+        mPost: "rara",
+        userId: 1
+      })
+
+      const posts = await postRepo.getPosts()
+      expect(posts).toMatchObject([
+        { id: 3, mPost: "rara", userId: 1, userName: "johnny" },
+        { id: 2, mPost: "jaja", userId: 2, userName: "jany" },
+        { id: 1, mPost: "blabla", userId: 2, userName: "jany" }
+      ])
+    })
+
+    it("Success; empty", async () => {
+      // Act
+      const posts = await postRepo.getPosts()
+      expect(posts).toMatchObject([])
     })
 
   })

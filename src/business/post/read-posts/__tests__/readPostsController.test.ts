@@ -2,7 +2,7 @@ import express from "express"
 import supertest from "supertest"
 import { makeReadPostsRouter } from "@business/post/read-posts/readPostsController.js"
 import { makeReadPostsService, MakeReadPostsService } from "@business/post/read-posts/readPostsService.js"
-import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
+import { mockPostRepo } from "@db/post/__mocks__/postRepository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/post/read-posts/readPostsService.js", () => ({

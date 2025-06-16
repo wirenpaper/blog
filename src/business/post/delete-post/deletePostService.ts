@@ -1,5 +1,5 @@
 import { userIdExists, verifyUser } from "@business/aux.js"
-import { CheckPostOwnershipResult, PostRepository } from "@db/post/post_repository.js"
+import { CheckPostOwnershipResult, PostRepository } from "@db/post/postRepository.js"
 
 export interface MakeDeletePostService {
   deletePost: (params: CheckPostOwnershipResult) => Promise<void>

@@ -1,7 +1,7 @@
 import express from "express"
 import supertest from "supertest"
 import { makeReadPostService, MakeReadPostService } from "@business/post/read-post/readPostService.js"
-import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
+import { mockPostRepo } from "@db/post/__mocks__/postRepository.mock.js"
 import { makeReadPostRouter } from "@business/post/read-post/readPostController.js"
 import { createExpressError } from "@src/errors.js"
 

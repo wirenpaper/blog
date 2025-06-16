@@ -1,5 +1,5 @@
 import { PostgresClient } from "@src/db.js"
-import { PostModel } from "@db/post/post_model.js"
+import { PostModel } from "@db/post/postModel.js"
 import { createExpressError, isExpressError, postgresStatusCode } from "@src/errors.js"
 
 export interface CheckPostOwnershipResult {
