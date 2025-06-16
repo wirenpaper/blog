@@ -1,13 +1,13 @@
 import express from "express"
 import supertest from "supertest"
 import { makeChangePasswordLoggedInRouter, ChangePasswordRequest } from
-  "@business/auth/change_password_logged_in/change_password_logged_in_controller.js"
+  "@business/auth/change-password-logged-in/changePasswordLoggedInController.js"
 import { MakeChangePasswordLoggedInService, makeChangePasswordLoggedInService } from
-  "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
+  "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/auth/change_password_logged_in/change_password_logged_in_service.js", () => ({
+jest.mock("@business/auth/change-password-logged-in/changePasswordLoggedInService.js", () => ({
   makeChangePasswordLoggedInService: jest.fn()
 }))
 

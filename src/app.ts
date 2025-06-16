@@ -14,7 +14,7 @@ import { makeForgotPasswordRouter } from "@business/auth/forgot_password/forgot_
 // import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
 import { makeResetPasswordRouter } from "@business/auth/reset_password/reset_password_controller.js"
 import { makeChangePasswordLoggedInRouter } from
-  "@business/auth/change_password_logged_in/change_password_logged_in_controller.js"
+  "@business/auth/change-password-logged-in/changePasswordLoggedInController.js"
 import { makeDeleteUserRouter } from "@business/auth/delete_user/delete_user_controller.js"
 
 ///////////////////////////////////////////////////////////////////////////////////

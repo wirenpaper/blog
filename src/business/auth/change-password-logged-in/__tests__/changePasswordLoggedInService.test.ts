@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { makeChangePasswordLoggedInService } from
-  "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
+  "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
 
 jest.mock("bcrypt")
 

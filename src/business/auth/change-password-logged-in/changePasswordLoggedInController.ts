@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express"
 import { UserRepository } from "@db/user/user_repository.js"
 import { makeChangePasswordLoggedInService } from
-  "@business/auth/change_password_logged_in/change_password_logged_in_service.js"
+  "@business/auth/change-password-logged-in/changePasswordLoggedInService.js"
 import { createExpressError, ExpressError, isExpressError } from "@src/errors.js"
-import { validateChangePasswordLoggedIn } from "./change_password_logged_in_validator.js"
+import { validateChangePasswordLoggedIn } from
+  "@business/auth/change-password-logged-in/changePasswordLoggedInValidator.js"
 import { validation } from "@business/aux.js"
 
 export interface ChangePasswordRequest {
