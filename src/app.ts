@@ -31,7 +31,7 @@ import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_con
 ///////////////////////////////////////////////////////////////////////////////////
 import { makeCreateCommentRouter } from "@business/comment/create-comment/createCommentController.js"
 import { makeEditCommentRouter } from "@business/comment/edit_comment/edit_comment_controller.js"
-import { makeDeleteCommentRouter } from "@business/comment/delete_comment/delete_comment_controller.js"
+import { makeDeleteCommentRouter } from "@business/comment/delete-comment/deleteCommentController.js"
 import { makeGetPostCommentsRouter } from "@business/comment/get_post_comments/get_post_comments_controller.js"
 
 // REPOSITORIES ////////////////////////////////////////////////////////////////////

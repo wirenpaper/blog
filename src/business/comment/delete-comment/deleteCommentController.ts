@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { CommentRepository } from "@db/comment/comment_repository.js"
-import { makeDeleteCommentService } from "@business/comment/delete_comment/delete_comment_service.js"
+import { makeDeleteCommentService } from "@business/comment/delete-comment/deleteCommentService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { validateDeleteComment } from "./delete_comment_validator"
+import { validateDeleteComment } from "@business/comment/delete-comment/deleteCommentValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeDeleteCommentRouter(commentRepo: CommentRepository) {

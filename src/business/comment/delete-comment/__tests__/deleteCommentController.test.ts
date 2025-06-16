@@ -1,13 +1,13 @@
 import express from "express"
 import supertest from "supertest"
 import { makeDeleteCommentRouter } from
-  "@business/comment/delete_comment/delete_comment_controller.js"
+  "@business/comment/delete-comment/deleteCommentController.js"
 import { makeDeleteCommentService, MakeDeleteCommentService }
-  from "@business/comment/delete_comment/delete_comment_service.js"
+  from "@business/comment/delete-comment/deleteCommentService.js"
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/comment/delete_comment/delete_comment_service.js", () => ({
+jest.mock("@business/comment/delete-comment/deleteCommentService.js", () => ({
   makeDeleteCommentService: jest.fn()
 }))
 
