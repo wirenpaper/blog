@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
-import { makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
+import { makeResetPasswordService } from "@business/auth/reset-password/resetPasswordService.js"
 
 jest.mock("bcrypt")
 

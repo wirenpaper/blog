@@ -12,7 +12,7 @@ import { makeLoginRouter } from "@business/auth/login/loginController.js"
 import { makeLogoutRouter } from "@business/auth/logout/logoutController.js"
 import { makeForgotPasswordRouter } from "@business/auth/forgot-password/forgotPasswordController.js"
 // import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
-import { makeResetPasswordRouter } from "@business/auth/reset_password/reset_password_controller.js"
+import { makeResetPasswordRouter } from "@business/auth/reset-password/resetPasswordController.js"
 import { makeChangePasswordLoggedInRouter } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInController.js"
 import { makeDeleteUserRouter } from "@business/auth/delete-user/deleteUserController.js"

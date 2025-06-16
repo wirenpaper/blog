@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { UserRepository } from "@db/user/user_repository.js"
-import { makeResetPasswordService } from "@business/auth/reset_password/reset_password_service.js"
+import { makeResetPasswordService } from "@business/auth/reset-password/resetPasswordService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { validateResetPassword } from "./reset_password_validator.js"
+import { validateResetPassword } from "./resetPasswordValidator.js"
 import { validation } from "@business/aux.js"
 
 export interface ResetPasswordRequest {
