@@ -1,8 +1,8 @@
 import { PostRepository } from "@db/post/post_repository.js"
-import { makeReadPostService } from "@business/post/read_post/read_post_service.js"
+import { makeReadPostService } from "@business/post/read-post/readPostService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
 import { Router, Request, Response } from "express"
-import { validateReadPost } from "./read_post_validator"
+import { validateReadPost } from "@business/post/read-post/readPostValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeReadPostRouter(postRepo: PostRepository) {

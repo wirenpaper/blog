@@ -1,11 +1,11 @@
 import express from "express"
 import supertest from "supertest"
-import { makeReadPostService, MakeReadPostService } from "@business/post/read_post/read_post_service.js"
+import { makeReadPostService, MakeReadPostService } from "@business/post/read-post/readPostService.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
-import { makeReadPostRouter } from "../read_post_controller.js"
+import { makeReadPostRouter } from "@business/post/read-post/readPostController.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/post/read_post/read_post_service.js", () => ({
+jest.mock("@business/post/read-post/readPostService.js", () => ({
   makeReadPostService: jest.fn()
 }))
 
