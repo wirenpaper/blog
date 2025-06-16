@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
-import { makeRegisterService } from "@business/auth/register/register_service.js"
+import { makeRegisterService } from "@business/auth/register/registerService.js"
 import { UserRepository } from "@db/user/user_repository.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { validateRegister } from "./register_validator.js"
+import { validateRegister } from "./registerValidator.js"
 import { validation } from "@business/aux.js"
 
 export interface RegisterRequest {

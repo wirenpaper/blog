@@ -7,7 +7,7 @@ import { ExpressError } from "@src/errors.js"
 ////////////////////////////////////////////////////////////////////////////////////
 /////////// AUTH ROUTER IMPORTS
 ////////////////////////////////////////////////////////////////////////////////////
-import { makeRegisterRouter } from "@business/auth/register/register_controller.js"
+import { makeRegisterRouter } from "@business/auth/register/registerController.js"
 import { makeLoginRouter } from "@business/auth/login/loginController.js"
 import { makeLogoutRouter } from "@business/auth/logout/logoutController.js"
 import { makeForgotPasswordRouter } from "@business/auth/forgot-password/forgotPasswordController.js"
