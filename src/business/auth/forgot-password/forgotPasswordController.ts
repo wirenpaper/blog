@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { UserRepository } from "@db/user/user_repository.js"
-import { makeForgotPasswordService } from "@business/auth/forgot_password/forgot_password_service.js"
+import { makeForgotPasswordService } from "@business/auth/forgot-password/forgotPasswordService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { validateForgotPassword } from "./forgot_password_validator.js"
+import { validateForgotPassword } from "@business/auth/forgot-password/forgotPasswordValidator.js"
 import { validation } from "@business/aux.js"
 import { EmailClient } from "@src/client/email_client.js"
 

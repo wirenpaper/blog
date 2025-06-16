@@ -1,14 +1,14 @@
 import express from "express"
 import supertest from "supertest"
 import { makeForgotPasswordRouter, ForgotPasswordRequest } from
-  "@business/auth/forgot_password/forgot_password_controller.js"
+  "@business/auth/forgot-password/forgotPasswordController.js"
 import { MakeForgotPasswordService, makeForgotPasswordService }
-  from "@business/auth/forgot_password/forgot_password_service.js"
+  from "@business/auth/forgot-password/forgotPasswordService.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { mockEmailClient } from "@src/client/mocks/email_client_mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/auth/forgot_password/forgot_password_service.js", () => ({
+jest.mock("@business/auth/forgot-password/forgotPasswordService.js", () => ({
   makeForgotPasswordService: jest.fn()
 }))
 
