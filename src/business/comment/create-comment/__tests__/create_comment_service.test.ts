@@ -1,5 +1,5 @@
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
-import { makeCreateCommentService } from "@business/comment/create_comment/create_comment_service.js"
+import { makeCreateCommentService } from "@business/comment/create-comment/createCommentService.js"
 import { userIdExists } from "@business/aux.js"
 import { createExpressError } from "@src/errors.js"
 
