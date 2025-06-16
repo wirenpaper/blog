@@ -20,7 +20,7 @@ import { makeDeleteUserRouter } from "@business/auth/delete-user/deleteUserContr
 //////// POST ROUTER IMPORTS
 ///////////////////////////////////////////////////////////////////////////////////
 import { makePostRouter } from "@business/post/create-post/createPostController.js"
-import { makeReadPostsRouter } from "@business/post/read_posts/read_posts_controller.js"
+import { makeReadPostsRouter } from "@business/post/read-posts/readPostsController.js"
 import { makeReadPostRouter } from "@business/post/read-post/readPostController.js"
 import { makeEditPostRouter } from "@business/post/edit-post/editPostController.js"
 import { makeDeletePostRouter } from "@business/post/delete-post/deletePostController.js"
