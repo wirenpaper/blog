@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
-import { makePostService } from "@business/post/create_post/create_post_service.js"
+import { makePostService } from "@business/post/create-post/createPostService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { validateCreatePost } from "./create_post_validator"
+import { validateCreatePost } from "@business/post/create-post/createPostValidator.js"
 import { validation } from "@business/aux.js"
 
 export interface PostService {
