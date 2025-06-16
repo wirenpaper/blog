@@ -1,11 +1,11 @@
 import express from "express"
 import supertest from "supertest"
-import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_controller.js"
-import { MakeDeletePostService, makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
+import { makeDeletePostRouter } from "@business/post/delete-post/deletePostController.js"
+import { MakeDeletePostService, makeDeletePostService } from "@business/post/delete-post/deletePostService.js"
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/post/delete_post/delete_post_service.js", () => ({
+jest.mock("@business/post/delete-post/deletePostService.js", () => ({
   makeDeletePostService: jest.fn()
 }))
 

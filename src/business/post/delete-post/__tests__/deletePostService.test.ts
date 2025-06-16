@@ -1,5 +1,5 @@
 import { mockPostRepo } from "@db/post/__mocks__/post_repository.mock.js"
-import { makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
+import { makeDeletePostService } from "@business/post/delete-post/deletePostService.js"
 import { userIdExists, verifyUser } from "@business/aux.js"
 import { createExpressError } from "@src/errors.js"
 

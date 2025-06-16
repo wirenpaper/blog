@@ -23,7 +23,7 @@ import { makePostRouter } from "@business/post/create-post/createPostController.
 import { makeReadPostsRouter } from "@business/post/read_posts/read_posts_controller.js"
 import { makeReadPostRouter } from "@business/post/read_post/read_post_controller.js"
 import { makeEditPostRouter } from "@business/post/edit_post/edit_post_controller.js"
-import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_controller.js"
+import { makeDeletePostRouter } from "@business/post/delete-post/deletePostController.js"
 
 ///////////////////////////////////////////////////////////////////////////////////
 //////// COMMENT ROUTER IMPORTS

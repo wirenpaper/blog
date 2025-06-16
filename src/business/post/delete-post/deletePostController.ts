@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { PostRepository } from "@db/post/post_repository.js"
-import { makeDeletePostService } from "@business/post/delete_post/delete_post_service.js"
+import { makeDeletePostService } from "@business/post/delete-post/deletePostService.js"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { validateDeletePost } from "./delete_post_validator"
+import { validateDeletePost } from "@business/post/delete-post/deletePostValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeDeletePostRouter(repo: PostRepository) {
