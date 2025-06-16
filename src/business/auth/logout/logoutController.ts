@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { isExpressError, ExpressError } from "@src/errors.js"
-import { destroySession } from "./session_service.js"
+import { destroySession } from "./sessionService.js"
 
 export function makeLogoutRouter() {
   return Router().post("/", async (req, res) => {

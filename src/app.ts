@@ -9,7 +9,7 @@ import { ExpressError } from "@src/errors.js"
 ////////////////////////////////////////////////////////////////////////////////////
 import { makeRegisterRouter } from "@business/auth/register/register_controller.js"
 import { makeLoginRouter } from "@business/auth/login/loginController.js"
-import { makeLogoutRouter } from "@business/auth/logout/logout_controller.js"
+import { makeLogoutRouter } from "@business/auth/logout/logoutController.js"
 import { makeForgotPasswordRouter } from "@business/auth/forgot-password/forgotPasswordController.js"
 // import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
 import { makeResetPasswordRouter } from "@business/auth/reset_password/reset_password_controller.js"

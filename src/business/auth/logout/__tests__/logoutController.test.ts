@@ -2,10 +2,10 @@ import { Session } from "express-session"
 import express from "express"
 import supertest from "supertest"
 import { createExpressError } from "@src/errors.js"
-import { makeLogoutRouter } from "@business/auth/logout/logout_controller.js"
-import { destroySession } from "@business/auth/logout/session_service.js"
+import { makeLogoutRouter } from "@business/auth/logout/logoutController.js"
+import { destroySession } from "@business/auth/logout/sessionService.js"
 
-jest.mock("@business/auth/logout/session_service.js", () => ({
+jest.mock("@business/auth/logout/sessionService.js", () => ({
   destroySession: jest.fn()
 }))
 
