@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
 import { CommentRepository } from "@db/comment/comment_repository.js"
-import { makeEditCommentService } from "@business/comment/edit_comment/edit_comment_service.js"
+import { makeEditCommentService } from "@business/comment/edit-comment/editCommentService.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { validateEditComment } from "./edit_comment_validator"
+import { validateEditComment } from "@business/comment/edit-comment/editCommentValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeEditCommentRouter(commentRepo: CommentRepository) {

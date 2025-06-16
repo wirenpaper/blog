@@ -1,12 +1,12 @@
 import express from "express"
 import supertest from "supertest"
-import { makeEditCommentRouter } from "@business/comment/edit_comment/edit_comment_controller.js"
+import { makeEditCommentRouter } from "@business/comment/edit-comment/editCommentController.js"
 import { makeEditCommentService, MakeEditCommentService } from
-  "@business/comment/edit_comment/edit_comment_service.js"
+  "@business/comment/edit-comment/editCommentService.js"
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/comment/edit_comment/edit_comment_service.js", () => ({
+jest.mock("@business/comment/edit-comment/editCommentService.js", () => ({
   makeEditCommentService: jest.fn()
 }))
 
