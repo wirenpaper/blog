@@ -1,11 +1,11 @@
 import express from "express"
 import supertest from "supertest"
-import { makeLoginRouter, MakeLoginRequest } from "@business/auth/login/login_controller.js"
-import { MakeLoginService, makeLoginService } from "@business/auth/login/login_service.js"
+import { makeLoginRouter, MakeLoginRequest } from "@business/auth/login/loginController.js"
+import { MakeLoginService, makeLoginService } from "@business/auth/login/loginService.js"
 import { mockUserRepo } from "@db/user/__mocks__/user_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/auth/login/login_service.js", () => ({
+jest.mock("@business/auth/login/loginService.js", () => ({
   makeLoginService: jest.fn()
 }))
 
