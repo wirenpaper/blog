@@ -11,7 +11,6 @@ import { makeRegisterRouter } from "@business/auth/register/registerController.j
 import { makeLoginRouter } from "@business/auth/login/loginController.js"
 import { makeLogoutRouter } from "@business/auth/logout/logoutController.js"
 import { makeForgotPasswordRouter } from "@business/auth/forgot-password/forgotPasswordController.js"
-// import { makeVerifyResetTokenRouter } from "@business/auth/verify_reset_token/verify_reset_token_controller.js"
 import { makeResetPasswordRouter } from "@business/auth/reset-password/resetPasswordController.js"
 import { makeChangePasswordLoggedInRouter } from
   "@business/auth/change-password-logged-in/changePasswordLoggedInController.js"
@@ -32,7 +31,7 @@ import { makeDeletePostRouter } from "@business/post/delete_post/delete_post_con
 import { makeCreateCommentRouter } from "@business/comment/create-comment/createCommentController.js"
 import { makeEditCommentRouter } from "@business/comment/edit-comment/editCommentController.js"
 import { makeDeleteCommentRouter } from "@business/comment/delete-comment/deleteCommentController.js"
-import { makeGetPostCommentsRouter } from "@business/comment/get_post_comments/get_post_comments_controller.js"
+import { makeGetPostCommentsRouter } from "@business/comment/get-post-comments/getPostCommentsController.js"
 
 // REPOSITORIES ////////////////////////////////////////////////////////////////////
 import { userRepository } from "@db/user/user_repository.js"

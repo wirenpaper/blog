@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
-import { makeGetPostCommentsService } from "@business/comment/get_post_comments/get_post_comments_service.js"
+import { makeGetPostCommentsService } from "@business/comment/get-post-comments/getPostCommentsService.js"
 import { CommentRepository } from "@db/comment/comment_repository.js"
 import { ExpressError, isExpressError } from "@src/errors.js"
-import { validateGetPostComments } from "./get_post_comments_validator"
+import { validateGetPostComments } from "@business/comment/get-post-comments//getPostCommentsValidator.js"
 import { validation } from "@business/aux.js"
 
 export function makeGetPostCommentsRouter(commentRepo: CommentRepository) {

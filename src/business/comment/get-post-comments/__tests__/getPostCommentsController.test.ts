@@ -1,12 +1,12 @@
 import express from "express"
 import supertest from "supertest"
-import { makeGetPostCommentsRouter } from "@business/comment/get_post_comments/get_post_comments_controller.js"
-import { makeGetPostCommentsService } from "@business/comment/get_post_comments/get_post_comments_service.js"
+import { makeGetPostCommentsRouter } from "@business/comment/get-post-comments/getPostCommentsController.js"
+import { makeGetPostCommentsService } from "@business/comment/get-post-comments/getPostCommentsService.js"
 import { GetPostCommentsSpecifications } from "@db/comment/comment_repository.js"
 import { mockCommentRepo } from "@db/comment/__mocks__/comment_repository.mock.js"
 import { createExpressError } from "@src/errors.js"
 
-jest.mock("@business/comment/get_post_comments/get_post_comments_service.js", () => ({
+jest.mock("@business/comment/get-post-comments/getPostCommentsService.js", () => ({
   makeGetPostCommentsService: jest.fn()
 }))
 
