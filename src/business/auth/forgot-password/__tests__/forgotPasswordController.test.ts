@@ -5,7 +5,7 @@ import { makeForgotPasswordRouter, ForgotPasswordRequest } from
 import { MakeForgotPasswordService, makeForgotPasswordService }
   from "@business/auth/forgot-password/forgotPasswordService.js"
 import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
-import { mockEmailClient } from "@src/client/mocks/emailClientMock.js"
+import { mockEmailClient } from "@client/mocks/emailClientMock.js"
 import { createExpressError } from "@src/errors.js"
 
 jest.mock("@business/auth/forgot-password/forgotPasswordService.js", () => ({

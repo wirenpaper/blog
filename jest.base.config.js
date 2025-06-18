@@ -8,6 +8,7 @@ const baseConfig = {
     "^@src/(.*)\\.js$": "<rootDir>/src/$1",
     "^@db/(.*)\\.js$": "<rootDir>/src/db/$1",
     "^@business/(.*)\\.js$": "<rootDir>/src/business/$1",
+    "^@client/(.*)\\.js$": "<rootDir>/src/client/$1",
     "^@middleware/(.*)\\.js$": "<rootDir>/src/middleware/$1"
   },
   transform: {

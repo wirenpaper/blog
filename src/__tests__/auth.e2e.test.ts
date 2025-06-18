@@ -3,8 +3,8 @@ import axios from "axios"
 import supertest from "supertest"
 import { createApp } from "@src/app.js"
 import testSql, { createTables, dropTables } from "@db/dbTestSetup.js" // Your test database connection
-import { testEmailConfig } from "@src/client/__tests__/testEmail.config.js"
-import { MailDevEmail } from "@src/client/emailClient.js"
+import { testEmailConfig } from "@client/__tests__/testEmail.config.js"
+import { MailDevEmail } from "@client/emailClient.js"
 import bcrypt from "bcrypt"
 
 // The correct API endpoint for MailDev v1

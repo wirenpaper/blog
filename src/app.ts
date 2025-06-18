@@ -44,7 +44,7 @@ import authMiddleware from "@middleware/authMiddleware.js"
 /////////////////////////
 
 // clients //////////////
-import { EmailConfig, makeEmailClient } from "@src/client/emailClient.js"
+import { EmailConfig, makeEmailClient } from "@client/emailClient.js"
 /////////////////////////
 
 export function createApp(sql: Sql, emailConfig: EmailConfig): Express {

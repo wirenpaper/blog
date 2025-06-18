@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import crypto from "crypto"
 import { mockUserRepo } from "@db/user/__mocks__/userRepository.mock.js"
 import { makeForgotPasswordService } from "@business/auth/forgot-password/forgotPasswordService.js"
-import { mockEmailClient } from "@src/client/mocks/emailClientMock.js"
+import { mockEmailClient } from "@client/mocks/emailClientMock.js"
 
 jest.mock("bcrypt")
 jest.mock("crypto")

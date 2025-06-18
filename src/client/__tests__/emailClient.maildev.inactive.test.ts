@@ -1,5 +1,5 @@
-import { makeEmailClient } from "@src/client/emailClient.js"
-import { testEmailConfig } from "@src/client/__tests__/testEmail.config.js"
+import { makeEmailClient } from "@client/emailClient.js"
+import { testEmailConfig } from "@client/__tests__/testEmail.config.js"
 
 describe("makeEmailClient", () => {
   describe("sendPasswordResetEmail", () => {

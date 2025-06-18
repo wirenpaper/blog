@@ -1,6 +1,6 @@
-import { createApp } from "@src/app.js" // Import the configured app
-import testSql from "@db/db_test_setup"
-import { testEmailConfig } from "@src/client/__tests__/test_email.config.js"
+import { createApp } from "@src/app.js"
+import testSql from "@db/dbTestSetup.js"
+import { testEmailConfig } from "@client/__tests__/testEmail.config.js"
 
 const PORT = process.env.PORT ?? 5003
 

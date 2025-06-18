@@ -4,7 +4,7 @@ import { makeForgotPasswordService } from "@business/auth/forgot-password/forgot
 import { ExpressError, isExpressError } from "@src/errors.js"
 import { validateForgotPassword } from "@business/auth/forgot-password/forgotPasswordValidator.js"
 import { validation } from "@business/aux.js"
-import { EmailClient } from "@src/client/emailClient.js"
+import { EmailClient } from "@client/emailClient.js"
 
 export interface ForgotPasswordRequest {
   userName: string
